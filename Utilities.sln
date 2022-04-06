@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kotz.Collections", "Collections\Kotz.Collections.csproj", "{BD9D5404-B579-4586-97B0-48875A23B9FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kotz.Tests", "Kotz.Tests\Kotz.Tests.csproj", "{DC30E201-3E33-4090-AD0B-9B69C98B6EBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kotz.Extensions", "Kotz.Extensions\Kotz.Extensions.csproj", "{FC8B43F0-C00F-43AA-9C5B-09AA867CFA61}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD9D5404-B579-4586-97B0-48875A23B9FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD9D5404-B579-4586-97B0-48875A23B9FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD9D5404-B579-4586-97B0-48875A23B9FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD9D5404-B579-4586-97B0-48875A23B9FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC30E201-3E33-4090-AD0B-9B69C98B6EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC30E201-3E33-4090-AD0B-9B69C98B6EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC30E201-3E33-4090-AD0B-9B69C98B6EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC30E201-3E33-4090-AD0B-9B69C98B6EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC8B43F0-C00F-43AA-9C5B-09AA867CFA61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC8B43F0-C00F-43AA-9C5B-09AA867CFA61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC8B43F0-C00F-43AA-9C5B-09AA867CFA61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC8B43F0-C00F-43AA-9C5B-09AA867CFA61}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

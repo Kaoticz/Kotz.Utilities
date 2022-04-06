@@ -1,0 +1,313 @@
+using System.Collections.Concurrent;
+
+namespace Kotz.Extensions;
+
+public static class LinqExt
+{
+    /// <summary>
+    /// Applies a deferred <paramref name="action"/> on a collection if the <paramref name="predicate"/> is <see langword="true"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="predicate">The condition to be checked.</param>
+    /// <param name="action">The action to be performed.</param>
+    /// <returns>The modified collection if <paramref name="predicate"/> is <see langword="true"/>, otherwise the original collection.</returns>
+    public static IEnumerable<T> If<T>(this IEnumerable<T> collection, Predicate<IEnumerable<T>> predicate, Func<IEnumerable<T>, IEnumerable<T>> action)
+        => (predicate(collection)) ? action(collection) : collection;
+
+    /// <summary>
+    /// Saves an <see cref="IEnumerable{T2}"/> collection to a concurrent dictionary.
+    /// </summary>
+    /// <typeparam name="T1">Type of the key.</typeparam>
+    /// <typeparam name="T2">Type of the value.</typeparam>
+    /// <param name="collection">This IEnumerable collection.</param>
+    /// <param name="keySelector">A method that defines the value to be used as the key for the dictionary.</param>
+    /// <returns>A <see cref="ConcurrentDictionary{T1, T2}"/> whose key is defined by <paramref name="keySelector"/>.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when either the collection or the key selector are <see langword="null"/>.</exception>
+    public static ConcurrentDictionary<T1, T2> ToConcurrentDictionary<T1, T2>(this IEnumerable<T2> collection, Func<T2, T1> keySelector) where T1 : notnull
+    {
+        if (collection is null || keySelector is null)
+            throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(keySelector), "Argument cannot be null.");
+
+        var result = new ConcurrentDictionary<T1, T2>();
+
+        foreach (var value in collection)
+            result.TryAdd(keySelector(value), value);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Checks if the current collection contains all elements of a given collection.
+    /// </summary>
+    /// <typeparam name="T">Data type contained in the collection.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="targetCollection">The collection to compare to.</param>
+    /// <returns>
+    /// <see langword="true"/> if all elements contained in <paramref name="targetCollection"/> are present
+    /// in <paramref name="collection"/>, <see langword="false"/> otherwise.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Occurs when either collections are <see langword="null"/>.</exception>
+    public static bool ContainsSubcollection<T>(this IEnumerable<T> collection, IEnumerable<T> targetCollection)
+    {
+        if (collection is null || targetCollection is null)
+            throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(targetCollection), "Collection cannot be null.");
+        else if (!collection.Any() || !targetCollection.Any())
+            return false;
+
+        var matches = 0;
+
+        foreach (var element in targetCollection)
+        {
+            if (collection.Any(x => x?.Equals(element) is true))
+                matches++;
+        }
+
+        return matches == targetCollection.Count();
+    }
+
+    /// <summary>
+    /// Checks if the current collection contains at least one element of a given collection.
+    /// </summary>
+    /// <typeparam name="T">Data type contained in the collection.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="targetCollection">The collection to compare to.</param>
+    /// <returns>
+    /// <see langword="true"/> if at least one element contained in <paramref name="targetCollection"/> is present
+    /// in <paramref name="collection"/>, <see langword="false"/> otherwise.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Occurs when either collections are <see langword="null"/>.</exception>
+    public static bool ContainsOne<T>(this IEnumerable<T> collection, params T[] targetCollection)
+        => collection.ContainsOne(targetCollection.AsEnumerable());
+
+    /// <summary>
+    /// Checks if the current collection contains at least one element of a given collection.
+    /// </summary>
+    /// <typeparam name="T">Data type contained in the collection.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="targetCollection">The collection to compare to.</param>
+    /// <returns>
+    /// <see langword="true"/> if at least one element contained in <paramref name="targetCollection"/> is present
+    /// in <paramref name="collection"/>, <see langword="false"/> otherwise.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Occurs when either collections are <see langword="null"/>.</exception>
+    public static bool ContainsOne<T>(this IEnumerable<T> collection, IEnumerable<T> targetCollection)
+    {
+        if (collection is null || targetCollection is null)
+            throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(targetCollection), "Collection cannot be null.");
+
+        foreach (var element in targetCollection)
+        {
+            if (collection.Any(x => x?.Equals(element) is true))
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Awaits all tasks in the current collection and returns when all of them have completed.
+    /// </summary>
+    /// <param name="collection">This collection.</param>
+    /// <exception cref="ArgumentNullException">Occurs when the collection is <see langword="null"/>.</exception>
+    public static async Task WhenAllAsync(this IEnumerable<Task> collection)
+    {
+        if (collection is null)
+            throw new ArgumentNullException(nameof(collection), "Collection cannot be null.");
+
+        await Task.WhenAll(collection).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Awaits all tasks in the current collection and returns their results in an array.
+    /// </summary>
+    /// <typeparam name="T">The data that needs to be awaited.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <returns>An array of <typeparamref name="T"/>.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when the collection is <see langword="null"/>.</exception>
+    public static async Task<T[]> WhenAllAsync<T>(this IEnumerable<Task<T>> collection)
+    {
+        return (collection is null)
+            ? throw new ArgumentNullException(nameof(collection), "Collection cannot be null.")
+            : await Task.WhenAll(collection).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Awaits all tasks in the current collection and returns when any of them have completed.
+    /// </summary>
+    /// <param name="collection">This collection.</param>
+    /// <exception cref="ArgumentNullException">Occurs when the collection is <see langword="null"/>.</exception>
+    public static async Task WhenAnyAsync(this IEnumerable<Task> collection)
+    {
+        if (collection is null)
+            throw new ArgumentNullException(nameof(collection), "Collection cannot be null.");
+
+        await (await Task.WhenAny(collection).ConfigureAwait(false)).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Awaits the first task that completes in the current collection and returns its result.
+    /// </summary>
+    /// <typeparam name="T">The data that needs to be awaited.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <returns>The <typeparamref name="T"/> object of the task that first finished executing.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when the collection is <see langword="null"/>.</exception>
+    public static async Task<T> WhenAnyAsync<T>(this IEnumerable<Task<T>> collection)
+    {
+        return (collection is null)
+            ? throw new ArgumentNullException(nameof(collection), "Collection cannot be null.")
+            : await (await Task.WhenAny(collection).ConfigureAwait(false)).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Gets the symmetric difference between two collections based on the key defined by <paramref name="keySelector"/>.
+    /// </summary>
+    /// <param name="collection">This collection.</param>
+    /// <param name="secondCollection">The second collection to compare with.</param>
+    /// <param name="keySelector">A method that defines the property to filter by.</param>
+    /// <typeparam name="T1">Data type contained in the collection.</typeparam>
+    /// <typeparam name="T2">Data type of the property to be selected.</typeparam>
+    /// <returns>A collection of <typeparamref name="T1"/> with the symmetric difference between this <paramref name="collection"/> and <paramref name="secondCollection"/>.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when either of the parameters is <see langword="null"/>.</exception>
+    public static IEnumerable<T1> ExceptBy<T1, T2>(this IEnumerable<T1> collection, IEnumerable<T1> secondCollection, Func<T1, T2> keySelector)
+    {
+        if (collection is null || secondCollection is null || keySelector is null)
+            throw new ArgumentNullException(collection is null ? nameof(collection) : secondCollection is null ? nameof(secondCollection) : nameof(keySelector), "Argument cannot be null.");
+
+        var seenKeys = new HashSet<T2>(collection.Intersect(secondCollection).Select(x => keySelector(x)));
+
+        foreach (var element in collection)
+        {
+            if (seenKeys.Add(keySelector(element)))
+                yield return element;
+        }
+
+        foreach (var element in secondCollection)
+        {
+            if (seenKeys.Add(keySelector(element)))
+                yield return element;
+        }
+    }
+
+    /// <summary>
+    /// Gets all elements present in this <paramref name="collection"/> and <paramref name="secondCollection"/>
+    /// that share the same property defined by <paramref name="keySelector"/>.
+    /// </summary>
+    /// <param name="collection">This collection.</param>
+    /// <param name="secondCollection">The collection to be intersected with.</param>
+    /// <param name="keySelector">A method that defines the property to filter by.</param>
+    /// <typeparam name="T1">Data type contained in the collection.</typeparam>
+    /// <typeparam name="T2">Data type of the property to be selected.</typeparam>
+    /// <returns>A collection of intersected <typeparamref name="T1"/> objects.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when either of the parameters is <see langword="null"/>.</exception>
+    public static IEnumerable<T1> IntersectBy<T1, T2>(this IEnumerable<T1> collection, IEnumerable<T1> secondCollection, Func<T1, T2> keySelector)
+    {
+        if (collection is null || secondCollection is null || keySelector is null)
+            throw new ArgumentNullException(collection is null ? nameof(collection) : secondCollection is null ? nameof(secondCollection) : nameof(keySelector), "Argument cannot be null.");
+
+        var seenKeys = new HashSet<T2>(collection.Select(x => keySelector(x)));
+        seenKeys.IntersectWith(secondCollection.Select(x => keySelector(x)));
+
+        foreach (var element in collection.Concat(secondCollection).DistinctBy(x => keySelector(x)))
+        {
+            if (!seenKeys.Add(keySelector(element)))
+                yield return element;
+        }
+    }
+
+    /// <summary>
+    /// Adds the <typeparamref name="T1"/> defined in <paramref name="sample"/> to the inner collections
+    /// of this <see cref="IEnumerable{T}"/> until all of them reach the same amount of elements.
+    /// </summary>
+    /// <param name="collection">This collection of collections of <typeparamref name="T1"/>.</param>
+    /// <param name="sample">The <typeparamref name="T1"/> object to be added to the inner collections.</param>
+    /// <typeparam name="T1">Data type contained in the inner collections.</typeparam>
+    /// <typeparam name="T2">The type of collections stored.</typeparam>
+    /// <returns>A <see cref="List"/> with <see cref="IEnumerable{T}"/> collections of the same size.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when either of the parameters is <see langword="null"/>.</exception>
+    public static List<List<T1>> Fill<T1, T2>(this IEnumerable<T2> collection, T1 sample) where T2 : IEnumerable<T1>
+    {
+        if (collection is null || sample is null)
+            throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(sample), "Argument cannot be null.");
+
+        var outerCollection = collection.Select(x => x.ToList()).ToList();
+
+        // Get the max count of the inner collections
+        var max = 0;
+        foreach (var innerCollection in outerCollection)
+            max = Math.Max(max, innerCollection.Count);
+
+        // Fill the collections until they have the same size
+        for (var index = 0; index < outerCollection.Count; index++)
+        {
+            while (outerCollection[index].Count != max)
+                outerCollection[index].Add(sample);
+        }
+
+        return outerCollection;
+    }
+
+    /// <summary>
+    /// Splits the elements of this <paramref name="collection"/> into several subcollections according to the value of the property defined by <paramref name="selector"/>.
+    /// </summary>
+    /// <typeparam name="T1">Type of the elements.</typeparam>
+    /// <typeparam name="T2">Type of the selected property.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="selector">A method that defines the property to filter the elements.</param>
+    /// <returns>An <see cref="IEnumerable{T1}"/> where all <typeparamref name="T1"/> have the same value for the property defined by <paramref name="selector"/>.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when the collection or the selector are <see langword="null"/>.</exception>
+    public static IEnumerable<IEnumerable<T1>> ChunkBy<T1, T2>(this IEnumerable<T1> collection, Func<T1, T2> selector) where T2 : notnull
+    {
+        return (collection is null || selector is null)
+            ? throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(selector), "Argument cannot be null.")
+            : collection
+                .Select(x => (selector(x), collection.Where(y => selector(y).Equals(selector(x)))))
+                .DistinctBy(x => x.Item1)
+                .Select(x => x.Item2);
+    }
+
+    /// <summary>
+    /// Gets a random <typeparamref name="T"/> from the current collection.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="random">A <see cref="Random"/> instance to generate the random index.</param>
+    /// <returns>A random <typeparamref name="T"/> element from this collection or <see langword="default"/>(<typeparamref name="T"/>) if the collection is empty.</returns>
+    public static T? RandomElementOrDefault<T>(this IEnumerable<T> collection, Random? random = default)
+    {
+        random ??= Random.Shared;
+        return collection.ElementAtOrDefault(random.Next(collection.Count()));
+    }
+
+    /// <summary>
+    /// Gets a random <typeparamref name="T"/> from the current collection.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="maxIndex">The maximum index to pick from.</param>
+    /// <param name="random">A <see cref="Random"/> instance to generate the random index.</param>
+    /// <returns>A random <typeparamref name="T"/> element from this collection or <see langword="default"/>(<typeparamref name="T"/>) if the collection is empty.</returns>
+    public static T? RandomElementOrDefault<T>(this IEnumerable<T> collection, int maxIndex, Random? random = default)
+    {
+        random ??= Random.Shared;
+        return collection.ElementAtOrDefault(random.Next(Math.Min(collection.Count(), Math.Abs(maxIndex))));
+    }
+
+    /// <summary>
+    /// Gets the symetric difference between all elements in the current and specified collections.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="collections">The collections to get the difference from.</param>
+    /// <returns>The symetric difference of all collections.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when the either of the collections are <see langword="null"/>.</exception>
+    public static IEnumerable<T> Unique<T>(this IEnumerable<T> collection, params IEnumerable<T>[] collections)
+    {
+        return (collection is null || collections is null)
+            ? throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(collections), "Argument cannot be null.")
+            : collection
+                .Concat(collections.SelectMany(x => x))
+                .Except(collections.SelectMany(x => x).Intersect(collection))
+                .Distinct();
+    }
+}
