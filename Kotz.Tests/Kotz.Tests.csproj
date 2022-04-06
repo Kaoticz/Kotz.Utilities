@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Collections\Kotz.Collections.csproj" />
+    <ProjectReference Include="..\Kotz.Collections\Kotz.Collections.csproj" />
     <ProjectReference Include="..\Kotz.Extensions\Kotz.Extensions.csproj" />
   </ItemGroup>
 
