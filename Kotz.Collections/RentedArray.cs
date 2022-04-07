@@ -46,7 +46,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IEnumerable<T>,
             ? amount
             : collection.Count();
 
-        _internalArray = Count is 0
+        _internalArray = (Count is 0)
             ? Array.Empty<T>()
             : ArrayPool<T>.Shared.Rent(Count);
 
