@@ -4,6 +4,12 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Kotz</Authors>
+    <Description>Provides collection types for common tasks.</Description>
+    <RepositoryUrl>https://github.com/Kaoticz/Kotz.Utilities</RepositoryUrl>
+    <PackageTags>utility;utilities</PackageTags>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
 </Project>
