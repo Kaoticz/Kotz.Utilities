@@ -14,7 +14,7 @@ namespace Kotz.Collections;
 /// Use this for short-lived arrays that exceed 1000 bytes in size or methods whose Gen0 allocation exceeds 1000 bytes. <br />
 /// Call <see cref="RentedArray{T}.Dispose"/> to return the array to the <see cref="ArrayPool{T}"/>.
 /// </remarks>
-public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IEnumerable<T>, IDisposable
+public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
 {
     private T[] _internalArray;
 

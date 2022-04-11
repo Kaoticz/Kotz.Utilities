@@ -14,7 +14,7 @@ public sealed class RingBufferTests
     [InlineData(3, 1, 2, 3, 4, 5)]
     internal void InitializationTest(int? capacity, params int?[] collection)
     {
-        var ringBuffer = CreateDynamicRingBuffer(capacity, collection);
+        var ringBuffer = CreateRingBuffer(capacity, collection);
 
         Assert.True(ringBuffer.CurrentIndex is 0);
         Assert.True(ringBuffer.Count == ringBuffer.Count(x => x != default));
@@ -50,7 +50,7 @@ public sealed class RingBufferTests
     [InlineData(null, false, 1, 2, 3, null, 5)]
     internal void TryGetValueTest(int? value, bool success, params int?[] collection)
     {
-        var ringBuffer = CreateDynamicRingBuffer(null, collection);
+        var ringBuffer = CreateRingBuffer(null, collection);
         var isSuccess = ringBuffer.TryGetValue(x => x == value, out var result);
 
         Assert.Equal(success, isSuccess);
@@ -68,7 +68,7 @@ public sealed class RingBufferTests
     [InlineData(3, 1, 2, 3, 4, 5)]
     internal void AddTest(int capacity, params int?[] collection)
     {
-        var ringBuffer = CreateDynamicRingBuffer<int?>(capacity);
+        var ringBuffer = CreateRingBuffer<int?>(capacity);
 
         foreach (var number in collection)
             ringBuffer.Add(number);
@@ -96,7 +96,7 @@ public sealed class RingBufferTests
     internal void RemoveTest(params int?[] collection)
     {
         var sample = Enumerable.Range(1, 10).ToArray();
-        var ringBuffer = CreateDynamicRingBuffer(null, sample);
+        var ringBuffer = CreateRingBuffer(null, sample);
 
         foreach (var number in collection)
             ringBuffer.Remove(number!.Value);
@@ -113,7 +113,7 @@ public sealed class RingBufferTests
     [InlineData(4, 1, 2, 3, 4, 5, 6, 7, 8)]
     internal void RemoveEvenTest(int result, params int?[] collection)
     {
-        var ringBuffer = CreateDynamicRingBuffer(null, collection);
+        var ringBuffer = CreateRingBuffer(null, collection);
 
         Assert.Equal(result, ringBuffer.Remove(x => x % 2 is 0));
         Assert.True(ringBuffer.All(x => x % 2 is not 0));
@@ -129,7 +129,7 @@ public sealed class RingBufferTests
     internal void ResizeTest(int newSize)
     {
         var sample = Enumerable.Range(1, 10).ToArray();
-        var ringBuffer = CreateDynamicRingBuffer(null, sample);
+        var ringBuffer = CreateRingBuffer(null, sample);
 
         if (newSize <= 0)
         {
@@ -156,7 +156,7 @@ public sealed class RingBufferTests
     internal void RemoveAtTest(int index)
     {
         var sample = Enumerable.Range(1, 10).ToArray();
-        var ringBuffer = CreateDynamicRingBuffer(null, sample);
+        var ringBuffer = CreateRingBuffer(null, sample);
 
         if (index < 0 || index > sample.Length)
             Assert.Throws<ArgumentOutOfRangeException>(() => ringBuffer.RemoveAt(index));
@@ -181,7 +181,7 @@ public sealed class RingBufferTests
     {
         var toInsert = 999;
         var sample = Enumerable.Range(1, 10).ToArray();
-        var ringBuffer = CreateDynamicRingBuffer(null, sample);
+        var ringBuffer = CreateRingBuffer(null, sample);
 
         if (index < 0 || index > ringBuffer.Capacity)
             Assert.Throws<ArgumentOutOfRangeException>(() => ringBuffer.Insert(index, toInsert));
@@ -205,7 +205,7 @@ public sealed class RingBufferTests
     internal void IndexOfTest(int index)
     {
         var sample = Enumerable.Range(0, 9).ToArray();
-        var ringBuffer = CreateDynamicRingBuffer(null, sample);
+        var ringBuffer = CreateRingBuffer(null, sample);
 
         if (index < 0 || index > ringBuffer.Capacity)
             Assert.Equal(-1, ringBuffer.IndexOf(index));
@@ -222,7 +222,7 @@ public sealed class RingBufferTests
     internal void ClearTest(int amount)
     {
         var sample = Enumerable.Range(0, amount).ToArray();
-        var ringBuffer = CreateDynamicRingBuffer(null, sample);
+        var ringBuffer = CreateRingBuffer(null, sample);
 
         ringBuffer.Clear();
 
@@ -238,7 +238,7 @@ public sealed class RingBufferTests
     [InlineData(9, 9, 9, 9, 8, 8, 8, 8, 8)]
     internal void ResizeMultiThreadTest(params int[] sizes)
     {
-        var sample = CreateDynamicRingBuffer<int>(default);
+        var sample = CreateRingBuffer<int>(default);
         var actions = sizes
             .Select(x => (Action)(() => sample.Resize(x))) // Need to cast explicitly, compiler regression
             .ToArray();
@@ -250,19 +250,19 @@ public sealed class RingBufferTests
     }
 
     /// <summary>
-    /// Generates a new dynamic ring buffer.
+    /// Generates a new ring buffer.
     /// </summary>
     /// <typeparam name="T">The element type.</typeparam>
     /// <param name="capacity">The final capacity of the ring buffer.</param>
     /// <param name="collection">The collection to add to the buffer, up to capacity.</param>
     /// <returns>A <see cref="DynamicRingBuffer{T}"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static RingBuffer<T> CreateDynamicRingBuffer<T>(int? capacity, IEnumerable<T>? collection = default)
+    private static RingBuffer<T> CreateRingBuffer<T>(int? capacity, IEnumerable<T>? collection = default)
     {
         return (capacity == default && collection == default)
             ? new RingBuffer<T>()
             : (capacity != default && collection != default)
-                ? new RingBuffer<T>(capacity!.Value, collection)
+                ? new RingBuffer<T>(collection, capacity!.Value)
                 : (capacity == default)
                     ? new RingBuffer<T>(collection ?? Enumerable.Empty<T>())
                     : new RingBuffer<T>(capacity!.Value);

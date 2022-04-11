@@ -61,7 +61,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     public int CurrentIndex { get; private set; }
 
     /// <summary>
-    /// Initializes a <see cref="RingBuffer{T}"/> with the default size.
+    /// Initializes a <see cref="RingBuffer{T}"/>.
     /// </summary>
     public RingBuffer()
     {
@@ -80,7 +80,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// Initializes a <see cref="RingBuffer{T}"/>.
     /// </summary>
     /// <param name="capacity">The size of the ring buffer.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="index"/> is greater than the buffer's capacity or less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="capacity"/> is greater than the buffer's capacity or less than 0.</exception>
     public RingBuffer(int capacity)
     {
         if (capacity <= 0)
@@ -93,11 +93,11 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Initializes a <see cref="RingBuffer{T}"/>.
     /// </summary>
-    /// <param name="capacity">The size of the ring buffer.</param>
     /// <param name="collection">The collection of elements to initialize the buffer with.</param>
+    /// <param name="capacity">The size of the ring buffer.</param>
     /// <remarks>Capacity takes precedence over the <paramref name="collection"/>'s size.</remarks>
-    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="index"/> is greater than the buffer's capacity or less than 0.</exception>
-    public RingBuffer(int capacity, IEnumerable<T> collection)
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="capacity"/> is greater than the buffer's capacity or less than 0.</exception>
+    public RingBuffer(IEnumerable<T> collection, int capacity)
     {
         if (capacity <= 0)
             throw new ArgumentOutOfRangeException(nameof(capacity), $"Capacity cannot be equal or lower than zero. Value: {capacity}");

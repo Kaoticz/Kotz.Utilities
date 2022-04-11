@@ -15,4 +15,26 @@ public static class CollectionsExt
     /// <exception cref="ArgumentNullException">Occurs when the <paramref name="collection"/> is <see langword="null"/>.</exception>
     public static RentedArray<T> ToRentedArray<T>(this IEnumerable<T> collection)
         => new(collection);
+
+    /// <summary>
+    /// Saves an <see cref="IEnumerable{T}"/> collection to a <see cref="RingBuffer{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">Data type contained in the collection.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <returns>A <see cref="RingBuffer{T}"/></returns>
+    /// <exception cref="ArgumentNullException">Occurs when the <paramref name="collection"/> is <see langword="null"/>.</exception>
+    public static RingBuffer<T> ToRingBuffer<T>(this IEnumerable<T> collection)
+        => new(collection);
+
+    /// <summary>
+    /// Saves an <see cref="IEnumerable{T}"/> collection to a <see cref="RingBuffer{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">Data type contained in the collection.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="capacity">The maximum size of the ring buffer.</param>
+    /// <returns>A <see cref="RingBuffer{T}"/></returns>
+    /// <exception cref="ArgumentNullException">Occurs when the <paramref name="collection"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="capacity"/> is equal or less than 0.</exception>
+    public static RingBuffer<T> ToRingBuffer<T>(this IEnumerable<T> collection, int capacity)
+        => new(collection, capacity);
 }
