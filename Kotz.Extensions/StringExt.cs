@@ -16,14 +16,6 @@ public static class StringExt
         => target is not null && (msg.Equals(target, comparisonType) || msg.StartsWith(target[..1], comparisonType));
 
     /// <summary>
-    /// Removes the file extension of this string, if there is one.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <returns></returns>
-    public static string RemoveExtension(this string text)
-        => text.Contains('.') ? text[..text.LastIndexOf('.')] : text;
-
-    /// <summary>
     /// Truncates the string to the maximum specified length.
     /// </summary>
     /// <param name="text">This string.</param>
@@ -48,35 +40,6 @@ public static class StringExt
         => (text is null || text.Length <= maxLength)
             ? text
             : (text.MaxLength(Math.Max(0, maxLength - append.Length)) + append)[..maxLength];
-
-    /// <summary>
-    /// Returns a new string that has a space character inserted at its begining and that
-    /// left-aligns the characters in this string by padding them with spaces on the right,
-    /// for a specified total length.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <param name="totalLength">The length of the resulting string.</param>
-    /// <returns>This string padded to the right.</returns>
-    public static string HardPad(this string text, int totalLength)
-        => string.IsNullOrWhiteSpace(text)
-            ? text?.PadRight(totalLength) ?? string.Empty
-            : text.Insert(0, " ").PadRight(totalLength);
-
-    /// <summary>
-    /// Returns a string whose first character is uppercase and all others are lowercase.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <returns>This string capitalized.</returns>
-    public static string Capitalize(this string text)
-        => string.IsNullOrWhiteSpace(text) ? string.Empty : char.ToUpperInvariant(text[0]) + text[1..].ToLowerInvariant();
-
-    /// <summary>
-    /// Converts a string to the format used by Discord's text channel names.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <returns>This <see cref="string"/> converted to a text-channel-name.</returns>
-    public static string ToTextChannelName(this string text)
-        => text.ToLowerInvariant().Replace(' ', '-');
 
     /// <summary>
     /// Converts a string to the snake_case format.
@@ -105,7 +68,7 @@ public static class StringExt
             .Replace("_ ", "_")
             .Replace("__", "_");
 
-        return buffer.ToString();
+        return buffer.ToStringAndClear();
     }
 
     /// <summary>
@@ -238,46 +201,6 @@ public static class StringExt
     }
 
     /// <summary>
-    /// Ensures this string is a valid <see cref="DiscordEmoji"/> name.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <returns>This string sanitized to an emoji name.</returns>
-    public static string SanitizeEmojiName(this string text)
-    {
-        if (text.Length < 2)
-            return "emoji";
-
-        var result = new StringBuilder();
-
-        foreach (var character in text)
-        {
-            if (character is '_' || !char.IsPunctuation(character))
-                result.Append(character);
-        }
-
-        // Emoji names have a max length of 50 characters
-        if (result.Length > 50)
-            result.Remove(0, 50);
-
-        return result.ToString();
-    }
-
-    /// <summary>
-    /// Removes punctuation and symbol characters from the beginning of this username.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <returns>A sanitized username.</returns>
-    public static string SanitizeUsername(this string text)
-    {
-        var index = 0;
-
-        while (index != text.Length && (char.IsPunctuation(text[index]) || char.IsSymbol(text[index])))
-            index++;
-
-        return text[index..];
-    }
-
-    /// <summary>
     /// Returns a string with all digits present in this string.
     /// </summary>
     /// <param name="text">This string.</param>
@@ -292,7 +215,7 @@ public static class StringExt
                 result.Append(character);
         }
 
-        return result.ToString();
+        return result.ToStringAndClear();
     }
 
     /// <summary>
