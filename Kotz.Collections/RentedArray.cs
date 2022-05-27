@@ -1,5 +1,6 @@
 #nullable disable warnings
 
+using Kotz.Collections.Extensions;
 using System.Buffers;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
@@ -202,10 +203,12 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// <param name="item">The resulting item.</param>
     /// <returns><see langword="true"/> if the item was successfully fetched, <see langword="false"/> otherwise.</returns>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public bool TryGetValue(Func<T, bool> predicate, [MaybeNullWhen(false)] out T item)
+    public bool TryGetValue(Func<T?, bool> predicate, [MaybeNullWhen(false)] out T item)
     {
-        item = _internalArray.FirstOrDefault(predicate);
-        return !Equals(item, default(T)) && IndexOf(item) is not -1;
+        var index = _internalArray.IndexOf(predicate);
+        item = (index is not -1) ? _internalArray[index] : default;
+
+        return index is not -1 && !Equals(item, default(T));
     }
 
     /// <summary>

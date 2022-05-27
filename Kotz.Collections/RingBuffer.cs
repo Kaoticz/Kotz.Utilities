@@ -1,5 +1,6 @@
 #nullable disable warnings
 
+using Kotz.Collections.Extensions;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -250,13 +251,15 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// Safely gets the first element that meets the criteria of the speficied <paramref name="predicate"/>.
     /// </summary>
     /// <param name="predicate">Delegate that defines the conditions of the element to get.</param>
-    /// <param name="result">The resulting element.</param>
+    /// <param name="item">The resulting element.</param>
     /// <returns><see langword="true"/> if the element was successfully fetched, <see langword="false"/> otherwise.</returns>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public bool TryGetValue(Func<T, bool> predicate, [MaybeNullWhen(false)] out T result)
+    public bool TryGetValue(Func<T?, bool> predicate, [MaybeNullWhen(false)] out T item)
     {
-        result = _internalList.FirstOrDefault(predicate);
-        return !Equals(result, default(T)) && _internalList.IndexOf(result) is not -1;
+        var index = _internalList.IndexOf(predicate);
+        item = (index is not -1) ? _internalList[index] : default;
+
+        return index is not -1 && !Equals(item, default(T));
     }
 
     /// <summary>

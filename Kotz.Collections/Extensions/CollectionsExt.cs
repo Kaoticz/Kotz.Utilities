@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Kotz.Collections.Extensions;
 
 public static class CollectionsExt
@@ -37,4 +39,26 @@ public static class CollectionsExt
     /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="capacity"/> is equal or less than 0.</exception>
     public static RingBuffer<T> ToRingBuffer<T>(this IEnumerable<T> collection, int capacity)
         => new(collection, capacity);
+
+    /// <summary>
+    /// Gets the index of the first element that matches the <paramref name="predicate"/>.
+    /// </summary>
+    /// <param name="collection">This collection.</param>
+    /// <param name="predicate">Delegate that defines the conditions of the item to get.</param>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <remarks>This method is a copy of the LinqExt.IndexOf method in Kotz.Extensions.</remarks>
+    /// <returns>The index of the item, -1 otherwise.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    internal static int IndexOf<T>(this IReadOnlyList<T> collection, Func<T, bool> predicate)
+    {
+        ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
+
+        for (var index = 0; index < collection.Count; index++)
+        {
+            if (predicate(collection[index]))
+                return index;
+        }
+
+        return -1;
+    }
 }
