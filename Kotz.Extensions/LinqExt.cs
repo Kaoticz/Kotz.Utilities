@@ -310,4 +310,25 @@ public static class LinqExt
                 .Except(collections.SelectMany(x => x).Intersect(collection))
                 .Distinct();
     }
+
+    /// <summary>
+    /// Gets the index of the first element that matches the <paramref name="predicate"/>.
+    /// </summary>
+    /// <param name="collection">This collection.</param>
+    /// <param name="predicate">Delegate that defines the conditions of the item to get.</param>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <returns>The index of the item, -1 otherwise.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static int IndexOf<T>(this IReadOnlyList<T> collection, Func<T, bool> predicate)
+    {
+        ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
+
+        for (var index = 0; index < collection.Count; index++)
+        {
+            if (predicate(collection[index]))
+                return index;
+        }
+
+        return -1;
+    }
 }

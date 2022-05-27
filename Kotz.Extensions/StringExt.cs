@@ -61,7 +61,7 @@ public static class StringExt
             buffer.Append(char.ToLowerInvariant(text[index]));
         }
 
-        if (buffer[0] == '_')
+        if (buffer[0] is '_')
             buffer.Remove(0, 1);
 
         buffer.Replace(" _", " ")

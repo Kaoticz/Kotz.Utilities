@@ -27,7 +27,7 @@ public static class StringBuilderExt
     /// <param name="length">The length of the substring.</param>
     /// <returns>A string whose value is the same as the specified substring of this instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string ToStringAndClear(this StringBuilder stringBuilder, in int startIndex, in int length)
+    public static string ToStringAndClear(this StringBuilder stringBuilder, int startIndex, int length)
     {
         var result = stringBuilder.ToString(startIndex, length);
         stringBuilder.Clear();

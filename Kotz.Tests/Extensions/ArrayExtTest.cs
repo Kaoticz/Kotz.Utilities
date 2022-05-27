@@ -37,6 +37,31 @@ public sealed class ArrayExtTest
         Assert.Equal(default, result);
     }
 
+    [Theory]
+    [MemberData(nameof(GetSampleArray), 1, 0)]
+    [MemberData(nameof(GetSampleArray), 10, 0)]
+    [MemberData(nameof(GetSampleArray), 10, 5)]
+    [MemberData(nameof(GetSampleArray), 10, 9)]
+    [MemberData(nameof(GetSampleArray), 50, 49)]
+    internal void TryGetValuePredicateTrueTest(int[] sample, int index)
+    {
+        Assert.True(sample.TryGetValue(x => x == index, out var result));
+        Assert.Equal(index, result);
+    }
+
+    [Theory]
+    [MemberData(nameof(GetSampleArray), 0, 0)]
+    [MemberData(nameof(GetSampleArray), 0, 1)]
+    [MemberData(nameof(GetSampleArray), 10, -1)]
+    [MemberData(nameof(GetSampleArray), 10, -10)]
+    [MemberData(nameof(GetSampleArray), 10, 10)]
+    [MemberData(nameof(GetSampleArray), 10, 11)]
+    internal void TryGetValuePredicateFalseTest(int[] sample, int index)
+    {
+        Assert.False(sample.TryGetValue(x => x == index, out var result));
+        Assert.Equal(default, result);
+    }
+
     /// <summary>
     /// Gets an int array and the desired index for a theory test.
     /// </summary>
