@@ -1,5 +1,8 @@
 namespace Kotz.Extensions;
 
+/// <summary>
+/// Provides extension methods for <see cref="object"/>.
+/// </summary>
 public static class ObjectExt
 {
     /// <summary>

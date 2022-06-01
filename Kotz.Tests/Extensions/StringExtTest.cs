@@ -49,6 +49,7 @@ public sealed class StringExtTest
     [InlineData("has_Underscore", "has_underscore")]
     [InlineData("has_ Underscore", "has_underscore")]
     [InlineData("has_ underscore", "has_underscore")]
+    //[InlineData("abCDe", "ab_cde")]
     internal void ToSnakeCaseTest(string caller, string result)
         => Assert.Equal(result, caller.ToSnakeCase());
 

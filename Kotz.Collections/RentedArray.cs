@@ -197,15 +197,15 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     }
 
     /// <summary>
-    /// Safely gets the first item that meets the criteria of the speficied <paramref name="predicate"/>.
+    /// Safely gets the first non-<see langword="null"/> item that meets the criteria of the speficied <paramref name="predicate"/>.
     /// </summary>
     /// <param name="predicate">Delegate that defines the conditions of the item to get.</param>
     /// <param name="item">The resulting item.</param>
     /// <returns><see langword="true"/> if the item was successfully fetched, <see langword="false"/> otherwise.</returns>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public bool TryGetValue(Func<T?, bool> predicate, [MaybeNullWhen(false)] out T item)
+    public bool TryGetValue(Func<T, bool> predicate, [MaybeNullWhen(false)] out T item)
     {
-        var index = _internalArray.IndexOf(predicate);
+        var index = _internalArray.IndexOfNonNull(predicate);
         item = (index is not -1) ? _internalArray[index] : default;
 
         return index is not -1 && !Equals(item, default(T));

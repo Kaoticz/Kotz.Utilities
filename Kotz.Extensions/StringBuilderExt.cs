@@ -3,6 +3,9 @@ using System.Text;
 
 namespace Kotz.Extensions;
 
+/// <summary>
+/// Provides extension methods for <see cref="StringBuilder"/>.
+/// </summary>
 public static class StringBuilderExt
 {
     /// <summary>

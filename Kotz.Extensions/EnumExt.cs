@@ -2,6 +2,9 @@ using System.Runtime.CompilerServices;
 
 namespace Kotz.Extensions;
 
+/// <summary>
+/// Provides extension methods for <see cref="Enum"/> types.
+/// </summary>
 public static class EnumExt
 {
     /// <summary>

@@ -1,5 +1,8 @@
 namespace Kotz.Extensions;
 
+/// <summary>
+/// Provides extension methods for <see cref="DateTimeOffset"/>.
+/// </summary>
 public static class DateTimeOffsetExt
 {
     /// <summary>

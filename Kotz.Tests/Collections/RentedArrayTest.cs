@@ -136,7 +136,7 @@ public sealed class RentedArrayTest
         using var rentedArray = new RentedArray<MockObject>(subCollection);
 
         foreach (var item in collection)
-            Assert.Equal(subCollection.Contains(item), rentedArray.TryGetValue(x => x?.Equals(item) is true, out _));
+            Assert.Equal(subCollection.Contains(item), rentedArray.TryGetValue(x => x.Equals(item), out _));
 
         Assert.True(rentedArray.TryGetValue(4, out _));
         Assert.False(rentedArray.TryGetValue(-1, out _));

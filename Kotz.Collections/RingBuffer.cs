@@ -248,15 +248,15 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Safely gets the first element that meets the criteria of the speficied <paramref name="predicate"/>.
+    /// Safely gets the first non-<see langword="null"/> element that meets the criteria of the speficied <paramref name="predicate"/>.
     /// </summary>
     /// <param name="predicate">Delegate that defines the conditions of the element to get.</param>
     /// <param name="item">The resulting element.</param>
     /// <returns><see langword="true"/> if the element was successfully fetched, <see langword="false"/> otherwise.</returns>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public bool TryGetValue(Func<T?, bool> predicate, [MaybeNullWhen(false)] out T item)
+    public bool TryGetValue(Func<T, bool> predicate, [MaybeNullWhen(false)] out T item)
     {
-        var index = _internalList.IndexOf(predicate);
+        var index = _internalList.IndexOfNonNull(predicate);
         item = (index is not -1) ? _internalList[index] : default;
 
         return index is not -1 && !Equals(item, default(T));
