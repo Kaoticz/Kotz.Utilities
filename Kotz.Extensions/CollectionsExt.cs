@@ -43,7 +43,7 @@ public static class CollectionsExt
 
         return index is not -1;
     }
-    
+
     /// <summary>
     /// Gets the index of the first element that matches the <paramref name="predicate"/>.
     /// </summary>
@@ -57,6 +57,20 @@ public static class CollectionsExt
         ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
 
         for (var index = 0; index < collection.Count; index++)
+        {
+            if (predicate(collection[index]))
+                return index;
+        }
+
+        return -1;
+    }
+
+    // Write unit tests
+    public static int LastIndexOf<T>(this IReadOnlyList<T> collection, Func<T, bool> predicate)
+    {
+        ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
+
+        for (var index = collection.Count - 1; index > 0; index--)
         {
             if (predicate(collection[index]))
                 return index;
