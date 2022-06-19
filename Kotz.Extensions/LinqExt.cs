@@ -62,7 +62,7 @@ public static class LinqExt
 
         foreach (var element in targetCollection)
         {
-            if (collection.Any(x => x?.Equals(element) is true))
+            if (collection.Any(x => Equals(x, element)))
                 matches++;
         }
 
@@ -101,7 +101,7 @@ public static class LinqExt
 
         foreach (var element in targetCollection)
         {
-            if (collection.Any(x => x?.Equals(element) is true))
+            if (collection.Any(x => Equals(x, element)))
                 return true;
         }
 
@@ -190,6 +190,8 @@ public static class LinqExt
             if (seenKeys.Add(keySelector(element)))
                 yield return element;
         }
+
+        seenKeys.Clear();
     }
 
     /// <summary>
@@ -216,6 +218,8 @@ public static class LinqExt
             if (!seenKeys.Add(keySelector(element)))
                 yield return element;
         }
+
+        seenKeys.Clear();
     }
 
     /// <summary>
@@ -276,8 +280,12 @@ public static class LinqExt
     /// <param name="random">A <see cref="Random"/> instance to generate the random index.</param>
     /// <typeparam name="T">The type of the elements.</typeparam>
     /// <returns>A random <typeparamref name="T"/> element from this collection.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="collection"/> is empty.</exception>
     public static T RandomElement<T>(this IEnumerable<T> collection, Random? random = default)
     {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
         random ??= Random.Shared;
         return collection.ElementAt(random.Next(collection.Count()));
     }
@@ -290,10 +298,47 @@ public static class LinqExt
     /// <param name="random">A <see cref="Random"/> instance to generate the random index.</param>
     /// <typeparam name="T">The type of the elements.</typeparam>
     /// <returns>A random <typeparamref name="T"/> element from this collection.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="collection"/> is empty.</exception>
     public static T RandomElement<T>(this IEnumerable<T> collection, int maxIndex, Random? random = default)
     {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
         random ??= Random.Shared;
         return collection.ElementAt(random.Next(Math.Min(collection.Count(), Math.Abs(maxIndex))));
+    }
+
+    /// <summary>
+    /// Gets a random <typeparamref name="T"/> from the current collection.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="random">A <see cref="Random"/> instance to generate the random index.</param>
+    /// <returns>A random <typeparamref name="T"/> element from this collection or <see langword="default"/>(<typeparamref name="T"/>) if the collection is empty.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
+    public static T? RandomElementOrDefault<T>(this IEnumerable<T> collection, Random? random = default)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        random ??= Random.Shared;
+        return collection.ElementAtOrDefault(random.Next(collection.Count()));
+    }
+
+    /// <summary>
+    /// Gets a random <typeparamref name="T"/> from the current collection.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="maxIndex">The maximum index to pick from.</param>
+    /// <param name="random">A <see cref="Random"/> instance to generate the random index.</param>
+    /// <returns>A random <typeparamref name="T"/> element from this collection or <see langword="default"/>(<typeparamref name="T"/>) if the collection is empty.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
+    public static T? RandomElementOrDefault<T>(this IEnumerable<T> collection, int maxIndex, Random? random = default)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        random ??= Random.Shared;
+        return collection.ElementAtOrDefault(random.Next(Math.Min(collection.Count(), Math.Abs(maxIndex))));
     }
 
     /// <summary>
