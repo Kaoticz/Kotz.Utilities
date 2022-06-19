@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Kotz.Collections;
 
 /// <summary>
-/// Represents an array that was rented from the <see cref="ArrayPool{T}"/>.
+/// Represents an array rented from the <see cref="ArrayPool{T}"/>.
 /// </summary>
 /// <typeparam name="T">The type of the items to be stored.</typeparam>
 /// <remarks>

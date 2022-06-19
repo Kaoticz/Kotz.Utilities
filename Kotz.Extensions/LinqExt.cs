@@ -15,7 +15,7 @@ public static class LinqExt
     /// <param name="predicate">The condition to be checked.</param>
     /// <param name="action">The action to be performed.</param>
     /// <returns>The modified collection if <paramref name="predicate"/> is <see langword="true"/>, otherwise the original collection.</returns>
-    public static IEnumerable<T> If<T>(this IEnumerable<T> collection, Predicate<IEnumerable<T>> predicate, Func<IEnumerable<T>, IEnumerable<T>> action)
+    public static IEnumerable<T> When<T>(this IEnumerable<T> collection, Predicate<IEnumerable<T>> predicate, Func<IEnumerable<T>, IEnumerable<T>> action)
         => (predicate(collection)) ? action(collection) : collection;
 
     /// <summary>
@@ -272,28 +272,28 @@ public static class LinqExt
     /// <summary>
     /// Gets a random <typeparamref name="T"/> from the current collection.
     /// </summary>
-    /// <typeparam name="T">The type of the elements.</typeparam>
     /// <param name="collection">This collection.</param>
     /// <param name="random">A <see cref="Random"/> instance to generate the random index.</param>
-    /// <returns>A random <typeparamref name="T"/> element from this collection or <see langword="default"/>(<typeparamref name="T"/>) if the collection is empty.</returns>
-    public static T? RandomElementOrDefault<T>(this IEnumerable<T> collection, Random? random = default)
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <returns>A random <typeparamref name="T"/> element from this collection.</returns>
+    public static T RandomElement<T>(this IEnumerable<T> collection, Random? random = default)
     {
         random ??= Random.Shared;
-        return collection.ElementAtOrDefault(random.Next(collection.Count()));
+        return collection.ElementAt(random.Next(collection.Count()));
     }
 
     /// <summary>
     /// Gets a random <typeparamref name="T"/> from the current collection.
     /// </summary>
-    /// <typeparam name="T">The type of the elements.</typeparam>
     /// <param name="collection">This collection.</param>
     /// <param name="maxIndex">The maximum index to pick from.</param>
     /// <param name="random">A <see cref="Random"/> instance to generate the random index.</param>
-    /// <returns>A random <typeparamref name="T"/> element from this collection or <see langword="default"/>(<typeparamref name="T"/>) if the collection is empty.</returns>
-    public static T? RandomElementOrDefault<T>(this IEnumerable<T> collection, int maxIndex, Random? random = default)
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <returns>A random <typeparamref name="T"/> element from this collection.</returns>
+    public static T RandomElement<T>(this IEnumerable<T> collection, int maxIndex, Random? random = default)
     {
         random ??= Random.Shared;
-        return collection.ElementAtOrDefault(random.Next(Math.Min(collection.Count(), Math.Abs(maxIndex))));
+        return collection.ElementAt(random.Next(Math.Min(collection.Count(), Math.Abs(maxIndex))));
     }
 
     /// <summary>

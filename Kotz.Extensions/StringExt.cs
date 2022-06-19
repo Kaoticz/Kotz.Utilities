@@ -252,7 +252,7 @@ public static class StringExt
     }
 
     /// <summary>
-    /// Returns the "Nth" last index of the specified character.
+    /// Returns the last "Nth" index of the specified character.
     /// </summary>
     /// <param name="text">This string.</param>
     /// <param name="character">The character to get the index from.</param>

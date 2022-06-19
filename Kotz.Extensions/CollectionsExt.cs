@@ -65,12 +65,19 @@ public static class CollectionsExt
         return -1;
     }
 
-    // Write unit tests
+    /// <summary>
+    /// Gets the index of the last element that matches the <paramref name="predicate"/>.
+    /// </summary>
+    /// <param name="collection">This collection.</param>
+    /// <param name="predicate">Delegate that defines the conditions of the item to get.</param>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <returns>The index of the item, -1 otherwise.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="predicate"/> is <see langword="null"/>.</exception>
     public static int LastIndexOf<T>(this IReadOnlyList<T> collection, Func<T, bool> predicate)
     {
         ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
 
-        for (var index = collection.Count - 1; index > 0; index--)
+        for (var index = collection.Count - 1; index >= 0; index--)
         {
             if (predicate(collection[index]))
                 return index;

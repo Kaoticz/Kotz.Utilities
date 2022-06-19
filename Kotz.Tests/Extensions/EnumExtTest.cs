@@ -122,7 +122,7 @@ public sealed class EnumExtTest
             expectedValue,
             enumGroup.ToValues()
                 .Where(x => x is not TestEnum.All)
-                .If(x => x.Count() != 1 || x.FirstOrDefault() is not TestEnum.None, x => x.Where(x => x is not TestEnum.None))
+                .When(x => x.Count() != 1 || x.FirstOrDefault() is not TestEnum.None, x => x.Where(x => x is not TestEnum.None))
                 .ToArray()
         );
     }

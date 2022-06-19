@@ -1,8 +1,12 @@
 # Kotz.Utilities
 
-General C# utilities commonly used on my projects.
+General C# utilities commonly used on my personal projects.
 
 Currently contains:
-- RentedArray\<T>
-- RingBuffer\<T>
-- A bunch of extension methods for multiple types
+- Kotz.Utilities (Metapackage that contains all others)
+- [Kotz.Collections]
+- [Kotz.Extensions]
+
+
+[Kotz.Collections]: https://github.com/Kaoticz/Kotz.Utilities/tree/main/Kotz.Collections/README.md
+[Kotz.Extensions]: https://github.com/Kaoticz/Kotz.Utilities/tree/main/Kotz.Extensions/README.md
