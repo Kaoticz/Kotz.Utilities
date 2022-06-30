@@ -49,6 +49,7 @@ public static class StringExt
     /// </summary>
     /// <param name="text">This string.</param>
     /// <returns>This <see cref="string"/> converted to snake_case.</returns>
+    [return: NotNullIfNotNull("text")]
     public static string ToSnakeCase(this string text)
     {
         if (string.IsNullOrWhiteSpace(text))
