@@ -257,7 +257,7 @@ public static class LinqExt
     /// <typeparam name="T2">The type of collections stored.</typeparam>
     /// <returns>A <see cref="List"/> with <see cref="IEnumerable{T}"/> collections of the same size.</returns>
     /// <exception cref="ArgumentNullException">Occurs when either of the parameters is <see langword="null"/>.</exception>
-    public static List<List<T1>> Fill<T1, T2>(this IEnumerable<T2> collection, T1 sample) where T2 : IEnumerable<T1>
+    public static List<List<T1>> NestedFill<T1, T2>(this IEnumerable<T2> collection, T1 sample) where T2 : IEnumerable<T1>
     {
         if (collection is null || sample is null)
             throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(sample), "Argument cannot be null.");

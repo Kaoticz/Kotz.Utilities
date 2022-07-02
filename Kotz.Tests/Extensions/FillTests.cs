@@ -10,7 +10,7 @@ public sealed partial class LinqExtTests
     {
         var sample = new string[] { "Some strings", "This should create 5 slots" }
             .Select(x => x.Split(' '))
-            .Fill(string.Empty);
+            .NestedFill(string.Empty);
 
         Assert.Equal(2, sample.Count);
 
@@ -20,16 +20,16 @@ public sealed partial class LinqExtTests
         // Empty collection
         sample = Array.Empty<string>()
             .Select(x => x.Split(' '))
-            .Fill(string.Empty);
+            .NestedFill(string.Empty);
 
         Assert.Empty(sample);
 
         // Null elements
-        Assert.Throws<ArgumentNullException>(() => new string[] { null!, "This should create 5 slots" }.Select(x => x?.Split(' ')!).Fill(string.Empty));
+        Assert.Throws<ArgumentNullException>(() => new string[] { null!, "This should create 5 slots" }.Select(x => x?.Split(' ')!).NestedFill(string.Empty));
 
         // Null input
         string[] nullStrings = null!;
-        Assert.Throws<ArgumentNullException>(() => nullStrings.Select(x => x?.Split(' ')!).Fill(string.Empty));
-        Assert.Throws<ArgumentNullException>(() => Array.Empty<string>().Select(x => x.Split(' ')).Fill<string, IEnumerable<string>>(null!));
+        Assert.Throws<ArgumentNullException>(() => nullStrings.Select(x => x?.Split(' ')!).NestedFill(string.Empty));
+        Assert.Throws<ArgumentNullException>(() => Array.Empty<string>().Select(x => x.Split(' ')).NestedFill<string, IEnumerable<string>>(null!));
     }
 }

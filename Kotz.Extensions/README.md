@@ -25,7 +25,7 @@ Defines the following extension methods:
     - WhenAnyAsync: Awaits all tasks in the current `IEnumerable<Task>` and returns when any of them have completed.
     - ExceptBy: Gets the symmetric difference between two collections based on a key selector.
     - IntersectBy: Gets the intersection between two collections based on a key selector.
-    - Fill: Adds a sample object to the inner collections of a collection of collections until they all have the same length.
+    - NestedFill: Adds a sample object to the inner collections of a collection of collections until they all have the same length.
     - ChunkBy: Splits a collection into a collection of collections based on the provided key selector.
     - RandomElement: Gets a random element from the current collection.
     - Unique: Gets the symetric difference between all elements in the current and specified collections.
