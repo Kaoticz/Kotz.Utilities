@@ -48,29 +48,45 @@ public static class StringExt
     /// Converts a string to the snake_case format.
     /// </summary>
     /// <param name="text">This string.</param>
+    /// <param name="joinSpaces"><see langword="true"/> to , <see langword="false"/></param>
     /// <returns>This <see cref="string"/> converted to snake_case.</returns>
     [return: NotNullIfNotNull("text")]
-    public static string ToSnakeCase(this string text)
+    public static string ToSnakeCase(this string text, bool joinSpaces = false)
     {
         if (string.IsNullOrWhiteSpace(text))
             return text;
 
+        var textSpan = text.AsSpan();
         var buffer = new StringBuilder();
 
-        for (var index = 0; index < text.Length; index++)
+        for (var index = 0; index < textSpan.Length; index++)
         {
-            if (index != text.Length - 1 && char.IsUpper(text[index]) && !char.IsUpper(text[index + 1]) && !char.IsWhiteSpace(text[index + 1]))
-                buffer.Append('_');
+            var chainLength = UpperChainLength(textSpan, index);
 
-            buffer.Append(char.ToLowerInvariant(text[index]));
+            if (chainLength <= 0)
+            {
+                buffer.Append(char.ToLowerInvariant(textSpan[index]));
+                continue;
+            }
+
+            buffer.Append('_');
+
+            foreach (var upperLetter in textSpan.Slice(index, chainLength))
+                buffer.Append(char.ToLowerInvariant(upperLetter));
+
+            index += chainLength - 1;
         }
 
         if (buffer[0] is '_')
             buffer.Remove(0, 1);
 
         buffer.Replace(" _", " ")
-            .Replace("_ ", "_")
-            .Replace("__", "_");
+            .Replace("_ ", "_");
+
+        if (joinSpaces)
+            buffer.Replace(' ', '_');
+
+        buffer.ReplaceAll("__", "_");
 
         return buffer.ToStringAndClear();
     }
@@ -233,7 +249,7 @@ public static class StringExt
     /// <example>This returns 3: <code>"hello".MatchedIndexOf('l', 1)</code></example>
     /// <example>This returns -1: <code>"hello".MatchedIndexOf('l', 2)</code></example>
     /// <seealso cref="LastOccurrenceOf(string, char, int)"/>
-    public static int FirstOccurrenceOf(this string text, char character, int occurrence)
+    public static int FirstOccurrenceOf(this string text, char character, int occurrence = 0)
     {
         if (occurrence < 0)
             occurrence = 0;
@@ -263,7 +279,7 @@ public static class StringExt
     /// <example>This returns 2: <code>"hello".LastMatchedIndexOf('l', 1)</code></example>
     /// <example>This returns -1: <code>"hello".LastMatchedIndexOf('l', 2)</code></example>
     /// <seealso cref="FirstOccurrenceOf(string, char, int)"/>
-    public static int LastOccurrenceOf(this string text, char character, int occurrence)
+    public static int LastOccurrenceOf(this string text, char character, int occurrence = 0)
     {
         if (occurrence < 0)
             occurrence = 0;
@@ -301,9 +317,37 @@ public static class StringExt
             sampleIndex = sample.Length - 1;
 
         var firstTextWord = text.AsSpan()[..textIndex];
-
         var firstSampleWord = sample.AsSpan()[..sampleIndex];
 
         return firstTextWord.Equals(firstSampleWord, comparisonType);
+    }
+
+    /// <summary>
+    /// Returns the length of an "ALL CAPS" substring in the specified span.
+    /// </summary>
+    /// <param name="text">The span to check.</param>
+    /// <param name="startIndex">The index where the substring starts.</param>
+    /// <returns>The length of the substring.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="startIndex"/> is greater than the length of the span.</exception>
+    private static int UpperChainLength(ReadOnlySpan<char> text, int startIndex)
+    {
+        if (startIndex > text.Length - 1)
+            throw new ArgumentOutOfRangeException(nameof(startIndex), "Start index cannot be greater than length of the span.");
+        else if (text.Length is 0)
+            return 0;
+        else if (startIndex < 0)
+            startIndex = 0;
+
+        var result = 0;
+
+        for (var count = startIndex; count < text.Length; count++)
+        {
+            if (!char.IsLetter(text[count]) || char.IsLower(text[count]))
+                break;
+
+            result++;
+        }
+
+        return result;
     }
 }

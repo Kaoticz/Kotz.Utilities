@@ -38,20 +38,25 @@ public sealed class StringExtTest
         => Assert.Equal(result, caller.MaxLength(length, append));
 
     [Theory]
-    [InlineData("hello", "hello")]
-    [InlineData("hello there", "hello there")]
-    [InlineData("heLlo tHere", "he_llo t_here")]
-    [InlineData("LongChannelName", "long_channel_name")]
-    [InlineData("Long Channel Name", "long channel name")]
-    [InlineData("Double  space!", "double  space!")]
-    [InlineData("ALL CAPS", "all caps")]
-    [InlineData("SOMECaps", "some_caps")]
-    [InlineData("has_Underscore", "has_underscore")]
-    [InlineData("has_ Underscore", "has_underscore")]
-    [InlineData("has_ underscore", "has_underscore")]
-    //[InlineData("abCDe", "ab_cde")]
-    internal void ToSnakeCaseTest(string caller, string result)
-        => Assert.Equal(result, caller.ToSnakeCase());
+    [InlineData("hello", "hello", "hello")]
+    [InlineData("Hello", "hello", "hello")]
+    [InlineData("hello there", "hello there", "hello_there")]
+    [InlineData("heLlo tHere", "he_llo t_here", "he_llo_t_here")]
+    [InlineData("heLLo tHeRE", "he_llo t_he_re", "he_llo_t_he_re")]
+    [InlineData("LongChannelName", "long_channel_name", "long_channel_name")]
+    [InlineData("Long Channel Name", "long channel name", "long_channel_name")]
+    [InlineData("Double  space!", "double  space!", "double_space!")]
+    [InlineData("Triple   space!", "triple   space!", "triple_space!")]
+    [InlineData("ALL CAPS", "all caps", "all_caps")]
+    [InlineData("SOMECaps", "somecaps", "somecaps")]
+    [InlineData("has_Underscore", "has_underscore", "has_underscore")]
+    [InlineData("has_ Underscore", "has_underscore", "has_underscore")]
+    [InlineData("has_ underscore", "has_underscore", "has_underscore")]
+    internal void ToSnakeCaseTest(string caller, string resultNoJoin, string resultWithJoin)
+    {
+        Assert.Equal(resultNoJoin, caller.ToSnakeCase(false));
+        Assert.Equal(resultWithJoin, caller.ToSnakeCase(true));
+    }
 
     [Theory]
     [InlineData("hello", 'l', 2)]
