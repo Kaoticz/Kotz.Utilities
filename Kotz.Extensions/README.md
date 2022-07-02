@@ -32,6 +32,7 @@ Defines the following extension methods:
 - **Object Extensions**
     - EqualsAny: Checks whether the current object equals any of the specified objects.
 - **StringBuilder Extensions**
+    - ReplaceAll: Replaces all instances of a substring with another substring, even if the new substring is a substring of the old substring.
     - ToStringAndClear: Returns the `string` value of the current builder and clears the builder.
 - **String Extensions**
     - EqualsOrStartsWith: Checks if the current string is <u>equal</u> or <u>starts with **the first character**</u> of another provided string.
