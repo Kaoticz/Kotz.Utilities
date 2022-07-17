@@ -22,8 +22,8 @@ public sealed class RotateTests
     internal void RotateTest(int[] sample, int startIndex, int amount)
     {
         var startSlice = sample[0..startIndex];
-        var middleSlice = sample[(startIndex + amount)..];
-        var endSlice = sample[startIndex..(startIndex + amount)];
+        var middleSlice = sample[(Math.Min(sample.Length - 1, startIndex + amount))..];
+        var endSlice = sample[startIndex..(Math.Min(sample.Length - 1, startIndex + amount))];
         var sampleSpan = sample.AsSpan();
 
         // Mutate the collection
@@ -39,11 +39,13 @@ public sealed class RotateTests
     [MemberData(nameof(GetSampleArray), 10, -1, 1)]
     [MemberData(nameof(GetSampleArray), 10, 1, -1)]
     [MemberData(nameof(GetSampleArray), 10, 1, 0)]
-    [MemberData(nameof(GetSampleArray), 10, 1, 0)]
     [MemberData(nameof(GetSampleArray), 10, 1, 10)]
     [MemberData(nameof(GetSampleArray), 10, 1, 11)]
     [MemberData(nameof(GetSampleArray), 10, 10, 1)]
     [MemberData(nameof(GetSampleArray), 10, 11, 1)]
+    [MemberData(nameof(GetSampleArray), 10, 5, 5)]
+    [MemberData(nameof(GetSampleArray), 10, 5, 6)]
+    [MemberData(nameof(GetSampleArray), 13, 6, 8)]
     internal void RotateFailTest(int[] sample, int startIndex, int amount)
         => Assert.ThrowsAny<ArgumentException>(() => sample.AsSpan().Rotate(startIndex, amount));
 

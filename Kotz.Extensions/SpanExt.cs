@@ -19,32 +19,20 @@ public static class SpanExt
     {
         if (amount <= 0 || amount >= span.Length)
             throw new ArgumentException($"Amount cannot be equal or lower than zero, or greater than {nameof(span)}'s length.", nameof(amount));
-        if (startIndex >= span.Length || startIndex < 0)
+        else if (startIndex >= span.Length || startIndex < 0)
             throw new ArgumentOutOfRangeException(nameof(startIndex), $"Index of {startIndex} is out of range. Span length: {span.Length}");
+        else if (startIndex + amount > span.Length - 1)
+            throw new ArgumentOutOfRangeException(nameof(amount), $"Amount cannot be equal or exceed the amount of elements that can be shifted. Subspan length: {span.Length - amount}");
 
-        // Determine the amount of elements that are being moved
-        // to the end of the span
-        amount %= span.Length;
+        // If the middle overlaps the end, use a buffer.
+        var buffer = (span[startIndex..(startIndex + amount)].Length <= span[(span.Length - startIndex - amount)..].Length)
+            ? span[startIndex..(startIndex + amount)].ToArray()
+            : Array.Empty<T>();
 
-        // Create a temporary buffer for the elements at the start
-        // of the span that must be preserved
-        var startBuffer = span[0..startIndex].ToArray();
+        for (int counter = 0, index = startIndex + amount; index < span.Length; counter++, index++)
+            (span[index], span[startIndex + counter]) = (span[startIndex + counter], span[index]);
 
-        // Create a temporary buffer for the elements at the middle
-        // of the span that must be moved to the end of the span
-
-        var endBuffer = span[startIndex..(startIndex + amount)].ToArray();
-
-        // Copy the span - amount, overwritting itself and effectively
-        // moving the entire span by amount. At this point, only the
-        // shifted elements in the middle are at their correct position
-        span[amount..].CopyTo(span);
-
-        // Copy the elements that are supposed to be at the end
-        endBuffer.CopyTo(span[^amount..]);
-
-        // Copy the elements that are supposed to be at the start
-        startBuffer.CopyTo(span);
+        buffer.CopyTo(span[^amount..]);
 
         return span;
     }
