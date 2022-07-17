@@ -14,14 +14,21 @@ public static class SpanExt
     /// <typeparam name="T">The type of data in the span.</typeparam>
     /// <returns>This span rotated.</returns>
     /// <exception cref="ArgumentException">Occurs when <paramref name="amount"/> equals or is lower than zero.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="startIndex"/> is outside the boundaries of the span.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Occurs when <paramref name="startIndex"/> is outside the boundaries of the span or when equals or exceeds
+    /// the amount of elements that can be shifted.
+    /// </exception>
     public static Span<T> Rotate<T>(this Span<T> span, int startIndex, int amount)
     {
-        if (amount <= 0 || amount >= span.Length)
-            throw new ArgumentException($"Amount cannot be equal or lower than zero, or greater than {nameof(span)}'s length.", nameof(amount));
+        if (amount <= 0)
+            throw new ArgumentException($"Amount cannot be equal or lower than zero.", nameof(amount));
         else if (startIndex >= span.Length || startIndex < 0)
             throw new ArgumentOutOfRangeException(nameof(startIndex), $"Index of {startIndex} is out of range. Span length: {span.Length}");
-        else if (startIndex + amount > span.Length - 1)
+
+        // Normalize the amount requested
+        amount %= span.Length;
+
+        if (startIndex + amount > span.Length - 1)
             throw new ArgumentOutOfRangeException(nameof(amount), $"Amount cannot be equal or exceed the amount of elements that can be shifted. Subspan length: {span.Length - amount}");
 
         // If the middle overlaps the end, use a buffer.
