@@ -78,9 +78,10 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when either collections are <see langword="null"/>.</exception>
     public static bool ContainsSubcollection<T>(this IEnumerable<T> collection, IEnumerable<T> targetCollection)
     {
-        if (collection is null || targetCollection is null)
-            throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(targetCollection), "Collection cannot be null.");
-        else if (!collection.Any() || !targetCollection.Any())
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(targetCollection, nameof(targetCollection));
+
+        if (!collection.Any() || !targetCollection.Any())
             return false;
 
         var matches = 0;
