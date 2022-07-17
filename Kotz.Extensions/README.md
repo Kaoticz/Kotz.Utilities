@@ -4,6 +4,10 @@ Defines the following extension methods:
 
 - **Array Extensions**
     - Several wrappers for `System.Array` static methods.
+- **List Extensions**
+    - AsSpan: Gets the current list as a `Span<T>` object.
+- **Span Extensions**
+    - Rotate: Rotates a span from a starting position by the specified amount of indices.
 - **IReadOnlyList\<T> Extensions**
     - TryGetValue: safely get an element from the collection, or `default(T)` if it fails.
     - IndexOf: Get the index of the first element that matches a predicate.

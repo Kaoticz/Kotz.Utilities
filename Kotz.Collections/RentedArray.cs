@@ -1,5 +1,3 @@
-#nullable disable warnings
-
 using Kotz.Collections.Extensions;
 using System.Buffers;
 using System.Collections;
@@ -115,7 +113,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
         if (index < 0 || index >= Count)
             throw new ArgumentOutOfRangeException(nameof(index), $"Index ({index}) exceeds size of array ({Count}).");
 
-        _internalArray[index] = default;
+        _internalArray[index] = default!;
     }
 
     /// <summary>
@@ -124,7 +122,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     public void Clear()
     {
         for (var index = 0; index < Count; index++)
-            _internalArray[index] = default;
+            _internalArray[index] = default!;
     }
 
     /// <summary>
@@ -154,7 +152,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
         {
             if (Equals(_internalArray[index], item))
             {
-                _internalArray[index] = default;
+                _internalArray[index] = default!;
                 return true;
             }
         }

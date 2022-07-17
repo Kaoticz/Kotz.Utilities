@@ -1,5 +1,3 @@
-#nullable disable warnings
-
 using Kotz.Collections.Extensions;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
@@ -167,7 +165,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// <param name="index">The zero-based index of the item to remove.</param>
     /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="index"/> is greater than the buffer's capacity or less than 0.</exception>
     public void RemoveAt(int index)
-        => _internalList[index] = default;
+        => _internalList[index] = default!;
 
     /// <summary>
     /// Adds an item to the <see cref="RingBuffer{T}"/>.
@@ -191,7 +189,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
         var index = _internalList.IndexOf(item);
 
         if (index is not -1)
-            _internalList[index] = default;
+            _internalList[index] = default!;
 
         return index is not -1;
     }
@@ -210,7 +208,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
         {
             if (predicate(listSpan[index]))
             {
-                listSpan[index] = default;
+                listSpan[index] = default!;
                 amount++;
             }
         }
@@ -272,7 +270,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
         lock (_internalList)
         {
             for (var index = list.Count; index < list.Capacity; index++)
-                list.Add(default);
+                list.Add(default!);
         }
     }
 
@@ -286,6 +284,6 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
         var listSpan = CollectionsMarshal.AsSpan(list);
 
         for (var index = 0; index < list.Capacity; index++)
-            listSpan[index] = default;
+            listSpan[index] = default!;
     }
 }

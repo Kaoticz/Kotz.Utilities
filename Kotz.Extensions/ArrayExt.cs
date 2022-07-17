@@ -14,7 +14,7 @@ public static class ArrayExt
     /// <param name="array">The one-dimensional, zero-based array to wrap in a read-only <see cref="ReadOnlyCollection{T}"/> wrapper.</param>
     /// <typeparam name="T">Data type contained in the <paramref name="array"/>.</typeparam>
     /// <returns>A read-only <see cref="ReadOnlyCollection{T}"/> wrapper for the current array.</returns>
-    public static ReadOnlyCollection<T> AsReadOnly<T>(T[] array)
+    public static ReadOnlyCollection<T> AsReadOnly<T>(this T[] array)
         => Array.AsReadOnly(array);
 
     /// <summary>

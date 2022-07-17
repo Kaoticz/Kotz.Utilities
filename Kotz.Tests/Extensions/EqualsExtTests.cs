@@ -1,4 +1,3 @@
-
 using Kotz.Extensions;
 using Kotz.Tests.Models;
 using Xunit;
