@@ -304,7 +304,7 @@ public static class StringExt
     /// <param name="text">This string.</param>
     /// <param name="sample">The string to compare to.</param>
     /// <param name="comparisonType">The type of string comparison to be used.</param>
-    /// <returns><see langword="true"/> if both strings contain the same first word, <see cref="false"/> otherwise.</returns>
+    /// <returns><see langword="true"/> if both strings contain the same first word, <see langword="false"/> otherwise.</returns>
     public static bool HasFirstWordOf(this string text, string sample, StringComparison comparisonType = StringComparison.Ordinal)
     {
         var textIndex = text.IndexOf(' ', StringComparison.InvariantCulture) - 1;

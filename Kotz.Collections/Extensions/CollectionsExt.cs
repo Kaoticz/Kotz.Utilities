@@ -1,3 +1,5 @@
+using System.Buffers;
+
 namespace Kotz.Collections.Extensions;
 
 /// <summary>

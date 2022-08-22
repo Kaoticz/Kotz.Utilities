@@ -41,7 +41,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// Gets or sets the maximum amount of items the internal data structure can hold before
     /// writing cycles back to the beginning.
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="index"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="value"/> is less than 0.</exception>
     /// <exception cref="OutOfMemoryException">Occurs when the system has no free memory available for allocation.</exception>
     public int Capacity
     {
@@ -52,7 +52,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Determines whether this collection is read-only.
     /// </summary>
-    public bool IsReadOnly { get; } = false;
+    public bool IsReadOnly { get; }
 
     /// <summary>
     /// Defines the current index of the buffer for writing.
@@ -112,6 +112,14 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
         => _internalList.GetEnumerator();
 
     /// <summary>
+    /// Creates a new <see cref="Span{T}"/> over this ring buffer.
+    /// </summary>
+    /// <remarks>Do not resize the <see cref="RingBuffer{T}"/> while the <see cref="Span{T}"/> is in use.</remarks>
+    /// <returns>The <see cref="Span{T}"/> representation of the ring buffer.</returns>
+    public Span<T> AsSpan()
+        => CollectionsMarshal.AsSpan(_internalList);
+
+    /// <summary>
     /// Removes all items from the <see cref="RingBuffer{T}"/> by setting them to
     /// default value of <typeparamref name="T"/>.
     /// </summary>
@@ -137,7 +145,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// </exception>
     /// <exception cref="ArgumentException">Occurs when <paramref name="arrayIndex"/> is greater than the length of the <paramref name="array"/>.</exception>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="array"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="index"/> is greater than the buffer's capacity or less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="arrayIndex"/> is greater than the buffer's capacity or less than 0.</exception>
     public void CopyTo(T[] array, int arrayIndex)
         => _internalList.CopyTo(array, arrayIndex);
 
@@ -220,7 +228,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// Resizes this buffer to the specified size.
     /// </summary>
     /// <param name="newSize">The new size of the ring buffer.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="index"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="newSize"/> is less than 0.</exception>
     /// <exception cref="OutOfMemoryException">Occurs when the system has no free memory available for allocation.</exception>
     public void Resize(int newSize)
     {

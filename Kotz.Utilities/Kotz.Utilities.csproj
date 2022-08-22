@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <Description>Provides utility types and extension methods for common tasks. This is a metapackage that includes all other utility packages.</Description>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

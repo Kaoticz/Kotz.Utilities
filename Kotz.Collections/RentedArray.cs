@@ -17,7 +17,8 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
 {
     private T[] _internalArray;
 
-    public bool IsReadOnly { get; } = false;
+    /// <inheritdoc />
+    public bool IsReadOnly { get; }
 
     /// <summary>
     /// The size of this <see cref="RentedArray{T}"/>.
@@ -58,6 +59,13 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
 
     IEnumerator IEnumerable.GetEnumerator()
         => _internalArray.Take(Count).GetEnumerator();
+
+    /// <summary>
+    /// Creates a new <see cref="Span{T}"/> over this array.
+    /// </summary>
+    /// <returns>The <see cref="Span{T}"/> representation of the array.</returns>
+    public Span<T> AsSpan()
+        => _internalArray.AsSpan()[..Count];
 
     /// <summary>
     /// This method is not supported. Use <see cref="RentedArray{T}.Insert(int, T)"/> instead.
