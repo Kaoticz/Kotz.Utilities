@@ -89,7 +89,7 @@ public static class ArrayExt
     /// Occurs when index and length do not specify a valid range in <paramref name="array"/>. -or- comparer is <see langword="null"/>.
     /// </exception>
     /// <exception cref="InvalidOperationException">
-    /// Occurs when <see cref="comparer"/> is <see langword="null"/> and <typeparamref name="T"/> does not implement the
+    /// Occurs when <paramref name="comparer"/> is <see langword="null"/> and <typeparamref name="T"/> does not implement the
     /// <see cref="IComparable{T}"/> generic interface.
     /// </exception>
     public static int BinarySearch<T>(this T[] array, int index, int length, T value, IComparer<T> comparer)
@@ -152,7 +152,7 @@ public static class ArrayExt
     /// <param name="destinationArray">The <see cref="Array"/> that receives the data.</param>
     /// <param name="destinationIndex">A 32-bit integer that represents the index in the <paramref name="destinationArray"/> at which storing begins.</param>
     /// <param name="length">A 32-bit integer that represents the number of elements to copy.</param>
-    /// <typeparam name="T">Data type contained in the <paramref name="array"/>.</typeparam>
+    /// <typeparam name="T">Data type contained in the <paramref name="sourceArray"/>.</typeparam>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="sourceArray"/> is null. -or- <paramref name="destinationArray"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Occurs when <paramref name="sourceIndex"/> is less than the lower bound of the first dimension of <paramref name="sourceArray"/>.
@@ -593,8 +593,8 @@ public static class ArrayExt
     /// The one-dimensional, zero-based <see cref="Array"/> that contains the items that correspond to the keys in
     /// <paramref name="keys"/>, or <see langword="null"/> to sort only keys.
     /// </param>
-    /// <typeparam name="T">Data type contained in the <paramref name="array"/> array.</typeparam>
-    /// <typeparam name="U">Data type contained in the <paramref name="array"/> array.</typeparam>
+    /// <typeparam name="T">Data type contained in the <paramref name="keys"/> array.</typeparam>
+    /// <typeparam name="U">Data type contained in the <paramref name="items"/> array.</typeparam>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="keys"/> is null.</exception>
     /// <exception cref="ArgumentException">
     /// Occurs when <paramref name="items"/> is not null, and the lower bound of keys does not match the lower bound of items.
@@ -634,8 +634,8 @@ public static class ArrayExt
     /// </param>
     /// <param name="index">The starting index of the range to sort.</param>
     /// <param name="length">The number of elements in the range to sort.</param>
-    /// <typeparam name="T">Data type contained in the <paramref name="array"/> array.</typeparam>
-    /// <typeparam name="U">Data type contained in the <paramref name="array"/> array.</typeparam>
+    /// <typeparam name="T">Data type contained in the <paramref name="keys"/> array.</typeparam>
+    /// <typeparam name="U">Data type contained in the <paramref name="items"/> array.</typeparam>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="keys"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Occurs when <paramref name="index"/> is less than the lower bound of keys. -or- <paramref name="length"/> is less than zero.
@@ -666,8 +666,8 @@ public static class ArrayExt
     /// The <see cref="IComparer{T}"/> generic interface implementation to use when comparing elements, or <see langword="null"/> to
     /// use the <see cref="IComparable{T}"/> generic interface implementation of each element.
     /// </param>
-    /// <typeparam name="T">Data type contained in the <paramref name="array"/> array.</typeparam>
-    /// <typeparam name="U">Data type contained in the <paramref name="array"/> array.</typeparam>
+    /// <typeparam name="T">Data type contained in the <paramref name="keys"/> array.</typeparam>
+    /// <typeparam name="U">Data type contained in the <paramref name="items"/> array.</typeparam>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="keys"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Occurs when <paramref name="index"/> is less than the lower bound of keys. -or- <paramref name="length"/> is less than zero.
@@ -707,8 +707,8 @@ public static class ArrayExt
     /// The <see cref="IComparer{T}"/> generic interface implementation to use when comparing elements, or <see langword="null"/>
     /// to use the <see cref="IComparable{T}"/> generic interface implementation of each element.
     /// </param>
-    /// <typeparam name="T">Data type contained in the <paramref name="array"/> array.</typeparam>
-    /// <typeparam name="U">Data type contained in the <paramref name="array"/> array.</typeparam>
+    /// <typeparam name="T">Data type contained in the <paramref name="keys"/> array.</typeparam>
+    /// <typeparam name="U">Data type contained in the <paramref name="items"/> array.</typeparam>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="keys"/> is null.</exception>
     /// <exception cref="ArgumentException">
     /// Occurs when <paramref name="items"/> is not null, and the lower bound of <paramref name="keys"/> does not match the lower

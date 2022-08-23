@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\BaseCsproj.props" />
+
   <PropertyGroup>
-    <IsPackable>false</IsPackable>
+    <IsPackable>False</IsPackable>
     <Description>Unit tests</Description>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -11,9 +14,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <Import Project="..\BaseCsproj.props" />
+  </PropertyGroup>  
 
   <ItemGroup>
     <None Include="..\README.md">

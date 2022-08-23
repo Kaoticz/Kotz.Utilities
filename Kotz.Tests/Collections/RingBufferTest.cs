@@ -249,13 +249,28 @@ public sealed class RingBufferTests
         Assert.True(sample.Capacity > 0);
     }
 
+    [Theory]
+    [InlineData(10)]
+    [InlineData(1)]
+    [InlineData(0)]
+    internal void AsSpanTest(int amount)
+    {
+        using var ringBuffer = new RentedArray<int>(Enumerable.Range(0, amount));
+        var span = ringBuffer.AsSpan();
+
+        for (var index = 0; index < ringBuffer.Count; index++)
+            Assert.Equal(ringBuffer[index], span[index]);
+
+        Assert.Equal(ringBuffer.Count, span.Length);
+    }
+
     /// <summary>
     /// Generates a new ring buffer.
     /// </summary>
     /// <typeparam name="T">The element type.</typeparam>
     /// <param name="capacity">The final capacity of the ring buffer.</param>
     /// <param name="collection">The collection to add to the buffer, up to capacity.</param>
-    /// <returns>A <see cref="DynamicRingBuffer{T}"/>.</returns>
+    /// <returns>A <see cref="RingBuffer{T}"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static RingBuffer<T> CreateRingBuffer<T>(int? capacity, IEnumerable<T>? collection = default)
     {

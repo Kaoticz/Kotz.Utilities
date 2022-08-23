@@ -105,9 +105,11 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
         Resize(capacity);
     }
 
+    /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator()
         => _internalList.GetEnumerator();
 
+    /// <inheritdoc />
     public IEnumerator<T> GetEnumerator()
         => _internalList.GetEnumerator();
 

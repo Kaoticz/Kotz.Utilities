@@ -143,4 +143,17 @@ public sealed class RentedArrayTest
         Assert.False(rentedArray.TryGetValue(rentedArray.Count + 1, out _));
         Assert.False(rentedArray.TryGetValue(x => x == default, out _));
     }
+
+    [Theory]
+    [MemberData(nameof(MockCollectionTestData.Collection), MemberType = typeof(MockCollectionTestData))]
+    internal void AsSpanTest(MockObject[] collection)
+    {
+        using var rentedArray = new RentedArray<MockObject>(collection);
+        var span = rentedArray.AsSpan();
+
+        for (var index = 0; index < collection.Length; index++)
+            Assert.Equal(collection[index], span[index]);
+
+        Assert.Equal(collection.Length, span.Length);
+    }
 }

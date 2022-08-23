@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\BaseCsproj.props" />
+
   <PropertyGroup>
     <Description>Provides extension methods for common tasks.</Description>
   </PropertyGroup>
@@ -11,8 +13,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
-
-  <Import Project="..\BaseCsproj.props" />
 
   <ItemGroup>
     <None Include="README.md">

@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\BaseCsproj.props" />
+
   <PropertyGroup>
     <Description>Provides utility types and extension methods for common tasks. This is a metapackage that includes all other utility packages.</Description>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -12,8 +13,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
-
-  <Import Project="..\BaseCsproj.props" />
 
   <ItemGroup>
     <None Include="..\README.md">

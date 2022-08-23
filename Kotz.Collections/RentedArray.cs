@@ -17,7 +17,9 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
 {
     private T[] _internalArray;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Determines whether this collection is read-only.
+    /// </summary>
     public bool IsReadOnly { get; }
 
     /// <summary>
@@ -25,6 +27,12 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// </summary>
     public int Count { get; private set; }
 
+    /// <summary>
+    /// Gets or sets the element at the specified index.
+    /// </summary>
+    /// <param name="index">The index to get from or set to.</param>
+    /// <returns>The element at the specified index.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="index"/> is greater than the array's capacity or less than 0.</exception>
     public T this[int index]
     {
         get => _internalArray[index];
@@ -54,9 +62,11 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
             _internalArray[counter++] = element;
     }
 
+    /// <inheritdoc />
     public IEnumerator<T> GetEnumerator()
         => _internalArray.Cast<T>().Take(Count).GetEnumerator();
 
+    /// <inheritdoc />
     IEnumerator IEnumerable.GetEnumerator()
         => _internalArray.Take(Count).GetEnumerator();
 
@@ -70,7 +80,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// <summary>
     /// This method is not supported. Use <see cref="RentedArray{T}.Insert(int, T)"/> instead.
     /// </summary>
-    /// <inheritdoc />
+    /// <exception cref="NotSupportedException" />
     public void Add(T item)
         => throw new NotSupportedException($"{nameof(RentedArray<T>)} does not support this method. Use \"{nameof(RentedArray<T>.Insert)}\" instead.");
 
