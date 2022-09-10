@@ -156,4 +156,25 @@ public sealed class RentedArrayTest
 
         Assert.Equal(collection.Length, span.Length);
     }
+
+    [Theory]
+    [MemberData(nameof(MockCollectionTestData.Collection), MemberType = typeof(MockCollectionTestData))]
+    [MemberData(nameof(MockCollectionTestData.CollectionWithNull), MemberType = typeof(MockCollectionTestData))]
+    internal void SliceTest(MockObject[] collection)
+    {
+        var startIndex = 1;
+        var endIndex = collection.Length - 2;
+        using var rentedArray = new RentedArray<MockObject>(collection);
+        var rentedSlice = rentedArray[startIndex..endIndex];
+
+        for (int counter = 0, index = startIndex; index < endIndex; counter++, index++)
+            Assert.Equal(rentedArray[index], rentedSlice[counter]);
+
+        Assert.Equal(endIndex - startIndex, rentedSlice.Count);
+
+        rentedSlice.Dispose();
+
+        for (var index = 0; index < collection.Length; index++)
+            Assert.Equal(collection[index], rentedArray[index]);
+    }
 }

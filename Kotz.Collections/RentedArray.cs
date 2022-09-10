@@ -40,6 +40,14 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     }
 
     /// <summary>
+    /// Gets a slice of this <see cref="RentedArray{T}"/>.
+    /// </summary>
+    /// <returns>The specified slice of this <see cref="RentedArray{T}"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when the <paramref name="range"/> goes out of bounds of the <see cref="RentedArray{T}"/>.</exception>
+    public RentedArray<T> this[Range range]
+        => new(_internalArray[range]);
+
+    /// <summary>
     /// Creates an array from the <see cref="ArrayPool{T}"/> buffer.
     /// </summary>
     /// <param name="collection">Collection of <typeparamref name="T"/> to be saved to the array.</param>
@@ -49,7 +57,6 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
         if (collection is null)
             throw new ArgumentNullException(nameof(collection), "Collection must not be null.");
 
-        var counter = 0;
         Count = (collection.TryGetNonEnumeratedCount(out var amount))
             ? amount
             : collection.Count();
@@ -57,6 +64,8 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
         _internalArray = (Count is 0)
             ? Array.Empty<T>()
             : ArrayPool<T>.Shared.Rent(Count);
+
+        var counter = 0;
 
         foreach (var element in collection)
             _internalArray[counter++] = element;
