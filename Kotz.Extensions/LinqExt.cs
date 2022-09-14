@@ -122,8 +122,8 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when either collections are <see langword="null"/>.</exception>
     public static bool ContainsOne<T>(this IEnumerable<T> collection, IEnumerable<T> targetCollection)
     {
-        if (collection is null || targetCollection is null)
-            throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(targetCollection), "Collection cannot be null.");
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(targetCollection, nameof(targetCollection));
 
         foreach (var element in targetCollection)
         {
@@ -141,9 +141,7 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when the collection is <see langword="null"/>.</exception>
     public static async Task WhenAllAsync(this IEnumerable<Task> collection)
     {
-        if (collection is null)
-            throw new ArgumentNullException(nameof(collection), "Collection cannot be null.");
-
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
         await Task.WhenAll(collection).ConfigureAwait(false);
     }
 
@@ -156,9 +154,8 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when the collection is <see langword="null"/>.</exception>
     public static async Task<T[]> WhenAllAsync<T>(this IEnumerable<Task<T>> collection)
     {
-        return (collection is null)
-            ? throw new ArgumentNullException(nameof(collection), "Collection cannot be null.")
-            : await Task.WhenAll(collection).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        return await Task.WhenAll(collection).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -168,9 +165,7 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when the collection is <see langword="null"/>.</exception>
     public static async Task WhenAnyAsync(this IEnumerable<Task> collection)
     {
-        if (collection is null)
-            throw new ArgumentNullException(nameof(collection), "Collection cannot be null.");
-
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
         await (await Task.WhenAny(collection).ConfigureAwait(false)).ConfigureAwait(false);
     }
 
@@ -183,9 +178,8 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when the collection is <see langword="null"/>.</exception>
     public static async Task<T> WhenAnyAsync<T>(this IEnumerable<Task<T>> collection)
     {
-        return (collection is null)
-            ? throw new ArgumentNullException(nameof(collection), "Collection cannot be null.")
-            : await (await Task.WhenAny(collection).ConfigureAwait(false)).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        return await (await Task.WhenAny(collection).ConfigureAwait(false)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -200,8 +194,9 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when either of the parameters is <see langword="null"/>.</exception>
     public static IEnumerable<T1> ExceptBy<T1, T2>(this IEnumerable<T1> collection, IEnumerable<T1> secondCollection, Func<T1, T2> keySelector)
     {
-        if (collection is null || secondCollection is null || keySelector is null)
-            throw new ArgumentNullException(collection is null ? nameof(collection) : secondCollection is null ? nameof(secondCollection) : nameof(keySelector), "Argument cannot be null.");
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(secondCollection, nameof(secondCollection));
+        ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));
 
         var seenKeys = new HashSet<T2>(collection.Intersect(secondCollection).Select(x => keySelector(x)));
 
@@ -233,8 +228,9 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when either of the parameters is <see langword="null"/>.</exception>
     public static IEnumerable<T1> IntersectBy<T1, T2>(this IEnumerable<T1> collection, IEnumerable<T1> secondCollection, Func<T1, T2> keySelector)
     {
-        if (collection is null || secondCollection is null || keySelector is null)
-            throw new ArgumentNullException(collection is null ? nameof(collection) : secondCollection is null ? nameof(secondCollection) : nameof(keySelector), "Argument cannot be null.");
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(secondCollection, nameof(secondCollection));
+        ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));
 
         var seenKeys = new HashSet<T2>(collection.Select(x => keySelector(x)));
         seenKeys.IntersectWith(secondCollection.Select(x => keySelector(x)));
@@ -260,8 +256,8 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when either of the parameters is <see langword="null"/>.</exception>
     public static List<List<T1>> NestedFill<T1, T2>(this IEnumerable<T2> collection, T1 sample) where T2 : IEnumerable<T1>
     {
-        if (collection is null || sample is null)
-            throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(sample), "Argument cannot be null.");
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(sample, nameof(sample));
 
         var outerCollection = collection.Select(x => x.ToList()).ToList();
 
@@ -291,12 +287,13 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when the collection or the selector are <see langword="null"/>.</exception>
     public static IEnumerable<IEnumerable<T1>> ChunkBy<T1, T2>(this IEnumerable<T1> collection, Func<T1, T2> selector) where T2 : notnull
     {
-        return (collection is null || selector is null)
-            ? throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(selector), "Argument cannot be null.")
-            : collection
-                .Select(x => (selector(x), collection.Where(y => selector(y).Equals(selector(x)))))
-                .DistinctBy(x => x.Item1)
-                .Select(x => x.Item2);
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+
+        return collection
+            .Select(x => (Value: selector(x), Collection: collection.Where(y => selector(y).Equals(selector(x)))))
+            .DistinctBy(x => x.Value)
+            .Select(x => x.Collection);
     }
 
     /// <summary>
@@ -377,11 +374,82 @@ public static class LinqExt
     /// <exception cref="ArgumentNullException">Occurs when the either of the collections are <see langword="null"/>.</exception>
     public static IEnumerable<T> Unique<T>(this IEnumerable<T> collection, params IEnumerable<T>[] collections)
     {
-        return (collection is null || collections is null)
-            ? throw new ArgumentNullException(collection is null ? nameof(collection) : nameof(collections), "Argument cannot be null.")
-            : collection
-                .Concat(collections.SelectMany(x => x))
-                .Except(collections.SelectMany(x => x).Intersect(collection))
-                .Distinct();
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(collections, nameof(collections));
+
+        return collection
+            .Concat(collections.SelectMany(x => x))
+            .Except(collections.SelectMany(x => x).Intersect(collection))
+            .Distinct();
+    }
+
+    /// <summary>
+    /// Checks if the current collection contains at least the specified amount of elements
+    /// and exits early if it does.
+    /// </summary>
+    /// <param name="collection">This collection.</param>
+    /// <param name="minAmount">The minimum amount of elements the <paramref name="collection"/> should contain.</param>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="collection"/> has at least the specified
+    /// amount of elements, <see langword="false"/> otherwise.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="minAmount"/> is lower or equal to zero.</exception>
+    public static bool AtLeast<T>(this IEnumerable<T> collection, int minAmount)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        if (minAmount <= 0)
+            throw new ArgumentOutOfRangeException(nameof(minAmount), minAmount, "Amount must be higher than 0.");
+
+        if (collection is ICollection<T> mutableCollection)
+            return mutableCollection.Count >= minAmount;
+        else if (collection is IReadOnlyCollection<T> immutableCollection)
+            return immutableCollection.Count >= minAmount;
+
+        var counter = 0;
+        using var enumerator = collection.GetEnumerator();
+
+        while (enumerator.MoveNext())
+        {
+            if (++counter >= minAmount)
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Checks if the current collection contains at least the specified amount of elements
+    /// that satisfy the specified <paramref name="predicate"/> and exits early if it does.
+    /// </summary>
+    /// <param name="collection">This collection.</param>
+    /// <param name="minAmount">The minimum amount of elements the <paramref name="collection"/> should contain.</param>
+    /// <param name="predicate">The predicate each element should satisfy.</param>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="collection"/> has at least the specified
+    /// amount of elements that satisfy the <paramref name="predicate"/>, <see langword="false"/> otherwise.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> or <paramref name="predicate"/> are <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="minAmount"/> is lower or equal to zero.</exception>
+    public static bool AtLeast<T>(this IEnumerable<T> collection, int minAmount, Func<T, bool> predicate)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
+
+        if (minAmount <= 0)
+            throw new ArgumentOutOfRangeException(nameof(minAmount), minAmount, "Amount must be higher than 0.");
+
+        var counter = 0;
+
+        foreach (var element in collection)
+        {
+            if (predicate(element) && ++counter >= minAmount)
+                return true;
+        }
+
+        return false;
     }
 }

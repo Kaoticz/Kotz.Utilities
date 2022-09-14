@@ -71,11 +71,17 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
             _internalArray[counter++] = element;
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns an enumerator that iterates through the <see cref="RentedArray{T}"/>.
+    /// </summary>
+    /// <returns>An enumerator for the <see cref="RentedArray{T}"/>.</returns>
     public IEnumerator<T> GetEnumerator()
         => _internalArray.Cast<T>().Take(Count).GetEnumerator();
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns an enumerator that iterates through the <see cref="RentedArray{T}"/>.
+    /// </summary>
+    /// <returns>An enumerator for the <see cref="RentedArray{T}"/>.</returns>
     IEnumerator IEnumerable.GetEnumerator()
         => _internalArray.Take(Count).GetEnumerator();
 

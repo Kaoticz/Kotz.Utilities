@@ -4,51 +4,52 @@ Defines the following extension methods:
 
 - **Array Extensions**
     - Several wrappers for `System.Array` static methods.
-- **List Extensions**
-    - AsSpan: Gets the current list as a `Span<T>` object.
-- **Span Extensions**
-    - Rotate: Rotates a span from a starting position by the specified amount of indices.
-- **IReadOnlyList\<T> Extensions**
-    - TryGetValue: safely get an element from the collection, or `default(T)` if it fails.
-    - IndexOf: Get the index of the first element that matches a predicate.
-    - LastIndexOf: Get the index of the last element that matches a predicate.
 - **DateTimeOffset Extensions**
     - StartOfDay: Gets the beginning of the day for the current DateTimeOffset object.
 - **Enum Extensions**
-    - ToggleFlag: Returns an enum with the provided bit flag set if it's not currently set, and vice-versa.
     - HasOneFlag: Checks if the current enum has at least one of the provided bit flags.
-    - ToStrings: Creates a collection of human-readable strings of the current enum.
     - ToFlags: Flattens a collection of enums to a single enum value that contains all bit flags from the enums in the collection. It's the opposite of `ToValues()`.
+    - ToStrings: Creates a collection of human-readable strings of the current enum.
     - ToValues: Segregates bit flags into a collection of enum values of their own. It's the opposite of `ToFlags()`.
+    - ToggleFlag: Returns an enum with the provided bit flag set if it's not currently set, and vice-versa.
 - **IEnumerable\<T> Extensions**
-    - When: Fluent version of an `if` statement.
-    - ToConcurrentDictionary: Converts the current collection to a `ConcurrentDictionary<T, U>`.
-    - ContainsSubcollection: Checks if the current collection contains all elements of a given collection.
+    - AtLeast: Checks if the current collection contains at least the specified amount of elements and exits early if it does.
     - ContainsOne: Checks if the current collection contains at least one element of a given collection.
-    - WhenAllAsync: Awaits all tasks in the current `IEnumerable<Task>` and returns when all of them have completed.
-    - WhenAnyAsync: Awaits all tasks in the current `IEnumerable<Task>` and returns when any of them have completed.
+    - ContainsSubcollection: Checks if the current collection contains all elements of a given collection.
     - ExceptBy: Gets the symmetric difference between two collections based on a key selector.
     - IntersectBy: Gets the intersection between two collections based on a key selector.
     - NestedFill: Adds a sample object to the inner collections of a collection of collections until they all have the same length.
-    - ChunkBy: Splits a collection into a collection of collections based on the provided key selector.
     - RandomElement: Gets a random element from the current collection.
+    - ToConcurrentDictionary: Converts the current collection to a `ConcurrentDictionary<T, U>`.
     - Unique: Gets the symetric difference between all elements in the current and specified collections.
+    - When: Fluent version of an `if` statement.
+    - WhenAllAsync: Awaits all tasks in the current `IEnumerable<Task>` and returns when all of them have completed.
+    - WhenAnyAsync: Awaits all tasks in the current `IEnumerable<Task>` and returns when any of them have completed.
+    - ChunkBy: Splits a collection into a collection of collections based on the provided key selector.
+- **IReadOnlyList\<T> Extensions**
+    - IndexOf: Get the index of the first element that matches a predicate.
+    - LastIndexOf: Get the index of the last element that matches a predicate.
+    - TryGetValue: safely get an element from the collection, or `default(T)` if it fails.
+- **List Extensions**
+    - AsSpan: Gets the current list as a `Span<T>` object.
 - **Object Extensions**
     - EqualsAny: Checks whether the current object equals any of the specified objects.
+- **Span Extensions**
+    - Rotate: Rotates a span from a starting position by the specified amount of indices.
+- **String Extensions**
+    - Contains: Checks if the current string occurs within at least one of the entries in the provided collection.
+    - EndsWith: Checks whether the end of the current string matches any string stored in the provided collection.
+    - Equals: Checks whether the current string is equal to any of the provided strings.
+    - EqualsOrStartsWith: Checks if the current string is <u>equal</u> or <u>starts with **the first character**</u> of another provided string.
+    - FirstOccurrenceOf: Returns the "Nth" index of the provided character.
+    - GetDigits: Returns a string with all digits present in this string.
+    - HasFirstWordOf: Checks if the current string and the provided string contain the same first word.
+    - LastOccurrenceOf: Returns the last "Nth" index of the provided character.
+    - MaxElementLength: Get the length of the longest string of the current collection.
+    - MaxLength: Truncates the string to the maximum specified length.
+    - Occurrences: Gets the amount of occurences of a given character in the current string.
+    - StartsWith: Checks whether the beginning of the current string matches any string stored in the provided collection.
+    - ToSnakeCase: Converts the current string to the *snake_case* format.
 - **StringBuilder Extensions**
     - ReplaceAll: Replaces all instances of a substring with another substring, even if the new substring is a substring of the old substring.
     - ToStringAndClear: Returns the `string` value of the current builder and clears the builder.
-- **String Extensions**
-    - EqualsOrStartsWith: Checks if the current string is <u>equal</u> or <u>starts with **the first character**</u> of another provided string.
-    - MaxLength: Truncates the string to the maximum specified length.
-    - ToSnakeCase: Converts the current string to the *snake_case* format.
-    - Occurrences: Gets the amount of occurences of a given character in the current string.
-    - MaxElementLength: Get the length of the longest string of the current collection.
-    - Equals: Checks whether the current string is equal to any of the provided strings.
-    - Contains: Checks if the current string occurs within at least one of the entries in the provided collection.
-    - EndsWith: Checks whether the end of the current string matches any string stored in the provided collection.
-    - StartsWith: Checks whether the beginning of the current string matches any string stored in the provided collection.
-    - GetDigits: Returns a string with all digits present in this string.
-    - FirstOccurrenceOf: Returns the "Nth" index of the provided character.
-    - LastOccurrenceOf: Returns the last "Nth" index of the provided character.
-    - HasFirstWordOf: Checks if the current string and the provided string contain the same first word.

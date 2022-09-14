@@ -105,11 +105,17 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
         Resize(capacity);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns an enumerator that iterates through the <see cref="RingBuffer{T}"/>.
+    /// </summary>
+    /// <returns>An enumerator for the <see cref="RingBuffer{T}"/>.</returns>
     IEnumerator IEnumerable.GetEnumerator()
         => _internalList.GetEnumerator();
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns an enumerator that iterates through the <see cref="RingBuffer{T}"/>.
+    /// </summary>
+    /// <returns>An enumerator for the <see cref="RingBuffer{T}"/>.</returns>
     public IEnumerator<T> GetEnumerator()
         => _internalList.GetEnumerator();
 
