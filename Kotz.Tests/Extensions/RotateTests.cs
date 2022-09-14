@@ -7,6 +7,8 @@ namespace Kotz.Tests.Extensions;
 public sealed class RotateTests
 {
     [Theory]
+    [MemberData(nameof(GetSampleArray), 10, 1, 0)]
+    [MemberData(nameof(GetSampleArray), 10, 9, 0)]
     [MemberData(nameof(GetSampleArray), 10, 4, 2)]
     [MemberData(nameof(GetSampleArray), 10, 0, 1)]
     [MemberData(nameof(GetSampleArray), 10, 0, 5)]
@@ -14,6 +16,9 @@ public sealed class RotateTests
     [MemberData(nameof(GetSampleArray), 10, 1, 4)]
     [MemberData(nameof(GetSampleArray), 10, 8, 1)]
     [MemberData(nameof(GetSampleArray), 10, 4, 15)]
+    [MemberData(nameof(GetSampleArray), 10, 4, 17)]
+    [MemberData(nameof(GetSampleArray), 10, 5, 5)]
+    [MemberData(nameof(GetSampleArray), 10, 5, 6)]
     [MemberData(nameof(GetSampleArray), 13, 4, 2)]
     [MemberData(nameof(GetSampleArray), 13, 0, 1)]
     [MemberData(nameof(GetSampleArray), 13, 0, 5)]
@@ -21,12 +26,17 @@ public sealed class RotateTests
     [MemberData(nameof(GetSampleArray), 13, 1, 4)]
     [MemberData(nameof(GetSampleArray), 13, 8, 1)]
     [MemberData(nameof(GetSampleArray), 13, 4, 17)]
+    [MemberData(nameof(GetSampleArray), 13, 6, 8)]
     internal void RotateTest(int[] sample, int startIndex, int amount)
     {
         var normalizedAmount = amount % sample.Length;
-        var startSlice = sample[0..startIndex];
-        var middleSlice = sample[Math.Min(sample.Length - 1, startIndex + normalizedAmount)..];
-        var endSlice = sample[startIndex..Math.Min(sample.Length - 1, startIndex + normalizedAmount)];
+
+        if (startIndex + amount > sample.Length - startIndex)
+            normalizedAmount %= startIndex;
+
+        var startSlice = (normalizedAmount is 0) ? Array.Empty<int>() : sample[0..startIndex];
+        var middleSlice = (normalizedAmount is 0) ? Array.Empty<int>() : sample[Math.Min(sample.Length - 1, startIndex + normalizedAmount)..];
+        var endSlice = (normalizedAmount is 0) ? Array.Empty<int>() : sample[startIndex..Math.Min(sample.Length - 1, startIndex + normalizedAmount)];
         var sampleSpan = sample.AsSpan();
 
         // Mutate the collection
@@ -41,15 +51,10 @@ public sealed class RotateTests
     [Theory]
     [MemberData(nameof(GetSampleArray), 10, -1, 1)]
     [MemberData(nameof(GetSampleArray), 10, 1, -1)]
-    [MemberData(nameof(GetSampleArray), 10, 1, 0)]
     [MemberData(nameof(GetSampleArray), 10, 10, 1)]
     [MemberData(nameof(GetSampleArray), 10, 11, 1)]
-    [MemberData(nameof(GetSampleArray), 10, 5, 5)]
-    [MemberData(nameof(GetSampleArray), 10, 5, 6)]
-    [MemberData(nameof(GetSampleArray), 13, 6, 8)]
-    [MemberData(nameof(GetSampleArray), 10, 4, 17)]
     internal void RotateFailTest(int[] sample, int startIndex, int amount)
-        => Assert.ThrowsAny<ArgumentException>(() => sample.AsSpan().Rotate(startIndex, amount));
+        => Assert.ThrowsAny<ArgumentOutOfRangeException>(() => sample.AsSpan().Rotate(startIndex, amount));
 
     /// <summary>
     /// Checks if <paramref name="slice"/> is present at <paramref name="collection"/> starting from

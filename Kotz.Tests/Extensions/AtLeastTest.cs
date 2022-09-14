@@ -57,7 +57,7 @@ public sealed class AtLeastTest
     /// <param name="arraySize">The size of the array.</param>
     /// <param name="amount">The desired amount.</param>
     /// <returns>object[] { int[], int }</returns>
-    /// <exception cref="ArgumentException">Occurs when <paramref name="arraySize"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="arraySize"/> is less than 0.</exception>
     private static IEnumerable<object[]> GetSampleArray(int arraySize, int amount)
         => ArrayExtTest.GetSampleArray(arraySize, amount);
 }

@@ -13,23 +13,21 @@ public static class SpanExt
     /// <param name="amount">The amount of positions each element should be shifted by.</param>
     /// <typeparam name="T">The type of data in the span.</typeparam>
     /// <returns>This span rotated.</returns>
-    /// <exception cref="ArgumentException">Occurs when <paramref name="amount"/> equals or is lower than zero.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Occurs when <paramref name="startIndex"/> is outside the boundaries of the span or when equals or exceeds
-    /// the amount of elements that can be shifted.
-    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="startIndex"/> is outside the boundaries of the span.</exception>
     public static Span<T> Rotate<T>(this Span<T> span, int startIndex, int amount)
     {
-        if (amount <= 0)
-            throw new ArgumentException($"Amount cannot be equal or lower than zero.", nameof(amount));
+        if (amount < 0)
+            throw new ArgumentOutOfRangeException(nameof(amount), amount, "Amount cannot be lower than zero.");
         else if (startIndex >= span.Length || startIndex < 0)
-            throw new ArgumentOutOfRangeException(nameof(startIndex), $"Index of {startIndex} is out of range. Span length: {span.Length}");
+            throw new ArgumentOutOfRangeException(nameof(startIndex), startIndex, $"'{nameof(startIndex)}' is out of range.");
 
         // Normalize the amount requested
-        amount %= span.Length;
+        amount = (startIndex + (amount % span.Length) > span.Length - startIndex)
+            ? amount % span.Length % startIndex
+            : amount % span.Length;
 
-        if (startIndex + amount > span.Length - 1)
-            throw new ArgumentOutOfRangeException(nameof(amount), $"Amount cannot be equal or exceed the amount of elements that can be shifted. Subspan length: {span.Length - amount}");
+        if (amount is 0)
+            return span;
 
         // If the middle overlaps the end, use a buffer.
         var buffer = (span[startIndex..(startIndex + amount)].Length <= span[(span.Length - startIndex - amount)..].Length)

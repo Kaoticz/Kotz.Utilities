@@ -68,11 +68,11 @@ public sealed class ArrayExtTest
     /// <param name="arraySize">The size of the array.</param>
     /// <param name="index">The desired index.</param>
     /// <returns>object[] { int[], int }</returns>
-    /// <exception cref="ArgumentException">Occurs when <paramref name="arraySize"/> is less than 0.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="arraySize"/> is less than 0.</exception>
     public static IEnumerable<object[]> GetSampleArray(int arraySize, int index)
     {
         if (arraySize < 0)
-            throw new ArgumentException("Array size cannot be less than 0.", nameof(arraySize));
+            throw new ArgumentOutOfRangeException(nameof(arraySize), arraySize, "Array size cannot be less than 0.");
         else if (arraySize is 0)
             yield return new object[] { Array.Empty<int>(), index };
         else
