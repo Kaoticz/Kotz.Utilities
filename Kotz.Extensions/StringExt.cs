@@ -16,7 +16,7 @@ public static class StringExt
     /// <param name="comparisonType">The type of string comparison to be used.</param>
     /// <returns><see langword="true"/> if it matches, <see langword="false"/> otherwise.</returns>
     public static bool EqualsOrStartsWith(this string msg, string target, StringComparison comparisonType = StringComparison.Ordinal)
-        => target is not null && (msg.Equals(target, comparisonType) || msg.StartsWith(target[..1], comparisonType));
+        => target is not null && (msg.AsSpan().Equals(target, comparisonType) || msg.AsSpan().StartsWith(target.AsSpan()[..1], comparisonType));
 
     /// <summary>
     /// Truncates the string to the maximum specified length.
@@ -51,7 +51,7 @@ public static class StringExt
     /// <param name="joinSpaces"><see langword="true"/> to , <see langword="false"/></param>
     /// <returns>This <see cref="string"/> converted to snake_case.</returns>
     [return: NotNullIfNotNull("text")]
-    public static string ToSnakeCase(this string text, bool joinSpaces = false)
+    public static string? ToSnakeCase(this string? text, bool joinSpaces = false)
     {
         if (string.IsNullOrWhiteSpace(text))
             return text;
@@ -229,7 +229,7 @@ public static class StringExt
     {
         var result = new StringBuilder();
 
-        foreach (var character in text)
+        foreach (var character in text.AsSpan())
         {
             if (char.IsDigit(character))
                 result.Append(character);
@@ -245,20 +245,21 @@ public static class StringExt
     /// <param name="character">The character to get the index from.</param>
     /// <param name="occurrence">Defines how many occurrences should be skipped, starting from 0 (first match).</param>
     /// <returns>The index of the specified character or -1 if it was not found.</returns>
-    /// <example>This returns 2: <code>"hello".MatchedIndexOf('l', 0)</code></example>
-    /// <example>This returns 3: <code>"hello".MatchedIndexOf('l', 1)</code></example>
-    /// <example>This returns -1: <code>"hello".MatchedIndexOf('l', 2)</code></example>
+    /// <example>This returns 2: <code>"hello".FirstOccurrenceOf('l', 0)</code></example>
+    /// <example>This returns 3: <code>"hello".FirstOccurrenceOf('l', 1)</code></example>
+    /// <example>This returns -1: <code>"hello".FirstOccurrenceOf('l', 2)</code></example>
     /// <seealso cref="LastOccurrenceOf(string, char, int)"/>
     public static int FirstOccurrenceOf(this string text, char character, int occurrence = 0)
     {
         if (occurrence < 0)
             occurrence = 0;
 
+        var textSpan = text.AsSpan();
         int counter = -1, result = -1;
 
-        for (var index = 0; index < text.Length - 1; index++)
+        for (var index = 0; index < textSpan.Length - 1; index++)
         {
-            if (text[index].Equals(character) && ++counter == occurrence)
+            if (textSpan[index].Equals(character) && ++counter == occurrence)
             {
                 result = index;
                 break;
@@ -275,20 +276,21 @@ public static class StringExt
     /// <param name="character">The character to get the index from.</param>
     /// <param name="occurrence">Defines how many occurrences should be skipped, starting from 0 (first match).</param>
     /// <returns>The last index of the specified character or -1 if it was not found.</returns>
-    /// <example>This returns 3: <code>"hello".LastMatchedIndexOf('l', 0)</code></example>
-    /// <example>This returns 2: <code>"hello".LastMatchedIndexOf('l', 1)</code></example>
-    /// <example>This returns -1: <code>"hello".LastMatchedIndexOf('l', 2)</code></example>
+    /// <example>This returns 3: <code>"hello".LastOccurrenceOf('l', 0)</code></example>
+    /// <example>This returns 2: <code>"hello".LastOccurrenceOf('l', 1)</code></example>
+    /// <example>This returns -1: <code>"hello".LastOccurrenceOf('l', 2)</code></example>
     /// <seealso cref="FirstOccurrenceOf(string, char, int)"/>
     public static int LastOccurrenceOf(this string text, char character, int occurrence = 0)
     {
         if (occurrence < 0)
             occurrence = 0;
 
+        var textSpan = text.AsSpan();
         int counter = -1, result = -1;
 
-        for (var index = text.Length - 1; index >= 0; index--)
+        for (var index = textSpan.Length - 1; index >= 0; index--)
         {
-            if (text[index].Equals(character) && ++counter == occurrence)
+            if (textSpan[index].Equals(character) && ++counter == occurrence)
             {
                 result = index;
                 break;
@@ -332,7 +334,7 @@ public static class StringExt
     private static int UpperChainLength(ReadOnlySpan<char> text, int startIndex)
     {
         if (startIndex > text.Length - 1)
-            throw new ArgumentOutOfRangeException(nameof(startIndex), "Start index cannot be greater than length of the span.");
+            throw new ArgumentOutOfRangeException(nameof(startIndex), startIndex, "Start index cannot be greater than length of the span.");
         else if (text.Length is 0)
             return 0;
         else if (startIndex < 0)

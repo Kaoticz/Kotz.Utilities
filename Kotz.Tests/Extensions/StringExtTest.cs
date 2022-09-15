@@ -38,6 +38,8 @@ public sealed class StringExtTest
         => Assert.Equal(result, caller.MaxLength(length, append));
 
     [Theory]
+    [InlineData(null, null, null)]
+    [InlineData("", "", "")]
     [InlineData("hello", "hello", "hello")]
     [InlineData("Hello", "hello", "hello")]
     [InlineData("hello there", "hello there", "hello_there")]

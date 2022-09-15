@@ -78,6 +78,7 @@ public static class StringBuilderExt
     /// <param name="startIndex">The starting position of the substring in this instance.</param>
     /// <param name="length">The length of the substring.</param>
     /// <returns>A string whose value is the same as the specified substring of this instance.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when the specified range is invalid.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ToStringAndClear(this StringBuilder stringBuilder, int startIndex, int length)
     {
