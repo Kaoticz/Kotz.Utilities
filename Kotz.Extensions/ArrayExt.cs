@@ -9,6 +9,31 @@ namespace Kotz.Extensions;
 public static class ArrayExt
 {
     /// <summary>
+    /// Creates a new <see cref="ReadOnlySpan{T}"/> over the entirety of the specified <paramref name="array"/>.
+    /// </summary>
+    /// <param name="array">The array from which to create the <see cref="ReadOnlySpan{T}"/>.</param>
+    /// <typeparam name="T">Data type contained in the <paramref name="array"/>.</typeparam>
+    /// <returns>This <paramref name="array"/> wrapped in a <see cref="ReadOnlySpan{T}"/>.</returns>
+    public static ReadOnlySpan<T> AsReadOnlySpan<T>(this T[] array)
+        => (array.Length is 0) ? ReadOnlySpan<T>.Empty : new(array);
+
+    /// <summary>
+    /// Creates a new <see cref="ReadOnlySpan{T}"/> that includes a specified number of elements of an <paramref name="array"/>
+    /// starting at a specified index.
+    /// </summary>
+    /// <param name="array">The array from which to create the <see cref="ReadOnlySpan{T}"/>.</param>
+    /// <param name="startIndex">The index of the first element to include.</param>
+    /// <param name="length">The number of elements to include.</param>
+    /// <typeparam name="T">Data type contained in the <paramref name="array"/>.</typeparam>
+    /// <returns>A segment of this <paramref name="array"/> wrapped in a <see cref="ReadOnlySpan{T}"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Occurs when <paramref name="startIndex"/> is outside the bounds of the <paramref name="array"/> or
+    /// <paramref name="startIndex"/> and <paramref name="length"/> exceed the number of elements in the <paramref name="array"/>.
+    /// </exception>
+    public static ReadOnlySpan<T> AsReadOnlySpan<T>(this T[] array, int startIndex, int length)
+        => (array.Length is 0 || length is 0) ? ReadOnlySpan<T>.Empty : new(array, startIndex, length);
+
+    /// <summary>
     /// Returns a read-only wrapper for the current array.
     /// </summary>
     /// <param name="array">The one-dimensional, zero-based array to wrap in a read-only <see cref="ReadOnlyCollection{T}"/> wrapper.</param>

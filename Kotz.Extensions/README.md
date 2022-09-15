@@ -34,7 +34,10 @@ Defines the following extension methods:
     - AsSpan: Gets the current list as a `Span<T>` object.
 - **Object Extensions**
     - EqualsAny: Checks whether the current object equals any of the specified objects.
+- **ReadOnlySpan Extensions**
+    - AsEnumerable: Enumerates the current span.
 - **Span Extensions**
+    - AsEnumerable: Enumerates the current span.
     - Rotate: Rotates a span from a starting position by the specified amount of indices.
 - **String Extensions**
     - Contains: Checks if the current string occurs within at least one of the entries in the provided collection.
