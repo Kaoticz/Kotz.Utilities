@@ -22,6 +22,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    if: "!contains(format('{0} {1}', github.event.head_commit.message, github.event.pull_request.title), '[ci-skip]')"
     permissions:
       actions: read
       contents: read

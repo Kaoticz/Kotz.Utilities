@@ -3,7 +3,7 @@
   <Import Project="..\BaseCsproj.props" />
 
   <PropertyGroup>
-    <Description>Provides extension methods for common tasks.</Description>
+    <Description>Provides wrappers for common types.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -19,7 +19,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.9" />
   </ItemGroup>
 
 </Project>

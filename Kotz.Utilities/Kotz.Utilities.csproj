@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Kotz.Collections\Kotz.Collections.csproj" />
     <ProjectReference Include="..\Kotz.Extensions\Kotz.Extensions.csproj" />
+    <ProjectReference Include="..\Kotz.ObjectPool\Kotz.ObjectPool.csproj" />
   </ItemGroup>
 
 </Project>

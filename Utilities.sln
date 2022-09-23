@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
@@ -15,9 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		LICENSE = LICENSE
 		README.md = README.md
+		BaseCsproj.props = BaseCsproj.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kotz.Utilities", "Kotz.Utilities\Kotz.Utilities.csproj", "{63D705B9-05C9-4A83-8F1A-B75560679488}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kotz.ObjectPool", "Kotz.ObjectPool\Kotz.ObjectPool.csproj", "{07422927-522A-49E5-BAC4-4D6BCC278789}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +38,10 @@ Global
 		{7C6454FA-7915-4219-977F-D137E9DDBFF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C6454FA-7915-4219-977F-D137E9DDBFF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C6454FA-7915-4219-977F-D137E9DDBFF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{63D705B9-05C9-4A83-8F1A-B75560679488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{63D705B9-05C9-4A83-8F1A-B75560679488}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{63D705B9-05C9-4A83-8F1A-B75560679488}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{63D705B9-05C9-4A83-8F1A-B75560679488}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07422927-522A-49E5-BAC4-4D6BCC278789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07422927-522A-49E5-BAC4-4D6BCC278789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07422927-522A-49E5-BAC4-4D6BCC278789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07422927-522A-49E5-BAC4-4D6BCC278789}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
