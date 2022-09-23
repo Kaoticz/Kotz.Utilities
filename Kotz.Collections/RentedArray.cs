@@ -54,8 +54,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
     public RentedArray(IEnumerable<T> collection)
     {
-        if (collection is null)
-            throw new ArgumentNullException(nameof(collection), "Collection must not be null.");
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
 
         Count = (collection.TryGetNonEnumeratedCount(out var amount))
             ? amount
@@ -131,7 +130,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     public void Insert(int index, T item)
     {
         if (index < 0 || index >= Count)
-            throw new ArgumentOutOfRangeException(nameof(index), $"Index ({index}) exceeds size of array ({Count}).");
+            throw new ArgumentOutOfRangeException(nameof(index), index, $"Index exceeds size of array ({Count}).");
 
         _internalArray[index] = item;
     }
@@ -144,7 +143,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     public void RemoveAt(int index)
     {
         if (index < 0 || index >= Count)
-            throw new ArgumentOutOfRangeException(nameof(index), $"Index ({index}) exceeds size of array ({Count}).");
+            throw new ArgumentOutOfRangeException(nameof(index), index, $"Index exceeds size of array ({Count}).");
 
         _internalArray[index] = default!;
     }

@@ -83,7 +83,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     public RingBuffer(int capacity)
     {
         if (capacity <= 0)
-            throw new ArgumentOutOfRangeException(nameof(capacity), $"Capacity cannot be equal or lower than zero. Value: {capacity}");
+            throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Capacity cannot be equal or lower than zero.");
 
         _internalList = new(capacity);
         FillWithDefault(_internalList);
@@ -99,7 +99,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     public RingBuffer(IEnumerable<T> collection, int capacity)
     {
         if (capacity <= 0)
-            throw new ArgumentOutOfRangeException(nameof(capacity), $"Capacity cannot be equal or lower than zero. Value: {capacity}");
+            throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Capacity cannot be equal or lower than zero.");
 
         _internalList = new(collection);
         Resize(capacity);
@@ -241,7 +241,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     public void Resize(int newSize)
     {
         if (newSize <= 0)
-            throw new ArgumentOutOfRangeException(nameof(newSize), $"Ring buffer cannot be resized to zero or negative values. Value: {newSize}");
+            throw new ArgumentOutOfRangeException(nameof(newSize), newSize, "Ring buffer cannot be resized to zero or negative values.");
 
         lock (_internalList)
         {
@@ -281,9 +281,9 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// </summary>
     /// <param name="list">The list to be filled.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void FillWithDefault(List<T> list)
+    private static void FillWithDefault(List<T> list)
     {
-        lock (_internalList)
+        lock (list)
         {
             for (var index = list.Count; index < list.Capacity; index++)
                 list.Add(default!);
