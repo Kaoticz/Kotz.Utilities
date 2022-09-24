@@ -1,4 +1,4 @@
-# Kotz.Wrappers
+# Kotz.ObjectPool
 
 - Dependencies:
     - `Microsoft.Extensions.ObjectPool`

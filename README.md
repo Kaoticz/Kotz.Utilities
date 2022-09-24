@@ -10,10 +10,12 @@ Currently contains:
 - Kotz.Utilities (Metapackage that contains all others)
 - [Kotz.Collections]
 - [Kotz.Extensions]
+- [Kotz.ObjectPool]
 
 
 [Kotz.Collections]: https://github.com/Kaoticz/Kotz.Utilities/tree/main/Kotz.Collections/README.md
 [Kotz.Extensions]: https://github.com/Kaoticz/Kotz.Utilities/tree/main/Kotz.Extensions/README.md
+[Kotz.ObjectPool]: https://github.com/Kaoticz/Kotz.Utilities/tree/main/Kotz.ObjectPool/README.md
 [CodeFactor-Url]: https://www.codefactor.io/repository/github/kaoticz/kotz.utilities/overview/main
 [CodeFactor-Badge]: https://www.codefactor.io/repository/github/kaoticz/kotz.utilities/badge/main
 [.NET-Url]: ../../actions/workflows/dotnet.yml
