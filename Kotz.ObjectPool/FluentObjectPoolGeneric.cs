@@ -12,7 +12,7 @@ public sealed class FluentObjectPool<T> : ObjectPool<T> where T : class
     private readonly Func<T, T> _objectResetter;
 
     /// <summary>
-    /// Creates a default fluent instance of <see cref="ObjectPool{T}"/>.
+    /// Creates a fluent instance of <see cref="ObjectPool{T}"/>.
     /// </summary>
     /// <param name="objectPolicy">The pooling policy to use.</param>
     /// <param name="maximumRetained">The maximum number of objects to retain in the pool.</param>
@@ -26,73 +26,26 @@ public sealed class FluentObjectPool<T> : ObjectPool<T> where T : class
     }
 
     /// <summary>
-    /// Creates a default fluent instance of <see cref="ObjectPool{T}"/>.
+    /// Creates a fluent instance of <see cref="ObjectPool{T}"/>.
     /// </summary>
     /// <param name="objectFactory">The method responsible for instantiating a new <typeparamref name="T"/> object.</param>
     /// <param name="objectResetter">
     /// The method responsible for resetting the internal state of <typeparamref name="T"/> objects that are being returned to the pool.
     /// </param>
-    /// <param name="objectFilters">
-    /// The filters to be applied to an object that is being returned to the pool. <br />
-    /// If all filters return <see langword="true"/>, the object is returned to the pool, otherwise it is not and the object may become
-    /// eligible for garbage collection.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Occurs when <paramref name="objectFactory"/> or <paramref name="objectFilters"/> are <see langword="null"/>.
-    /// </exception>
-    public FluentObjectPool(Func<T> objectFactory, Func<T, T>? objectResetter, params Func<T, bool>[] objectFilters)
-        : this(default, objectFactory, objectResetter, objectFilters)
-    {
-    }
-
-    /// <summary>
-    /// Creates a default fluent instance of <see cref="ObjectPool{T}"/>.
-    /// </summary>
-    /// <param name="maximumRetained">The maximum number of objects to retain in the pool.</param>
-    /// <param name="objectFactory">The method responsible for instantiating a new <typeparamref name="T"/> object.</param>
-    /// <param name="objectResetter">
-    /// The method responsible for resetting the internal state of <typeparamref name="T"/> objects that are being returned to the pool.
-    /// </param>
-    /// <param name="objectFilters">
-    /// The filters to be applied to an object that is being returned to the pool. <br />
-    /// If all filters return <see langword="true"/>, the object is returned to the pool, otherwise it is not and the object may become
-    /// eligible for garbage collection.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Occurs when <paramref name="objectFactory"/> or <paramref name="objectFilters"/> are <see langword="null"/>.
-    /// </exception>
-    public FluentObjectPool(int maximumRetained, Func<T> objectFactory, Func<T, T>? objectResetter, params Func<T, bool>[] objectFilters)
-    {
-        ArgumentNullException.ThrowIfNull(objectFactory, nameof(objectFactory));
-        ArgumentNullException.ThrowIfNull(objectFilters, nameof(objectFilters));
-
-        var objectPolicy = new DefaultFluentPooledObjectPolicy<T>(objectFactory, objectFilters);
-        _internalPool = (maximumRetained > 0) ? new(objectPolicy, maximumRetained) : new(objectPolicy);
-        _objectResetter = objectResetter ?? (static x => x);
-    }
-
-    /// <summary>
-    /// Creates a default fluent instance of <see cref="ObjectPool{T}"/>.
-    /// </summary>
-    /// <param name="objectFactory">The method responsible for instantiating a new <typeparamref name="T"/> object.</param>
-    /// <param name="objectResetter">
-    /// The method responsible for resetting the internal state of <typeparamref name="T"/> objects that are being returned to the pool.
-    /// </param>
-    /// <param name="objectFilters">
-    /// The filters to be applied to an object that is being returned to the pool. <br />
-    /// If all filters return <see langword="true"/>, the object is returned to the pool, otherwise it is not and the object may become
+    /// <param name="objectFilter">
+    /// The filter to be applied to an object that is being returned to the pool. <br />
+    /// If the filter returns <see langword="true"/>, the object is returned to the pool, otherwise it is not and the object may become
     /// eligible for garbage collection.
     /// </param>
     /// <param name="maximumRetained">The maximum number of objects to retain in the pool.</param>
     /// <exception cref="ArgumentNullException">
-    /// Occurs when <paramref name="objectFactory"/> or <paramref name="objectFilters"/> are <see langword="null"/>.
+    /// Occurs when <paramref name="objectFactory"/> or <paramref name="objectFilter"/> are <see langword="null"/>.
     /// </exception>
-    public FluentObjectPool(Func<T> objectFactory, Func<T, T>? objectResetter, IReadOnlyCollection<Func<T, bool>> objectFilters, int maximumRetained = default)
+    public FluentObjectPool(Func<T> objectFactory, Func<T, T>? objectResetter = default, Func<T, bool>? objectFilter = default, int maximumRetained = default)
     {
         ArgumentNullException.ThrowIfNull(objectFactory, nameof(objectFactory));
-        ArgumentNullException.ThrowIfNull(objectFilters, nameof(objectFilters));
 
-        var objectPolicy = new DefaultFluentPooledObjectPolicy<T>(objectFactory, objectFilters);
+        var objectPolicy = new DefaultFluentPooledObjectPolicy<T>(objectFactory, objectFilter);
         _internalPool = (maximumRetained > 0) ? new(objectPolicy, maximumRetained) : new(objectPolicy);
         _objectResetter = objectResetter ?? (static x => x);
     }

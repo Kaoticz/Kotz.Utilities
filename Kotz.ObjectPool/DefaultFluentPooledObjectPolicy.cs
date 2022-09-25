@@ -9,23 +9,20 @@ namespace Kotz.ObjectPool;
 public sealed class DefaultFluentPooledObjectPolicy<T> : PooledObjectPolicy<T> where T : notnull
 {
     private readonly Func<T> _objectFactory;
-    private readonly Func<T, bool>[] _objectFilters;
+    private readonly Func<T, bool> _objectFilter;
 
     /// <summary>
     /// Creates a default fluent <see cref="PooledObjectPolicy{T}"/>.
     /// </summary>
     /// <param name="objectFactory">The method responsible for instantiating a new <typeparamref name="T"/> object.</param>
-    /// <param name="objectFilters">The filters to be applied to an object that is being returned to the pool.</param>
+    /// <param name="objectFilter">The filter to be applied to an object that is being returned to the pool.</param>
     /// <exception cref="ArgumentNullException">Occurs when one of the parameters is <see langword="null"/>.</exception>
-    internal DefaultFluentPooledObjectPolicy(Func<T> objectFactory, IReadOnlyCollection<Func<T, bool>> objectFilters)
+    internal DefaultFluentPooledObjectPolicy(Func<T> objectFactory, Func<T, bool>? objectFilter = default)
     {
         ArgumentNullException.ThrowIfNull(objectFactory, nameof(objectFactory));
-        ArgumentNullException.ThrowIfNull(objectFilters, nameof(objectFilters));
 
         _objectFactory = objectFactory;
-        _objectFilters = (objectFilters is Func<T, bool>[] filtersArray)
-            ? filtersArray
-            : objectFilters.ToArray();
+        _objectFilter = objectFilter ?? (static _ => true);
     }
 
     /// <summary>
@@ -41,13 +38,5 @@ public sealed class DefaultFluentPooledObjectPolicy<T> : PooledObjectPolicy<T> w
     /// <param name="obj">The object to be returned.</param>
     /// <returns><see langword="true"/> if the object can be returned to the pool, <see langword="false"/> otherwise.</returns>
     public override bool Return(T obj)
-    {
-        foreach (var objectFilter in _objectFilters)
-        {
-            if (!objectFilter(obj))
-                return false;
-        }
-
-        return true;
-    }
+        => _objectFilter(obj);
 }
