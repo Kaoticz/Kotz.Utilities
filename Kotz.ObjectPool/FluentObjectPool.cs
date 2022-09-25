@@ -29,9 +29,7 @@ public static class FluentObjectPool
     /// eligible for garbage collection.
     /// </param>
     /// <param name="maximumRetained">The maximum number of objects to retain in the pool.</param>
-    /// <exception cref="ArgumentNullException">
-    /// Occurs when <paramref name="objectFactory"/> is <see langword="null"/>.
-    /// </exception>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="objectFactory"/> is <see langword="null"/>.</exception>
     public static FluentObjectPool<T> Create<T>(Func<T> objectFactory, Func<T, T>? objectResetter, Func<T, bool> objectFilter, int maximumRetained = default) where T : class
         => new(objectFactory, objectResetter, objectFilter, maximumRetained);
 }

@@ -38,9 +38,7 @@ public sealed class FluentObjectPool<T> : ObjectPool<T> where T : class
     /// eligible for garbage collection.
     /// </param>
     /// <param name="maximumRetained">The maximum number of objects to retain in the pool.</param>
-    /// <exception cref="ArgumentNullException">
-    /// Occurs when <paramref name="objectFactory"/> or <paramref name="objectFilter"/> are <see langword="null"/>.
-    /// </exception>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="objectFactory"/> is <see langword="null"/>.</exception>
     public FluentObjectPool(Func<T> objectFactory, Func<T, T>? objectResetter = default, Func<T, bool>? objectFilter = default, int maximumRetained = default)
     {
         ArgumentNullException.ThrowIfNull(objectFactory, nameof(objectFactory));

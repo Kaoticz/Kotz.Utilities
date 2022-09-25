@@ -16,7 +16,7 @@ public sealed class DefaultFluentPooledObjectPolicy<T> : PooledObjectPolicy<T> w
     /// </summary>
     /// <param name="objectFactory">The method responsible for instantiating a new <typeparamref name="T"/> object.</param>
     /// <param name="objectFilter">The filter to be applied to an object that is being returned to the pool.</param>
-    /// <exception cref="ArgumentNullException">Occurs when one of the parameters is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="objectFactory"/> is <see langword="null"/>.</exception>
     internal DefaultFluentPooledObjectPolicy(Func<T> objectFactory, Func<T, bool>? objectFilter = default)
     {
         ArgumentNullException.ThrowIfNull(objectFactory, nameof(objectFactory));
