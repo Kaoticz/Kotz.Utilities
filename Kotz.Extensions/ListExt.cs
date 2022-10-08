@@ -17,4 +17,15 @@ public static class ListExt
     /// <returns>A <see cref="Span{T}"/> instance over the <see cref="List{T}"/>.</returns>
     public static Span<T> AsSpan<T>(this List<T> list)
         => CollectionsMarshal.AsSpan(list);
+
+    /// <summary>
+    /// Gets a <see cref="ReadOnlySpan{T}"/> view over the data in a list. Items should not be
+    ///  added or removed from the <see cref="List{T}"/> while the <see cref="ReadOnlySpan{T}"/>
+    ///  is in use.
+    /// </summary>
+    /// <typeparam name="T">The type of items in the list.</typeparam>
+    /// <param name="list">List from which to create the <see cref="ReadOnlySpan{T}"/>.</param>
+    /// <returns>A <see cref="ReadOnlySpan{T}"/> instance over the <see cref="List{T}"/>.</returns>
+    public static ReadOnlySpan<T> AsReadOnlySpan<T>(this List<T> list)
+        => CollectionsMarshal.AsSpan(list);
 }

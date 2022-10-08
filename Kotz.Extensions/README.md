@@ -16,8 +16,6 @@ Defines the following extension methods:
     - AtLeast: Checks if the current collection contains at least the specified amount of elements and exits early if it does.
     - ContainsOne: Checks if the current collection contains at least one element of a given collection.
     - ContainsSubcollection: Checks if the current collection contains all elements of a given collection.
-    - ExceptBy: Gets the symmetric difference between two collections based on a key selector.
-    - IntersectBy: Gets the intersection between two collections based on a key selector.
     - NestedFill: Adds a sample object to the inner collections of a collection of collections until they all have the same length.
     - RandomElement: Gets a random element from the current collection.
     - ToConcurrentDictionary: Converts the current collection to a `ConcurrentDictionary<T, U>`.
@@ -32,6 +30,7 @@ Defines the following extension methods:
     - TryGetValue: safely get an element from the collection, or `default(T)` if it fails.
 - **List Extensions**
     - AsSpan: Gets the current list as a `Span<T>` object.
+    - AsReadOnlySpan: Gets the current list as a `ReadOnlySpan<T>` object.
 - **Object Extensions**
     - EqualsAny: Checks whether the current object equals any of the specified objects.
 - **ReadOnlySpan Extensions**

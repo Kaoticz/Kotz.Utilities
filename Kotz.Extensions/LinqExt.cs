@@ -81,18 +81,7 @@ public static class LinqExt
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
         ArgumentNullException.ThrowIfNull(targetCollection, nameof(targetCollection));
 
-        if (!collection.Any() || !targetCollection.Any())
-            return false;
-
-        var matches = 0;
-
-        foreach (var element in targetCollection)
-        {
-            if (collection.Any(x => Equals(x, element)))
-                matches++;
-        }
-
-        return matches == targetCollection.Count();
+        return collection.Any() && targetCollection.Any() && targetCollection.All(x => collection.Contains(x));
     }
 
     /// <summary>
@@ -125,13 +114,9 @@ public static class LinqExt
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
         ArgumentNullException.ThrowIfNull(targetCollection, nameof(targetCollection));
 
-        foreach (var element in targetCollection)
-        {
-            if (collection.Any(x => Equals(x, element)))
-                return true;
-        }
-
-        return false;
+        return collection
+            .Intersect(targetCollection)
+            .Any();
     }
 
     /// <summary>
@@ -183,68 +168,6 @@ public static class LinqExt
     }
 
     /// <summary>
-    /// Gets the symmetric difference between two collections based on the key defined by <paramref name="keySelector"/>.
-    /// </summary>
-    /// <param name="collection">This collection.</param>
-    /// <param name="secondCollection">The second collection to compare with.</param>
-    /// <param name="keySelector">A method that defines the property to filter by.</param>
-    /// <typeparam name="T1">Data type contained in the collection.</typeparam>
-    /// <typeparam name="T2">Data type of the property to be selected.</typeparam>
-    /// <returns>A collection of <typeparamref name="T1"/> with the symmetric difference between this <paramref name="collection"/> and <paramref name="secondCollection"/>.</returns>
-    /// <exception cref="ArgumentNullException">Occurs when either of the parameters is <see langword="null"/>.</exception>
-    public static IEnumerable<T1> ExceptBy<T1, T2>(this IEnumerable<T1> collection, IEnumerable<T1> secondCollection, Func<T1, T2> keySelector)
-    {
-        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-        ArgumentNullException.ThrowIfNull(secondCollection, nameof(secondCollection));
-        ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));
-
-        var seenKeys = new HashSet<T2>(collection.Intersect(secondCollection).Select(x => keySelector(x)));
-
-        foreach (var element in collection)
-        {
-            if (seenKeys.Add(keySelector(element)))
-                yield return element;
-        }
-
-        foreach (var element in secondCollection)
-        {
-            if (seenKeys.Add(keySelector(element)))
-                yield return element;
-        }
-
-        seenKeys.Clear();
-    }
-
-    /// <summary>
-    /// Gets all elements present in this <paramref name="collection"/> and <paramref name="secondCollection"/>
-    /// that share the same property defined by <paramref name="keySelector"/>.
-    /// </summary>
-    /// <param name="collection">This collection.</param>
-    /// <param name="secondCollection">The collection to be intersected with.</param>
-    /// <param name="keySelector">A method that defines the property to filter by.</param>
-    /// <typeparam name="T1">Data type contained in the collection.</typeparam>
-    /// <typeparam name="T2">Data type of the property to be selected.</typeparam>
-    /// <returns>A collection of intersected <typeparamref name="T1"/> objects.</returns>
-    /// <exception cref="ArgumentNullException">Occurs when either of the parameters is <see langword="null"/>.</exception>
-    public static IEnumerable<T1> IntersectBy<T1, T2>(this IEnumerable<T1> collection, IEnumerable<T1> secondCollection, Func<T1, T2> keySelector)
-    {
-        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-        ArgumentNullException.ThrowIfNull(secondCollection, nameof(secondCollection));
-        ArgumentNullException.ThrowIfNull(keySelector, nameof(keySelector));
-
-        var seenKeys = new HashSet<T2>(collection.Select(x => keySelector(x)));
-        seenKeys.IntersectWith(secondCollection.Select(x => keySelector(x)));
-
-        foreach (var element in collection.Concat(secondCollection).DistinctBy(x => keySelector(x)))
-        {
-            if (!seenKeys.Add(keySelector(element)))
-                yield return element;
-        }
-
-        seenKeys.Clear();
-    }
-
-    /// <summary>
     /// Adds the <typeparamref name="T1"/> defined in <paramref name="sample"/> to the inner collections
     /// of this <see cref="IEnumerable{T}"/> until all of them reach the same amount of elements.
     /// </summary>
@@ -252,9 +175,9 @@ public static class LinqExt
     /// <param name="sample">The <typeparamref name="T1"/> object to be added to the inner collections.</param>
     /// <typeparam name="T1">Data type contained in the inner collections.</typeparam>
     /// <typeparam name="T2">The type of collections stored.</typeparam>
-    /// <returns>A <see cref="List{T}"/> with <see cref="IEnumerable{T}"/> collections of the same size.</returns>
+    /// <returns>A <see cref="IReadOnlyList{T}"/> of lists with the same size.</returns>
     /// <exception cref="ArgumentNullException">Occurs when either of the parameters is <see langword="null"/>.</exception>
-    public static List<List<T1>> NestedFill<T1, T2>(this IEnumerable<T2> collection, T1 sample) where T2 : IEnumerable<T1>
+    public static IReadOnlyList<IReadOnlyList<T1>> NestedFill<T1, T2>(this IEnumerable<T2> collection, T1 sample) where T2 : IEnumerable<T1>
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
         ArgumentNullException.ThrowIfNull(sample, nameof(sample));
