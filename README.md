@@ -7,7 +7,7 @@
 General C# utilities commonly used on my personal projects.
 
 Currently contains:
-- Kotz.Utilities (Metapackage that contains all others)
+- Kotz.Utilities (Metapackage that contains all other packages)
 - [Kotz.Collections]
 - [Kotz.Extensions]
 - [Kotz.ObjectPool]

@@ -9,14 +9,59 @@ namespace Kotz.Extensions;
 public static class StringExt
 {
     /// <summary>
-    /// Checks if this string is equal or starts with the first character specified in <paramref name="target"/>.
+    /// Gets the amount of occurences of a given character in this string.
     /// </summary>
-    /// <param name="msg">This string.</param>
-    /// <param name="target">The string to compare with.</param>
+    /// <param name="text">This string.</param>
+    /// <param name="target">The character to check for.</param>
+    /// <returns>The amount of occurences of <paramref name="target"/> in this string.</returns>
+    public static int Occurrences(this string text, char target)
+        => ReadOnlySpanCharExt.Occurrences(text, target);
+
+    /// <summary>
+    /// Returns a string with all digits present in this string.
+    /// </summary>
+    /// <param name="text">This string.</param>
+    /// <returns>A string with all digits of this string, <see cref="string.Empty"/> if none is found.</returns>
+    public static string GetDigits(this string text)
+        => ReadOnlySpanCharExt.GetDigits(text);
+
+    /// <summary>
+    /// Returns the "Nth" index of the specified character.
+    /// </summary>
+    /// <param name="text">This string.</param>
+    /// <param name="character">The character to get the index from.</param>
+    /// <param name="occurrence">Defines how many occurrences should be skipped, starting from 0 (first match).</param>
+    /// <returns>The index of the specified character or -1 if it was not found.</returns>
+    /// <example>This returns 2: <code>"hello".FirstOccurrenceOf('l', 0)</code></example>
+    /// <example>This returns 3: <code>"hello".FirstOccurrenceOf('l', 1)</code></example>
+    /// <example>This returns -1: <code>"hello".FirstOccurrenceOf('l', 2)</code></example>
+    /// <seealso cref="LastOccurrenceOf(string, char, int)"/>
+    public static int FirstOccurrenceOf(this string text, char character, int occurrence = 0)
+        => ReadOnlySpanCharExt.FirstOccurrenceOf(text, character, occurrence);
+
+    /// <summary>
+    /// Returns the last "Nth" index of the specified character.
+    /// </summary>
+    /// <param name="text">This string.</param>
+    /// <param name="character">The character to get the index from.</param>
+    /// <param name="occurrence">Defines how many occurrences should be skipped, starting from 0 (first match).</param>
+    /// <returns>The last index of the specified character or -1 if it was not found.</returns>
+    /// <example>This returns 3: <code>"hello".LastOccurrenceOf('l', 0)</code></example>
+    /// <example>This returns 2: <code>"hello".LastOccurrenceOf('l', 1)</code></example>
+    /// <example>This returns -1: <code>"hello".LastOccurrenceOf('l', 2)</code></example>
+    /// <seealso cref="FirstOccurrenceOf(string, char, int)"/>
+    public static int LastOccurrenceOf(this string text, char character, int occurrence = 0)
+        => ReadOnlySpanCharExt.LastOccurrenceOf(text, character, occurrence);
+
+    /// <summary>
+    /// Checks if this string and <paramref name="sample"/> contain the same first word.
+    /// </summary>
+    /// <param name="text">This string.</param>
+    /// <param name="sample">The string to compare to.</param>
     /// <param name="comparisonType">The type of string comparison to be used.</param>
-    /// <returns><see langword="true"/> if it matches, <see langword="false"/> otherwise.</returns>
-    public static bool EqualsOrStartsWith(this string msg, string target, StringComparison comparisonType = StringComparison.Ordinal)
-        => target is not null && (msg.AsSpan().Equals(target, comparisonType) || msg.AsSpan().StartsWith(target.AsSpan()[..1], comparisonType));
+    /// <returns><see langword="true"/> if both strings contain the same first word, <see langword="false"/> otherwise.</returns>
+    public static bool HasFirstWordOf(this string text, string sample, StringComparison comparisonType = StringComparison.Ordinal)
+        => ReadOnlySpanCharExt.HasFirstWordOf(text, sample, comparisonType);
 
     /// <summary>
     /// Truncates the string to the maximum specified length.
@@ -89,25 +134,6 @@ public static class StringExt
         buffer.ReplaceAll("__", "_");
 
         return buffer.ToStringAndClear();
-    }
-
-    /// <summary>
-    /// Gets the amount of occurences of a given character in this string.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <param name="target">The character to check for.</param>
-    /// <returns>The amount of occurences of <paramref name="target"/> in this string.</returns>
-    public static int Occurrences(this string text, char target)
-    {
-        var counter = 0;
-
-        foreach (var letter in text.AsSpan())
-        {
-            if (letter == target)
-                counter++;
-        }
-
-        return counter;
     }
 
     /// <summary>
@@ -218,110 +244,6 @@ public static class StringExt
         }
 
         return false;
-    }
-
-    /// <summary>
-    /// Returns a string with all digits present in this string.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <returns>A string with all digits of this string, <see cref="string.Empty"/> if none is found.</returns>
-    public static string GetDigits(this string text)
-    {
-        var result = new StringBuilder();
-
-        foreach (var character in text.AsSpan())
-        {
-            if (char.IsDigit(character))
-                result.Append(character);
-        }
-
-        return result.ToStringAndClear();
-    }
-
-    /// <summary>
-    /// Returns the "Nth" index of the specified character.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <param name="character">The character to get the index from.</param>
-    /// <param name="occurrence">Defines how many occurrences should be skipped, starting from 0 (first match).</param>
-    /// <returns>The index of the specified character or -1 if it was not found.</returns>
-    /// <example>This returns 2: <code>"hello".FirstOccurrenceOf('l', 0)</code></example>
-    /// <example>This returns 3: <code>"hello".FirstOccurrenceOf('l', 1)</code></example>
-    /// <example>This returns -1: <code>"hello".FirstOccurrenceOf('l', 2)</code></example>
-    /// <seealso cref="LastOccurrenceOf(string, char, int)"/>
-    public static int FirstOccurrenceOf(this string text, char character, int occurrence = 0)
-    {
-        if (occurrence < 0)
-            occurrence = 0;
-
-        var textSpan = text.AsSpan();
-        int counter = -1, result = -1;
-
-        for (var index = 0; index < textSpan.Length - 1; index++)
-        {
-            if (textSpan[index].Equals(character) && ++counter == occurrence)
-            {
-                result = index;
-                break;
-            }
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    /// Returns the last "Nth" index of the specified character.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <param name="character">The character to get the index from.</param>
-    /// <param name="occurrence">Defines how many occurrences should be skipped, starting from 0 (first match).</param>
-    /// <returns>The last index of the specified character or -1 if it was not found.</returns>
-    /// <example>This returns 3: <code>"hello".LastOccurrenceOf('l', 0)</code></example>
-    /// <example>This returns 2: <code>"hello".LastOccurrenceOf('l', 1)</code></example>
-    /// <example>This returns -1: <code>"hello".LastOccurrenceOf('l', 2)</code></example>
-    /// <seealso cref="FirstOccurrenceOf(string, char, int)"/>
-    public static int LastOccurrenceOf(this string text, char character, int occurrence = 0)
-    {
-        if (occurrence < 0)
-            occurrence = 0;
-
-        var textSpan = text.AsSpan();
-        int counter = -1, result = -1;
-
-        for (var index = textSpan.Length - 1; index >= 0; index--)
-        {
-            if (textSpan[index].Equals(character) && ++counter == occurrence)
-            {
-                result = index;
-                break;
-            }
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    /// Checks if this string and <paramref name="sample"/> contain the same first word.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <param name="sample">The string to compare to.</param>
-    /// <param name="comparisonType">The type of string comparison to be used.</param>
-    /// <returns><see langword="true"/> if both strings contain the same first word, <see langword="false"/> otherwise.</returns>
-    public static bool HasFirstWordOf(this string text, string sample, StringComparison comparisonType = StringComparison.Ordinal)
-    {
-        var textIndex = text.IndexOf(' ', StringComparison.InvariantCulture) - 1;
-        var sampleIndex = sample.IndexOf(' ', StringComparison.InvariantCulture) - 1;
-
-        if (textIndex is -2)
-            textIndex = text.Length - 1;
-
-        if (sampleIndex is -2)
-            sampleIndex = sample.Length - 1;
-
-        var firstTextWord = text.AsSpan()[..textIndex];
-        var firstSampleWord = sample.AsSpan()[..sampleIndex];
-
-        return firstTextWord.Equals(firstSampleWord, comparisonType);
     }
 
     /// <summary>

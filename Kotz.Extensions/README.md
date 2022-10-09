@@ -28,21 +28,20 @@ Defines the following extension methods:
     - IndexOf: Get the index of the first element that matches a predicate.
     - LastIndexOf: Get the index of the last element that matches a predicate.
     - TryGetValue: safely get an element from the collection, or `default(T)` if it fails.
-- **List Extensions**
+- **List\<T> Extensions**
     - AsSpan: Gets the current list as a `Span<T>` object.
     - AsReadOnlySpan: Gets the current list as a `ReadOnlySpan<T>` object.
 - **Object Extensions**
     - EqualsAny: Checks whether the current object equals any of the specified objects.
-- **ReadOnlySpan Extensions**
+- **ReadOnlySpan\<T> Extensions**
     - AsEnumerable: Enumerates the current span.
-- **Span Extensions**
+- **Span\<T> Extensions**
     - AsEnumerable: Enumerates the current span.
     - Rotate: Rotates a span from a starting position by the specified amount of indices.
-- **String Extensions**
+- **String and ReadOnlySpan\<char> Extensions**
     - Contains: Checks if the current string occurs within at least one of the entries in the provided collection.
     - EndsWith: Checks whether the end of the current string matches any string stored in the provided collection.
     - Equals: Checks whether the current string is equal to any of the provided strings.
-    - EqualsOrStartsWith: Checks if the current string is <u>equal</u> or <u>starts with **the first character**</u> of another provided string.
     - FirstOccurrenceOf: Returns the "Nth" index of the provided character.
     - GetDigits: Returns a string with all digits present in this string.
     - HasFirstWordOf: Checks if the current string and the provided string contain the same first word.

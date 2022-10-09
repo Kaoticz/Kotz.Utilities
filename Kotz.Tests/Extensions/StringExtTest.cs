@@ -6,25 +6,12 @@ namespace Kotz.Tests.Extensions;
 public sealed class StringExtTest
 {
     [Theory]
-    [InlineData("hello", "hello", StringComparison.Ordinal, true)]
-    [InlineData("hello", "hel", StringComparison.Ordinal, true)]
-    [InlineData("", "", StringComparison.Ordinal, true)]
-    [InlineData("hello", "HEllo", StringComparison.OrdinalIgnoreCase, true)]
-    [InlineData("hello", "HEl", StringComparison.OrdinalIgnoreCase, true)]
-    [InlineData("hello", "hEl", StringComparison.Ordinal, true)]
-    [InlineData("hello", "h", StringComparison.Ordinal, true)]
-    [InlineData("hello", null, StringComparison.Ordinal, false)]
-    [InlineData("hello", "HEllo", StringComparison.Ordinal, false)]
-    internal void EqualsOrStartsWithTest(string caller, string calle, StringComparison comparisonType, bool result)
-        => Assert.Equal(result, caller.EqualsOrStartsWith(calle, comparisonType));
-
-    [Theory]
     [InlineData(5, "hello", "hello")]
     [InlineData(5, "avocado", "avoca")]
     [InlineData(0, "banana", "")]
     [InlineData(5, null, null)]
-    internal void MaxLengthTest(int length, string caller, string result)
-        => Assert.Equal(result, caller.MaxLength(length));
+    internal void MaxLengthTest(int length, string source, string result)
+        => Assert.Equal(result, source.MaxLength(length));
 
     [Theory]
     [InlineData(11, "banana cheesecake", "banana[...]", "[...]")]
@@ -34,8 +21,8 @@ public sealed class StringExtTest
     [InlineData(5, "", "", "[...]")]
     [InlineData(5, "a", "a", "[...]")]
     [InlineData(5, "a", "a", null)]
-    internal void MaxLengthWithAppendTest(int length, string caller, string result, string append)
-        => Assert.Equal(result, caller.MaxLength(length, append));
+    internal void MaxLengthWithAppendTest(int length, string source, string result, string append)
+        => Assert.Equal(result, source.MaxLength(length, append));
 
     [Theory]
     [InlineData(null, null, null)]
@@ -54,10 +41,10 @@ public sealed class StringExtTest
     [InlineData("has_Underscore", "has_underscore", "has_underscore")]
     [InlineData("has_ Underscore", "has_underscore", "has_underscore")]
     [InlineData("has_ underscore", "has_underscore", "has_underscore")]
-    internal void ToSnakeCaseTest(string caller, string resultNoJoin, string resultWithJoin)
+    internal void ToSnakeCaseTest(string source, string resultNoJoin, string resultWithJoin)
     {
-        Assert.Equal(resultNoJoin, caller.ToSnakeCase(false));
-        Assert.Equal(resultWithJoin, caller.ToSnakeCase(true));
+        Assert.Equal(resultNoJoin, source.ToSnakeCase(false));
+        Assert.Equal(resultWithJoin, source.ToSnakeCase(true));
     }
 
     [Theory]
@@ -65,8 +52,8 @@ public sealed class StringExtTest
     [InlineData("hello", 'a', 0)]
     [InlineData("hello there", 'e', 3)]
     [InlineData("this has three spaces", ' ', 3)]
-    internal void OccurrencesTest(string caller, char target, int result)
-        => Assert.Equal(result, caller.Occurrences(target));
+    internal void OccurrencesTest(string source, char target, int result)
+        => Assert.Equal(result, source.Occurrences(target));
 
     [Theory]
     [InlineData(7, "hello", "banana", "avocado")]
@@ -82,8 +69,8 @@ public sealed class StringExtTest
     [InlineData("!1_2a3&4%5", "12345")]
     [InlineData("Nothing", "")]
     [InlineData("111e111", "111111")]
-    internal void GetDigitsTest(string caller, string result)
-        => Assert.Equal(result, caller.GetDigits());
+    internal void GetDigitsTest(string source, string result)
+        => Assert.Equal(result, source.GetDigits());
 
     [Theory]
     [InlineData("hello", 'a', 0, -1)]
@@ -97,8 +84,8 @@ public sealed class StringExtTest
     [InlineData("hello hello", 'l', 3, 9)]
     [InlineData("hello hello", 'h', 0, 0)]
     [InlineData("hello hello", 'h', 1, 6)]
-    internal void FirstOccurrenceOfTest(string caller, char character, int match, int result)
-        => Assert.Equal(result, caller.FirstOccurrenceOf(character, match));
+    internal void FirstOccurrenceOfTest(string source, char character, int match, int result)
+        => Assert.Equal(result, source.FirstOccurrenceOf(character, match));
 
     [Theory]
     [InlineData("hello", 'a', 0, -1)]
@@ -112,8 +99,8 @@ public sealed class StringExtTest
     [InlineData("hello hello", 'l', 3, 2)]
     [InlineData("hello hello", 'h', 0, 6)]
     [InlineData("hello hello", 'h', 1, 0)]
-    internal void LastOccurrenceOfTest(string caller, char character, int match, int result)
-        => Assert.Equal(result, caller.LastOccurrenceOf(character, match));
+    internal void LastOccurrenceOfTest(string source, char character, int match, int result)
+        => Assert.Equal(result, source.LastOccurrenceOf(character, match));
 
     [Theory]
     [InlineData("!hello", "!hello", StringComparison.Ordinal, true)]
@@ -124,6 +111,6 @@ public sealed class StringExtTest
     [InlineData("!hello", "!heLLO", StringComparison.Ordinal, false)]
     [InlineData("!hello", "!heLLo", StringComparison.OrdinalIgnoreCase, true)]
     [InlineData("!hello", "!hellow there", StringComparison.Ordinal, false)]
-    internal void HasFirstWordOfTest(string caller, string callee, StringComparison comparisonType, bool result)
-        => Assert.Equal(result, caller.HasFirstWordOf(callee, comparisonType));
+    internal void HasFirstWordOfTest(string source, string callee, StringComparison comparisonType, bool result)
+        => Assert.Equal(result, source.HasFirstWordOf(callee, comparisonType));
 }
