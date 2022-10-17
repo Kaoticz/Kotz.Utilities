@@ -11,19 +11,8 @@ public static class ObjectExt
     /// <param name="thisObj">This object.</param>
     /// <param name="objects">Collection of objects to compare to.</param>
     /// <returns><see langword="true"/> if this object is equal to any element in <paramref name="objects"/>, <see langword="false"/> otherwise.</returns>
-    public static bool EqualsAny(this object thisObj, params object?[] objects)
-    {
-        if (thisObj is null && objects is null)
-            return true;
-
-        foreach (var obj in objects)
-        {
-            if (Equals(thisObj, obj))
-                return true;
-        }
-
-        return false;
-    }
+    public static bool EqualsAny<T>(this T thisObj, params T?[] objects)
+        => EqualsAny(thisObj, objects.AsEnumerable());
 
     /// <summary>
     /// Determines whether this object is equal to any element in <paramref name="objects"/>.
@@ -31,14 +20,16 @@ public static class ObjectExt
     /// <param name="thisObj">This object.</param>
     /// <param name="objects">Collection of objects to compare to.</param>
     /// <returns><see langword="true"/> if this object is equal to any element in <paramref name="objects"/>, <see langword="false"/> otherwise.</returns>
-    public static bool EqualsAny(this object thisObj, IEnumerable<object?> objects)
+    public static bool EqualsAny<T>(this T thisObj, IEnumerable<T?> objects)
     {
         if (thisObj is null && objects is null)
             return true;
+        else if (objects is null)
+            return false;
 
         foreach (var obj in objects)
         {
-            if (Equals(thisObj, obj))
+            if (EqualityComparer<T>.Default.Equals(thisObj, obj))
                 return true;
         }
 

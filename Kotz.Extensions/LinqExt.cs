@@ -214,9 +214,9 @@ public static class LinqExt
         ArgumentNullException.ThrowIfNull(selector, nameof(selector));
 
         return collection
-            .Select(x => (Value: selector(x), Collection: collection.Where(y => selector(y).Equals(selector(x)))))
-            .DistinctBy(x => x.Value)
-            .Select(x => x.Collection);
+            .Select(x => selector(x))
+            .Distinct()
+            .Select(x => collection.Where(y => EqualityComparer<T2>.Default.Equals(x, selector(y))));
     }
 
     /// <summary>

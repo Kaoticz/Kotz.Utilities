@@ -23,10 +23,15 @@ public sealed class EqualsAnyTests
 
     [Theory]
     [InlineData(null, false)]
+    [InlineData(new int[0], false)]
     internal void EqualsAnyNullTests(object thisObject, bool result)
     {
         Assert.Equal(result, thisObject.EqualsAny(_dummies));
         Assert.Equal(result, _dummies.EqualsAny(thisObject));
-        Assert.True(thisObject.EqualsAny(null!));
+
+        if (thisObject is null)
+            Assert.True(thisObject.EqualsAny(null!));
+        else
+            Assert.False(thisObject.EqualsAny(null!));
     }
 }

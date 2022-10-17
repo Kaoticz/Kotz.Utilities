@@ -166,7 +166,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     {
         for (var index = 0; index < Count; index++)
         {
-            if (Equals(_internalArray[index], item))
+            if (EqualityComparer<T>.Default.Equals(_internalArray[index], item))
                 return true;
         }
 
@@ -182,7 +182,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     {
         for (var index = 0; index < Count; index++)
         {
-            if (Equals(_internalArray[index], item))
+            if (EqualityComparer<T>.Default.Equals(_internalArray[index], item))
             {
                 _internalArray[index] = default!;
                 return true;
@@ -201,7 +201,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     {
         for (var index = 0; index < Count; index++)
         {
-            if (Equals(_internalArray[index], item))
+            if (EqualityComparer<T>.Default.Equals(_internalArray[index], item))
                 return index;
         }
 
@@ -238,7 +238,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
         var index = _internalArray.IndexOfNonNull(predicate);
         item = (index is not -1) ? _internalArray[index] : default;
 
-        return index is not -1 && !Equals(item, default(T));
+        return index is not -1 && !EqualityComparer<T>.Default.Equals(item, default);
     }
 
     /// <summary>

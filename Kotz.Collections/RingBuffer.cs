@@ -35,7 +35,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// Returns the amount of indices that are not storing the default value for <typeparamref name="T"/>.
     /// </summary>
     public int Count
-        => _internalList.Count(x => !Equals(x, default(T)));
+        => _internalList.Count(x => !EqualityComparer<T>.Default.Equals(x, default));
 
     /// <summary>
     /// Gets or sets the maximum amount of items the internal data structure can hold before
@@ -273,7 +273,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
         var index = _internalList.IndexOfNonNull(predicate);
         item = (index is not -1) ? _internalList[index] : default;
 
-        return index is not -1 && !Equals(item, default(T));
+        return index is not -1 && !EqualityComparer<T>.Default.Equals(item, default);
     }
 
     /// <summary>
