@@ -4,6 +4,11 @@ Defines the following extension methods:
 
 - **Array Extensions**
     - Several wrappers for `System.Array` static methods.
+- **Assembly Extensions**
+    - GetConcreteTypes: Gets all concrete types from the current assembly.
+    - GetAbstractTypes: Gets all abstract types from the current assembly.
+    - GetConcreteTypesOf: Gets the concrete types from the current assembly that derive from another type.
+    - GetAbstractTypesOf: Gets the abstract types from the current assembly that derive from another type.
 - **DateTimeOffset Extensions**
     - StartOfDay: Gets the beginning of the day for the current DateTimeOffset object.
 - **Enum Extensions**
