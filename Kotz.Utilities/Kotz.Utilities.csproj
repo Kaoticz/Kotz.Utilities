@@ -6,14 +6,6 @@
     <Description>Provides utility types and extension methods for common tasks. This is a metapackage that includes all other utility packages.</Description>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Include="..\README.md">
       <Pack>True</Pack>

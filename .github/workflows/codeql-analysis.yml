@@ -53,12 +53,7 @@ jobs:
     - name: Set up .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.x'
-
-    # This NuGet feed has been discontinued - packages are now available at nuget.org
-    #- name: Add DSharpPlus Nightly Repository
-    #  run: |
-    #   dotnet nuget add source https://nuget.emzi0767.com/api/v3/index.json -n DSharpPlusNightly
+        dotnet-version: '7.x'
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)

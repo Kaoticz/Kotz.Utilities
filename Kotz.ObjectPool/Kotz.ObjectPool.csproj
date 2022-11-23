@@ -3,15 +3,7 @@
   <Import Project="..\BaseCsproj.props" />
 
   <PropertyGroup>
-    <Description>Provides wrappers for common types.</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <Description>Provides a fluent wrapper for "Microsoft.Extensions.ObjectPool".</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +11,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.9" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0" />
   </ItemGroup>
 
 </Project>

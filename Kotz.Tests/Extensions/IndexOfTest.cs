@@ -58,6 +58,6 @@ public sealed class IndexOfTest
     /// <summary>
     /// Wrapper method to make an external static method work with xUnit.
     /// </summary>
-    private static IEnumerable<object[]> GetSampleArray(int arraySize, int index)
+    public static IEnumerable<object[]> GetSampleArray(int arraySize, int index)
         => ArrayExtTest.GetSampleArray(arraySize, index);
 }

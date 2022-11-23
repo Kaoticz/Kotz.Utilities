@@ -73,7 +73,7 @@ public sealed class RotateTests
     /// <summary>
     /// Wrapper method to make an external static method work with xUnit.
     /// </summary>
-    private static IEnumerable<object[]> GetSampleArray(int arraySize, int index, int amount)
+    public static IEnumerable<object[]> GetSampleArray(int arraySize, int index, int amount)
     {
         var resultArray = ArrayExtTest.GetSampleArray(arraySize, index).First();
         yield return new object[] { resultArray[0], index, amount };

@@ -70,7 +70,7 @@ public static class StringExt
     /// <param name="maxLength">The maximum length the string should have.</param>
     /// <returns>This string with length equal to or lower than <paramref name="maxLength"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="maxLength"/> is less than zero.</exception>
-    [return: NotNullIfNotNull("text")]
+    [return: NotNullIfNotNull(nameof(text))]
     public static string? MaxLength(this string? text, int maxLength)
         => text?[..Math.Min(text.Length, maxLength)];
 
@@ -83,7 +83,7 @@ public static class StringExt
     /// <remarks>The <paramref name="append"/> only gets added to the truncated string if this string exceeds <paramref name="maxLength"/> in length.</remarks>
     /// <returns>This string with length equal to or lower than <paramref name="maxLength"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="maxLength"/> is less than zero.</exception>
-    [return: NotNullIfNotNull("text")]
+    [return: NotNullIfNotNull(nameof(text))]
     public static string? MaxLength(this string? text, int maxLength, string append)
         => (text is null || text.Length <= maxLength)
             ? text
@@ -95,7 +95,7 @@ public static class StringExt
     /// <param name="text">This string.</param>
     /// <param name="joinSpaces"><see langword="true"/> to , <see langword="false"/></param>
     /// <returns>This <see cref="string"/> converted to snake_case.</returns>
-    [return: NotNullIfNotNull("text")]
+    [return: NotNullIfNotNull(nameof(text))]
     public static string? ToSnakeCase(this string? text, bool joinSpaces = false)
     {
         if (string.IsNullOrWhiteSpace(text))
