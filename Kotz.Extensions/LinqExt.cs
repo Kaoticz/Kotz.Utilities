@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Kotz.Extensions;
 
@@ -374,5 +375,49 @@ public static class LinqExt
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Splits the current <paramref name="collection"/> into multiple collections based on the specified <paramref name="separator"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="separator">The value to split the collection on.</param>
+    /// <param name="comparer">The comparer for <typeparamref name="T"/>.</param>
+    /// <remarks>The <paramref name="separator"/> is not included in the final result.</remarks>
+    /// <returns>Subcollections of this <paramref name="collection"/> delimited by the specified <paramref name="separator"/>.</returns>
+    public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> collection, T separator, IEqualityComparer<T>? comparer = default)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        if (!collection.Any())
+        {
+            yield return collection;
+            yield break;
+        }
+
+        comparer ??= EqualityComparer<T>.Default;
+        var currentIndex = 0;
+        var last = 0;
+
+        foreach (var element in collection)
+        {
+            if (comparer.Equals(element, separator))
+            {
+                var result = collection
+                    .Skip(last)
+                    .Take(currentIndex - last);
+
+                if (result.Any())
+                    yield return result;
+
+                last = currentIndex + 1;
+            }
+
+            currentIndex++;
+        }
+
+        if (currentIndex - last > 0)
+            yield return collection.TakeLast(currentIndex - last);
     }
 }
