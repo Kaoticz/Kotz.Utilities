@@ -75,7 +75,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// </summary>
     /// <returns>An enumerator for the <see cref="RentedArray{T}"/>.</returns>
     public IEnumerator<T> GetEnumerator()
-        => _internalArray.Cast<T>().Take(Count).GetEnumerator();
+        => _internalArray.Take(Count).GetEnumerator();
 
     /// <summary>
     /// Returns an enumerator that iterates through the <see cref="RentedArray{T}"/>.

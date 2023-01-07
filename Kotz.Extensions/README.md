@@ -24,12 +24,20 @@ Defines the following extension methods:
     - NestedFill: Adds a sample object to the inner collections of a collection of collections until they all have the same length.
     - RandomElement: Gets a random element from the current collection.
     - Split: Splits the current collection into multiple collections based on the specified separator.
-    - ToConcurrentDictionary: Converts the current collection to a `ConcurrentDictionary<T, U>`.
     - Unique: Gets the symetric difference between all elements in the current and specified collections.
     - When: Fluent version of an `if` statement.
     - WhenAllAsync: Awaits all tasks in the current `IEnumerable<Task>` and returns when all of them have completed.
     - WhenAnyAsync: Awaits all tasks in the current `IEnumerable<Task>` and returns when any of them have completed.
     - ChunkBy: Splits a collection into a collection of collections based on the provided key selector.
+    - A variety of **"To"** methods:
+        - ToConcurrentDictionary
+        - ToQueue
+        - ToConcurrentQueue
+        - ToImmutableQueue
+        - ToPriorityQueue
+        - ToStack
+        - ToConcurrentStack
+        - ToImmutableStack
 - **IReadOnlyList\<T> Extensions**
     - IndexOf: Get the index of the first element that matches a predicate.
     - LastIndexOf: Get the index of the last element that matches a predicate.
