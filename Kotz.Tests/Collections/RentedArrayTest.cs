@@ -45,8 +45,55 @@ public sealed class RentedArrayTest
         var counter = 0;
         using var rentedArray = new RentedArray<MockObject>(collection);
 
+        Assert.Equal(collection.Length, rentedArray.Count);
+
         foreach (var rentedItem in rentedArray)
             Assert.Equal(collection[counter++], rentedItem);
+    }
+
+    [Theory]
+    [MemberData(nameof(MockCollectionTestData.Collection), MemberType = typeof(MockCollectionTestData))]
+    [MemberData(nameof(MockCollectionTestData.CollectionWithNull), MemberType = typeof(MockCollectionTestData))]
+    [MemberData(nameof(MockCollectionTestData.EmptyCollection), MemberType = typeof(MockCollectionTestData))]
+    internal void MaterializationTest(MockObject[] collection)
+    {
+        using var rentedArray = new RentedArray<MockObject>(collection);
+        var copy = rentedArray.ToArray();
+
+        for (var index = 0; index < collection.Length; index++)
+        {
+            Assert.StrictEqual(collection[index], rentedArray[index]);
+            Assert.StrictEqual(collection[index], copy[index]);
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(MockCollectionTestData.Collection), MemberType = typeof(MockCollectionTestData))]
+    [MemberData(nameof(MockCollectionTestData.CollectionWithNull), MemberType = typeof(MockCollectionTestData))]
+    [MemberData(nameof(MockCollectionTestData.EmptyCollection), MemberType = typeof(MockCollectionTestData))]
+    internal void CopyToTest(MockObject[] collection)
+    {
+        using var rentedArray = new RentedArray<MockObject>(collection);
+        var copy = new MockObject[collection.Length];
+
+        rentedArray.CopyTo(copy, 0);
+
+        for (var index = 0; index < collection.Length; index++)
+        {
+            Assert.StrictEqual(collection[index], rentedArray[index]);
+            Assert.StrictEqual(collection[index], copy[index]);
+        }
+    }
+
+    [Theory]
+    [InlineData(3, 0, 1, 2)]
+    [InlineData(-1, 0, 1, 2)]
+    internal void CopyToFailTest(int startIndex, params int[] collection)
+    {
+        using var rentedArray = new RentedArray<int>(collection);
+        var copy = new int[collection.Length];
+
+        Assert.ThrowsAny<ArgumentException>(() => rentedArray.CopyTo(copy, startIndex));
     }
 
     [Theory]
@@ -131,17 +178,32 @@ public sealed class RentedArrayTest
 
     [Theory]
     [MemberData(nameof(MockCollectionTestData.TrueSubcollection), MemberType = typeof(MockCollectionTestData))]
-    internal void TryGetValueTest(MockObject[] collection, MockObject[] subCollection)
+    internal void TryGetValueReferenceTypeTest(MockObject[] collection, MockObject[] subCollection)
     {
         using var rentedArray = new RentedArray<MockObject>(subCollection);
 
         foreach (var item in collection)
             Assert.Equal(subCollection.Contains(item), rentedArray.TryGetValue(x => x.Equals(item), out _));
 
+        Assert.True(rentedArray.TryGetValue(0, out _));
         Assert.True(rentedArray.TryGetValue(4, out _));
         Assert.False(rentedArray.TryGetValue(-1, out _));
         Assert.False(rentedArray.TryGetValue(rentedArray.Count + 1, out _));
         Assert.False(rentedArray.TryGetValue(x => x == default, out _));
+    }
+
+    [Theory]
+    [InlineData(true, 0, 0, 1, 2, 3)]
+    [InlineData(true, 1, 0, 1, 2, 3)]
+    [InlineData(false, 5, 0, 1, 2, 3)]
+    internal void TryGetValueValueTypeTest(bool expected, int toSearch, params int[] collection)
+    {
+        using var rentedArray = new RentedArray<int>(collection);
+
+        if (expected)
+            Assert.True(rentedArray.TryGetValue(x => x == toSearch, out _));
+        else
+            Assert.False(rentedArray.TryGetValue(x => x == toSearch, out _));
     }
 
     [Theory]

@@ -18,19 +18,18 @@ public sealed class RingBufferTests
         var ringBuffer = CreateRingBuffer(capacity, collection);
 
         Assert.True(ringBuffer.CurrentIndex is 0);
-        Assert.True(ringBuffer.Count == ringBuffer.Count(x => x != default));
 
         if (collection == default)
             Assert.True(ringBuffer.All(x => x == default), "Buffer was not filled with default values.");
 
         if (capacity != default)
-            Assert.True(capacity == ringBuffer.Length);
+            Assert.True(capacity == ringBuffer.Count);
 
         if (capacity != default && collection == default)
-            Assert.Equal(capacity, ringBuffer.Length);
+            Assert.Equal(capacity, ringBuffer.Count);
 
         if (capacity == default && collection != default)
-            Assert.Equal(collection.Length, ringBuffer.Length);
+            Assert.Equal(collection.Length, ringBuffer.Count);
 
         if (capacity != default && collection != default)
         {
@@ -39,6 +38,59 @@ public sealed class RingBufferTests
             else
                 Assert.Contains(collection.Take(capacity!.Value), x => ringBuffer.Contains(x));
         }
+    }
+
+    [Theory]
+    [InlineData(0, 1, 2, 3, 4)]
+    [InlineData(0, 1, null, null, 4)]
+    [InlineData(null, 1, 2, 3, 4)]
+    [InlineData(null, null, null, null, null)]
+    internal void MaterializationTest(params int?[] collection)
+    {
+        var ringBuffer = CreateRingBuffer(null, collection);
+        var copy = ringBuffer.ToArray();
+
+        Assert.Equal(collection.Length, ringBuffer.Count);
+        Assert.Equal(collection.Length, copy.Length);
+
+        for (var index = 0; index < collection.Length; index++)
+        {
+            Assert.StrictEqual(collection[index], ringBuffer[index]);
+            Assert.StrictEqual(collection[index], copy[index]);
+        }
+    }
+
+    [Theory]
+    [InlineData(0, 1, 2, 3, 4)]
+    [InlineData(0, 1, null, null, 4)]
+    [InlineData(null, 1, 2, 3, 4)]
+    [InlineData(null, null, null, null, null)]
+    internal void CopyToTest(params int?[] collection)
+    {
+        var ringBuffer = CreateRingBuffer(null, collection);
+        var copy = new int?[ringBuffer.Count];
+
+        ringBuffer.CopyTo(copy, 0);
+
+        Assert.Equal(collection.Length, ringBuffer.Count);
+        Assert.Equal(collection.Length, copy.Length);
+
+        for (var index = 0; index < collection.Length; index++)
+        {
+            Assert.StrictEqual(collection[index], ringBuffer[index]);
+            Assert.StrictEqual(collection[index], copy[index]);
+        }
+    }
+
+    [Theory]
+    [InlineData(3, 0, 1, 2)]
+    [InlineData(-1, 0, 1, 2)]
+    internal void CopyToFailTest(int startIndex, params int[] collection)
+    {
+        var ringBuffer = CreateRingBuffer(null, collection);
+        var copy = new int[collection.Length];
+
+        Assert.ThrowsAny<ArgumentException>(() => ringBuffer.CopyTo(copy, startIndex));
     }
 
     [Theory]
@@ -74,18 +126,18 @@ public sealed class RingBufferTests
         foreach (var number in collection)
             ringBuffer.Add(number);
 
-        Assert.Equal(capacity, ringBuffer.Length);
+        Assert.Equal(capacity, ringBuffer.Count);
 
         if (capacity >= collection.Length)
         {
             Assert.Contains(collection, x => ringBuffer.Contains(x));
-            Assert.Equal(ringBuffer.Count, collection.Length);
+            Assert.Equal(ringBuffer.Count(x => x is not null), collection.Length);
             Assert.Equal(ringBuffer.CurrentIndex, collection.Length);
         }
         else
         {
             Assert.Contains(collection.TakeLast(capacity), x => ringBuffer.Contains(x));
-            Assert.NotEqual(ringBuffer.Count, collection.Length);
+            Assert.NotEqual(ringBuffer.Count(x => x is not null), collection.Length);
         }
     }
 
@@ -96,14 +148,16 @@ public sealed class RingBufferTests
     [InlineData(1, 2, 3, 4, 5, 6, 7, 8)]
     internal void RemoveTest(params int?[] collection)
     {
-        var sample = Enumerable.Range(1, 10).ToArray();
+        var sample = Enumerable.Range(1, 10)
+            .Cast<int?>()
+            .ToArray();
         var ringBuffer = CreateRingBuffer(null, sample);
 
         foreach (var number in collection)
-            ringBuffer.Remove(number!.Value);
+            ringBuffer.Remove(number);
 
-        Assert.Equal(ringBuffer.Length, sample.Length);
-        Assert.Equal(ringBuffer.Count, sample.Length - collection.Length);
+        Assert.Equal(ringBuffer.Count, sample.Length);
+        Assert.Equal(ringBuffer.Count(x => x is not null), sample.Length - collection.Length);
         Assert.DoesNotContain(ringBuffer, x => collection.Contains(x));
     }
 
@@ -139,12 +193,12 @@ public sealed class RingBufferTests
         }
 
         ringBuffer.Resize(newSize);
-        Assert.Equal(ringBuffer.Length, newSize);
+        Assert.Equal(ringBuffer.Count, newSize);
 
         if (sample.Length > newSize)
             Assert.DoesNotContain(ringBuffer, x => ringBuffer.Contains(default));
         else
-            Assert.Equal(newSize - sample.Length, ringBuffer.AsReadOnlySpan().AsEnumerable().Count(x => x == default));
+            Assert.Equal(newSize - sample.Length, ringBuffer.Count(x => x == default));
     }
 
     [Theory]
@@ -161,14 +215,14 @@ public sealed class RingBufferTests
 
         if (index < 0 || index > sample.Length)
             Assert.Throws<ArgumentOutOfRangeException>(() => ringBuffer.RemoveAt(index));
-        else if (index < ringBuffer.Length)
+        else if (index < ringBuffer.Count)
         {
             ringBuffer.RemoveAt(index);
             Assert.True(ringBuffer[index] == default);
             Assert.Equal(ringBuffer.Intersect(sample).Count(), sample.Length - 1);
         }
 
-        Assert.Equal(ringBuffer.Length, sample.Length);
+        Assert.Equal(ringBuffer.Count, sample.Length);
     }
 
     [Theory]
@@ -184,16 +238,16 @@ public sealed class RingBufferTests
         var sample = Enumerable.Range(1, 10).ToArray();
         var ringBuffer = CreateRingBuffer(null, sample);
 
-        if (index < 0 || index > ringBuffer.Length)
+        if (index < 0 || index > ringBuffer.Count)
             Assert.Throws<ArgumentOutOfRangeException>(() => ringBuffer.Insert(index, toInsert));
-        else if (index < ringBuffer.Length)
+        else if (index < ringBuffer.Count)
         {
             ringBuffer.Insert(index, toInsert);
             Assert.Equal(ringBuffer[index], toInsert);
             Assert.Equal(ringBuffer.Intersect(sample).Count(), sample.Length - 1);
         }
 
-        Assert.Equal(ringBuffer.Length, sample.Length);
+        Assert.Equal(ringBuffer.Count, sample.Length);
     }
 
     [Theory]
@@ -208,7 +262,7 @@ public sealed class RingBufferTests
         var sample = Enumerable.Range(0, 9).ToArray();
         var ringBuffer = CreateRingBuffer(null, sample);
 
-        if (index < 0 || index > ringBuffer.Length)
+        if (index < 0 || index > ringBuffer.Count)
             Assert.Equal(-1, ringBuffer.IndexOf(index));
         else
             Assert.Equal(ringBuffer[index], ringBuffer.IndexOf(index));
@@ -227,7 +281,7 @@ public sealed class RingBufferTests
 
         ringBuffer.Clear();
 
-        Assert.Equal(amount, ringBuffer.Length);
+        Assert.Equal(amount, ringBuffer.Count);
         Assert.True(ringBuffer.All(x => x == default));
     }
 
@@ -247,7 +301,7 @@ public sealed class RingBufferTests
         // This throws if a race condition occurs
         Parallel.Invoke(actions);
 
-        Assert.True(sample.Length > 0);
+        Assert.True(sample.Count > 0);
     }
 
     [Theory]
@@ -262,7 +316,7 @@ public sealed class RingBufferTests
         for (var index = 0; index < ringBuffer.Count; index++)
             Assert.Equal(ringBuffer[index], span[index]);
 
-        Assert.Equal(ringBuffer.Length, span.Length);
+        Assert.Equal(ringBuffer.Count, span.Length);
     }
 
     [Theory]
@@ -277,7 +331,7 @@ public sealed class RingBufferTests
         for (var index = 0; index < ringBuffer.Count; index++)
             Assert.Equal(ringBuffer[index], span[index]);
 
-        Assert.Equal(ringBuffer.Length, span.Length);
+        Assert.Equal(ringBuffer.Count, span.Length);
     }
 
     /// <summary>

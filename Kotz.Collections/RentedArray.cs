@@ -1,3 +1,4 @@
+using Kotz.Collections.Debugger;
 using Kotz.Collections.Extensions;
 using System.Buffers;
 using System.Collections;
@@ -14,6 +15,7 @@ namespace Kotz.Collections;
 /// Use this for short-lived arrays that exceed 1000 bytes in size or methods whose Gen0 allocation exceeds 1000 bytes. <br />
 /// Call <see cref="RentedArray{T}.Dispose"/> to return the array to the <see cref="ArrayPool{T}"/>.
 /// </remarks>
+[DebuggerTypeProxy(typeof(CollectionDebugView<>))]
 [DebuggerDisplay("Count = {Count}")]
 public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
 {
@@ -45,7 +47,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// Gets a slice of this <see cref="RentedArray{T}"/>.
     /// </summary>
     /// <returns>The specified slice of this <see cref="RentedArray{T}"/>.</returns>
-    /// <remarks>This allocates a new <see cref="RentedArray{T}"/>. If you want to avoid allocations, call <see cref="AsSpan"/> first and get a slice of that.</remarks>
+    /// <remarks>This allocates a new <see cref="RentedArray{T}"/>. If you want to avoid allocations, call <see cref="AsSpan"/> first then get a slice of that.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Occurs when the <paramref name="range"/> goes out of bounds of the <see cref="RentedArray{T}"/>.</exception>
     public RentedArray<T> this[Range range]
         => new(_internalArray[range]);
@@ -76,6 +78,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// <summary>
     /// Returns an enumerator that iterates through the <see cref="RentedArray{T}"/>.
     /// </summary>
+    /// <remarks>If <typeparamref name="T"/> is a reference type, <see langword="null"/> values may be enumerared.</remarks>
     /// <returns>An enumerator for the <see cref="RentedArray{T}"/>.</returns>
     public IEnumerator<T> GetEnumerator()
         => _internalArray.Take(Count).GetEnumerator();
@@ -83,6 +86,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// <summary>
     /// Returns an enumerator that iterates through the <see cref="RentedArray{T}"/>.
     /// </summary>
+    /// <remarks>If <typeparamref name="T"/> is a reference type, <see langword="null"/> values may be enumerared.</remarks>
     /// <returns>An enumerator for the <see cref="RentedArray{T}"/>.</returns>
     IEnumerator IEnumerable.GetEnumerator()
         => _internalArray.Take(Count).GetEnumerator();
@@ -90,6 +94,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// <summary>
     /// Creates a new <see cref="Span{T}"/> over this array.
     /// </summary>
+    /// <remarks>If <typeparamref name="T"/> is a reference type, the span may contain <see langword="null"/> values.</remarks>
     /// <returns>The <see cref="Span{T}"/> representation of the array.</returns>
     public Span<T> AsSpan()
         => _internalArray.AsSpan()[..Count];
@@ -97,6 +102,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// <summary>
     /// Creates a new <see cref="ReadOnlySpan{T}"/> over this array.
     /// </summary>
+    /// <remarks>If <typeparamref name="T"/> is a reference type, the span may contain <see langword="null"/> values.</remarks>
     /// <returns>The <see cref="ReadOnlySpan{T}"/> representation of the array.</returns>
     public ReadOnlySpan<T> AsReadOnlySpan()
         => _internalArray.AsSpan()[..Count];
@@ -115,6 +121,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// </summary>
     /// <param name="array">The one-dimensional array that is the destination of the elements copied from the current array.</param>
     /// <param name="arrayIndex">A 32-bit integer that represents the index in array at which copying begins.</param>
+    /// <remarks>If <typeparamref name="T"/> is a reference type, the copied array may contain <see langword="null"/> values.</remarks>
     /// <exception cref="ArgumentNullException">Occurs when the <paramref name="array"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Occurs when the index is less than the lower bound of the array.</exception>
     /// <exception cref="RankException">Occurs when the source <paramref name="array"/> is multidimensional.</exception>
@@ -129,7 +136,22 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// Occurs when At least one element in the source System.Array cannot be cast to the type of destination array.
     /// </exception>
     public void CopyTo(T[] array, int arrayIndex)
-        => _internalArray.CopyTo(array, arrayIndex);
+    {
+        ArgumentNullException.ThrowIfNull(array, nameof(array));
+
+        if (Count is 0)
+            return;
+        else if (arrayIndex < 0 || arrayIndex >= array.Length)
+            throw new ArgumentOutOfRangeException(nameof(arrayIndex), arrayIndex, $"Index ({arrayIndex}) is out of bounds (array's size: {Count}).");
+
+        var span = AsReadOnlySpan();
+        var targetSpan = array.AsSpan()[arrayIndex..];
+
+        if (span.Length > targetSpan.Length)
+            throw new ArgumentException($"Source collection is too big ({span.Length}) for the target collection ({targetSpan.Length}). Provide a bigger collection or decrease the value of arrayIndex ({arrayIndex}).");
+
+        span.CopyTo(targetSpan);
+    }
 
     /// <summary>
     /// Inserts an item to the <see cref="RentedArray{T}"/> at the specified index.
@@ -162,10 +184,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// Removes all items from this <see cref="RentedArray{T}"/>.
     /// </summary>
     public void Clear()
-    {
-        for (var index = 0; index < Count; index++)
-            _internalArray[index] = default!;
-    }
+        => _internalArray.AsSpan().Clear();
 
     /// <summary>
     /// Determines whether this <see cref="RentedArray{T}"/> contains a specific value.
@@ -248,7 +267,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
         var index = _internalArray.IndexOfNonNull(predicate);
         item = (index is not -1) ? _internalArray[index] : default;
 
-        return index is not -1 && !EqualityComparer<T>.Default.Equals(item, default);
+        return index is not -1 && item is not null;
     }
 
     /// <summary>
@@ -256,13 +275,26 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// </summary>
     public void Dispose()
     {
-        if (Count is not 0)
-        {
-            ArrayPool<T>.Shared.Return(_internalArray, true);
-            _internalArray = Array.Empty<T>();
-            Count = 0;
-        }
-
+        InternalDispose();
         GC.SuppressFinalize(this);
     }
+
+    /// <summary>
+    /// Clears and returns the internal rented array to the <see cref="ArrayPool{T}"/>.
+    /// </summary>
+    private void InternalDispose()
+    {
+        if (Count is 0)
+            return;
+
+        ArrayPool<T>.Shared.Return(_internalArray, true);
+        _internalArray = Array.Empty<T>();
+        Count = 0;
+    }
+
+    /// <summary>
+    /// Disposes and finalizes this rented array.
+    /// </summary>
+    ~RentedArray()
+        => InternalDispose();
 }

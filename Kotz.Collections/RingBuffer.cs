@@ -1,3 +1,4 @@
+using Kotz.Collections.Debugger;
 using Kotz.Collections.Extensions;
 using System.Collections;
 using System.Diagnostics;
@@ -13,7 +14,8 @@ namespace Kotz.Collections;
 /// overwriting old data. The buffer can be manually resized.
 /// </summary>
 /// <typeparam name="T">The data type of the elements stored in this buffer.</typeparam>
-[DebuggerDisplay("Length = {Length}")]
+[DebuggerTypeProxy(typeof(CollectionDebugView<>))]
+[DebuggerDisplay("Count = {Count}")]
 public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
 {
     /// <summary>
@@ -36,19 +38,8 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Gets or sets the size of the internal data structure.
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="value"/> is less than 0.</exception>
-    /// <exception cref="OutOfMemoryException">Occurs when the system has no free memory available for allocation.</exception>
-    public int Length
-    {
-        get => _internalList.Capacity;
-        set => Resize(value);
-    }
-
-    /// <summary>
-    /// Returns the amount of indices that are not storing the default value for <typeparamref name="T"/>.
-    /// </summary>
     public int Count
-        => _internalList.Count(x => !EqualityComparer<T>.Default.Equals(x, default));
+        => _internalList.Count;
 
     /// <summary>
     /// Determines whether this collection is read-only.
@@ -126,24 +117,18 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Returns an enumerator that iterates through the <see cref="RingBuffer{T}"/>.
     /// </summary>
-    /// <remarks>
-    /// Default elements are excluded. <br />
-    /// See <see cref="AsReadOnlySpan"/> if you want <see langword="default"/> elements to be returned.
-    /// </remarks>
+    /// <remarks>If <typeparamref name="T"/> is a nullable type, <see langword="null"/> values may be enumerated.</remarks>
     /// <returns>An enumerator for the <see cref="RingBuffer{T}"/>.</returns>
     IEnumerator IEnumerable.GetEnumerator()
-        => _internalList.Where(x => !EqualityComparer<T>.Default.Equals(x, default)).GetEnumerator();
+        => _internalList.GetEnumerator();
 
     /// <summary>
     /// Returns an enumerator that iterates through the <see cref="RingBuffer{T}"/>.
     /// </summary>
-    /// <remarks>
-    /// Default elements are excluded. <br />
-    /// See <see cref="AsReadOnlySpan"/> if you want <see langword="default"/> elements to be returned.
-    /// </remarks>
+    /// <remarks>If <typeparamref name="T"/> is a nullable type, <see langword="null"/> values may be enumerated.</remarks>
     /// <returns>An enumerator for the <see cref="RingBuffer{T}"/>.</returns>
     public IEnumerator<T> GetEnumerator()
-        => _internalList.Where(x => !EqualityComparer<T>.Default.Equals(x, default)).GetEnumerator();
+        => _internalList.GetEnumerator();
 
     /// <summary>
     /// Creates a new <see cref="Span{T}"/> over this ring buffer.
@@ -169,7 +154,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
 
     /// <summary>
     /// Removes all items from the <see cref="RingBuffer{T}"/> by setting them to
-    /// default value of <typeparamref name="T"/>.
+    /// the default value of <typeparamref name="T"/>.
     /// </summary>
     public void Clear()
         => CollectionsMarshal.AsSpan(_internalList).Clear();
@@ -187,6 +172,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// </summary>
     /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the elements copied from the <see cref="RingBuffer{T}"/>.</param>
     /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+    /// <remarks>If <typeparamref name="T"/> is a reference type, the copied array may contain <see langword="null"/> values.</remarks>
     /// <exception cref="ArgumentException">
     /// Occurs when the number of elements in the source <see cref="RingBuffer{T}"/> is greater than the available space from <paramref name="arrayIndex"/>
     /// to the end of the destination <paramref name="array"/>.
@@ -302,7 +288,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Safely gets the first non-<see langword="null"/> element that meets the criteria of the speficied <paramref name="predicate"/>.
+    /// Safely gets the first non-<see langword="null"/> element that meets the criteria of the specified <paramref name="predicate"/>.
     /// </summary>
     /// <param name="predicate">Delegate that defines the conditions of the element to get.</param>
     /// <param name="item">The resulting element.</param>
@@ -313,7 +299,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
         var index = _internalList.IndexOfNonNull(predicate);
         item = (index is not -1) ? _internalList[index] : default;
 
-        return index is not -1 && !EqualityComparer<T>.Default.Equals(item, default);
+        return index is not -1 && item is not null;
     }
 
     /// <summary>
