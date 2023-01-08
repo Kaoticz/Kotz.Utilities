@@ -1,5 +1,6 @@
 using Kotz.Collections.Extensions;
 using System.Collections;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -12,6 +13,7 @@ namespace Kotz.Collections;
 /// overwriting old data. The buffer can be manually resized.
 /// </summary>
 /// <typeparam name="T">The data type of the elements stored in this buffer.</typeparam>
+[DebuggerDisplay("Length = {Length}")]
 public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
 {
     /// <summary>
@@ -32,22 +34,21 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Returns the amount of indices that are not storing the default value for <typeparamref name="T"/>.
-    /// </summary>
-    public int Count
-        => _internalList.Count(x => !EqualityComparer<T>.Default.Equals(x, default));
-
-    /// <summary>
-    /// Gets or sets the maximum amount of items the internal data structure can hold before
-    /// writing cycles back to the beginning.
+    /// Gets or sets the size of the internal data structure.
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="value"/> is less than 0.</exception>
     /// <exception cref="OutOfMemoryException">Occurs when the system has no free memory available for allocation.</exception>
-    public int Capacity
+    public int Length
     {
         get => _internalList.Capacity;
         set => Resize(value);
     }
+
+    /// <summary>
+    /// Returns the amount of indices that are not storing the default value for <typeparamref name="T"/>.
+    /// </summary>
+    public int Count
+        => _internalList.Count(x => !EqualityComparer<T>.Default.Equals(x, default));
 
     /// <summary>
     /// Determines whether this collection is read-only.
@@ -72,8 +73,23 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// Initializes a <see cref="RingBuffer{T}"/>.
     /// </summary>
     /// <param name="collection">The collection of elements to initialize the buffer with.</param>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
     public RingBuffer(IEnumerable<T> collection)
-        => _internalList = new(collection);
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        if (!collection.Any())
+        {
+            _internalList = new(0);
+            return;
+        }
+
+        _internalList = new(collection);
+        var count = _internalList.Count;
+
+        FillWithDefault(_internalList);
+        Resize(count);
+    }
 
     /// <summary>
     /// Initializes a <see cref="RingBuffer{T}"/>.
@@ -102,29 +118,53 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
             throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Capacity cannot be equal or lower than zero.");
 
         _internalList = new(collection);
+
+        FillWithDefault(_internalList);
         Resize(capacity);
     }
 
     /// <summary>
     /// Returns an enumerator that iterates through the <see cref="RingBuffer{T}"/>.
     /// </summary>
+    /// <remarks>
+    /// Default elements are excluded. <br />
+    /// See <see cref="AsReadOnlySpan"/> if you want <see langword="default"/> elements to be returned.
+    /// </remarks>
     /// <returns>An enumerator for the <see cref="RingBuffer{T}"/>.</returns>
     IEnumerator IEnumerable.GetEnumerator()
-        => _internalList.GetEnumerator();
+        => _internalList.Where(x => !EqualityComparer<T>.Default.Equals(x, default)).GetEnumerator();
 
     /// <summary>
     /// Returns an enumerator that iterates through the <see cref="RingBuffer{T}"/>.
     /// </summary>
+    /// <remarks>
+    /// Default elements are excluded. <br />
+    /// See <see cref="AsReadOnlySpan"/> if you want <see langword="default"/> elements to be returned.
+    /// </remarks>
     /// <returns>An enumerator for the <see cref="RingBuffer{T}"/>.</returns>
     public IEnumerator<T> GetEnumerator()
-        => _internalList.GetEnumerator();
+        => _internalList.Where(x => !EqualityComparer<T>.Default.Equals(x, default)).GetEnumerator();
 
     /// <summary>
     /// Creates a new <see cref="Span{T}"/> over this ring buffer.
     /// </summary>
-    /// <remarks>Do not resize the <see cref="RingBuffer{T}"/> while the <see cref="Span{T}"/> is in use.</remarks>
+    /// <remarks>
+    /// Do not resize the <see cref="RingBuffer{T}"/> while the <see cref="Span{T}"/> is in use. <br />
+    /// If <typeparamref name="T"/> is a nullable type, this span may contain <see langword="null"/> values.
+    /// </remarks>
     /// <returns>The <see cref="Span{T}"/> representation of the ring buffer.</returns>
     public Span<T> AsSpan()
+        => CollectionsMarshal.AsSpan(_internalList);
+
+    /// <summary>
+    /// Creates a new <see cref="ReadOnlySpan{T}"/> over this ring buffer.
+    /// </summary>
+    /// <remarks>
+    /// Do not resize the <see cref="RingBuffer{T}"/> while the <see cref="ReadOnlySpan{T}"/> is in use. <br />
+    /// If <typeparamref name="T"/> is a nullable type, this span may contain <see langword="null"/> values.
+    /// </remarks>
+    /// <returns>The <see cref="ReadOnlySpan{T}"/> representation of the ring buffer.</returns>
+    public ReadOnlySpan<T> AsReadOnlySpan()
         => CollectionsMarshal.AsSpan(_internalList);
 
     /// <summary>
@@ -132,7 +172,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// default value of <typeparamref name="T"/>.
     /// </summary>
     public void Clear()
-        => Reset(_internalList);
+        => CollectionsMarshal.AsSpan(_internalList).Clear();
 
     /// <summary>
     ///  Determines whether the <see cref="RingBuffer{T}"/> contains a specific value.
@@ -288,18 +328,5 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
             for (var index = list.Count; index < list.Capacity; index++)
                 list.Add(default!);
         }
-    }
-
-    /// <summary>
-    /// Sets all elements of the specified list to the default <typeparamref name="T"/> value.
-    /// </summary>
-    /// <param name="list">The list to be reset.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void Reset(List<T> list)
-    {
-        var listSpan = CollectionsMarshal.AsSpan(list);
-
-        for (var index = 0; index < list.Capacity; index++)
-            listSpan[index] = default!;
     }
 }

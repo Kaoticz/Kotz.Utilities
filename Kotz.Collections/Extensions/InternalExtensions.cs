@@ -13,9 +13,12 @@ internal static class InternalExtensions
     /// <typeparam name="T">The type of the elements.</typeparam>
     /// <remarks>This method is almost a copy of the LinqExt.IndexOf method in Kotz.Extensions.</remarks>
     /// <returns>The index of the item, -1 otherwise.</returns>
-    /// <exception cref="ArgumentNullException">Occurs when <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">
+    /// Occurs when <paramref name="collection"/> or <paramref name="predicate"/> are <see langword="null"/>.
+    /// </exception>
     internal static int IndexOfNonNull<T>(this IReadOnlyList<T> collection, Func<T, bool> predicate)
     {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
         ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
 
         for (var index = 0; index < collection.Count; index++)

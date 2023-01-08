@@ -159,6 +159,19 @@ public sealed class RentedArrayTest
 
     [Theory]
     [MemberData(nameof(MockCollectionTestData.Collection), MemberType = typeof(MockCollectionTestData))]
+    internal void AsReadOnlySpanTest(MockObject[] collection)
+    {
+        using var rentedArray = new RentedArray<MockObject>(collection);
+        var span = rentedArray.AsReadOnlySpan();
+
+        for (var index = 0; index < collection.Length; index++)
+            Assert.Equal(collection[index], span[index]);
+
+        Assert.Equal(collection.Length, span.Length);
+    }
+
+    [Theory]
+    [MemberData(nameof(MockCollectionTestData.Collection), MemberType = typeof(MockCollectionTestData))]
     [MemberData(nameof(MockCollectionTestData.CollectionWithNull), MemberType = typeof(MockCollectionTestData))]
     internal void SliceTest(MockObject[] collection)
     {

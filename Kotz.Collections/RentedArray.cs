@@ -1,6 +1,7 @@
 using Kotz.Collections.Extensions;
 using System.Buffers;
 using System.Collections;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Kotz.Collections;
@@ -13,6 +14,7 @@ namespace Kotz.Collections;
 /// Use this for short-lived arrays that exceed 1000 bytes in size or methods whose Gen0 allocation exceeds 1000 bytes. <br />
 /// Call <see cref="RentedArray{T}.Dispose"/> to return the array to the <see cref="ArrayPool{T}"/>.
 /// </remarks>
+[DebuggerDisplay("Count = {Count}")]
 public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
 {
     private T[] _internalArray;
@@ -36,13 +38,14 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     public T this[int index]
     {
         get => _internalArray[index];
-        set => _internalArray[index] = value;
+        set => _internalArray[index] = (index >= Count) ? throw new ArgumentOutOfRangeException(nameof(index), index, "Index out of range.") : value;
     }
 
     /// <summary>
     /// Gets a slice of this <see cref="RentedArray{T}"/>.
     /// </summary>
     /// <returns>The specified slice of this <see cref="RentedArray{T}"/>.</returns>
+    /// <remarks>This allocates a new <see cref="RentedArray{T}"/>. If you want to avoid allocations, call <see cref="AsSpan"/> first and get a slice of that.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Occurs when the <paramref name="range"/> goes out of bounds of the <see cref="RentedArray{T}"/>.</exception>
     public RentedArray<T> this[Range range]
         => new(_internalArray[range]);
@@ -89,6 +92,13 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// </summary>
     /// <returns>The <see cref="Span{T}"/> representation of the array.</returns>
     public Span<T> AsSpan()
+        => _internalArray.AsSpan()[..Count];
+
+    /// <summary>
+    /// Creates a new <see cref="ReadOnlySpan{T}"/> over this array.
+    /// </summary>
+    /// <returns>The <see cref="ReadOnlySpan{T}"/> representation of the array.</returns>
+    public ReadOnlySpan<T> AsReadOnlySpan()
         => _internalArray.AsSpan()[..Count];
 
     /// <summary>
