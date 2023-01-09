@@ -1,7 +1,4 @@
-using Kotz.Collections;
-using Kotz.Extensions;
 using System.Runtime.CompilerServices;
-using Xunit;
 
 namespace Kotz.Tests.Collections;
 

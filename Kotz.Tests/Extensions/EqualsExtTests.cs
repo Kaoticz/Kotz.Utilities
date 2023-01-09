@@ -1,7 +1,3 @@
-using Kotz.Extensions;
-using Kotz.Tests.Models;
-using Xunit;
-
 namespace Kotz.Tests.Extensions;
 
 public sealed class EqualsAnyTests

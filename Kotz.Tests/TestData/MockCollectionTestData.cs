@@ -1,5 +1,3 @@
-using Kotz.Tests.Models;
-
 namespace Kotz.Tests.TestData;
 
 /// <summary>

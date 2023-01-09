@@ -1,6 +1,4 @@
-using Kotz.ObjectPool;
 using System.Text;
-using Xunit;
 
 namespace Kotz.Tests.ObjectPool;
 

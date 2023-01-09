@@ -1,7 +1,3 @@
-using Kotz.Extensions;
-using Xunit;
-using Xunit.Sdk;
-
 namespace Kotz.Tests.Extensions;
 
 public sealed class RotateTests

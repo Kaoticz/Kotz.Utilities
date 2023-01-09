@@ -1,6 +1,3 @@
-using Kotz.Extensions;
-using Xunit;
-
 namespace Kotz.Tests.Extensions;
 
 public sealed class IndexOfTest

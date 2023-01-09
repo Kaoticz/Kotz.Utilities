@@ -1,8 +1,3 @@
-using Kotz.Collections.Extensions;
-using Kotz.Tests.Models;
-using Kotz.Tests.TestData;
-using Xunit;
-
 namespace Kotz.Tests.Extensions;
 
 public sealed partial class LinqExtTests
