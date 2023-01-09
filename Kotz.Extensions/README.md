@@ -22,6 +22,8 @@ Defines the following extension methods:
     - ContainsOne: Checks if the current collection contains at least one element of a given collection.
     - ContainsSubcollection: Checks if the current collection contains all elements of a given collection.
     - NestedFill: Adds a sample object to the inner collections of a collection of collections until they all have the same length.
+    - OrderByAmount: Sorts the elements of a sequence in ascending order according to how many times they appear in the sequence.
+    - OrderByDescendingAmount: Sorts the elements of a sequence in descending order according to how many times they appear in the sequence.
     - RandomElement: Gets a random element from the current collection.
     - Split: Splits the current collection into multiple collections based on the specified separator.
     - Unique: Gets the symetric difference between all elements in the current and specified collections.

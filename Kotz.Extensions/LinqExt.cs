@@ -363,26 +363,75 @@ public static class LinqExt
 
         comparer ??= EqualityComparer<T>.Default;
         var currentIndex = 0;
-        var last = 0;
+        var lastMatchIndex = 0;
 
         foreach (var element in collection)
         {
             if (comparer.Equals(element, separator))
             {
                 var result = collection
-                    .Skip(last)
-                    .Take(currentIndex - last);
+                    .Skip(lastMatchIndex)
+                    .Take(currentIndex - lastMatchIndex);
 
                 if (result.Any())
                     yield return result;
 
-                last = currentIndex + 1;
+                lastMatchIndex = currentIndex + 1;
             }
 
             currentIndex++;
         }
 
-        if (currentIndex - last > 0)
-            yield return collection.TakeLast(currentIndex - last);
+        if (currentIndex - lastMatchIndex > 0)
+            yield return collection.TakeLast(currentIndex - lastMatchIndex);
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in ascending order according to how many times they appear in the sequence.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <returns>An <see cref="IOrderedEnumerable{TElement}"/> whose elements are sorted according to their frequency in the sequence.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
+    public static IOrderedEnumerable<T> OrderByAmount<T>(this IEnumerable<T> collection) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        var result = CountElements(collection);
+        return collection.OrderBy(x => result[x]);
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in descending order according to how many times they appear in the sequence.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <returns>An <see cref="IOrderedEnumerable{TElement}"/> whose elements are sorted according to their frequency in the sequence.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
+    public static IOrderedEnumerable<T> OrderByDescendingAmount<T>(this IEnumerable<T> collection) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        var result = CountElements(collection);
+        return collection.OrderByDescending(x => result[x]);
+    }
+
+    /// <summary>
+    /// Counts the occurences of elements in a <paramref name="collection"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <returns>A dictionary with the element as the key and how many times it appears in the <paramref name="collection"/> as the value.</returns>
+    private static IReadOnlyDictionary<T, uint> CountElements<T>(IEnumerable<T> collection) where T : notnull
+    {
+        var result = new Dictionary<T, uint>();
+
+        foreach (var element in collection)
+        {
+            if (!result.TryAdd(element, 1))
+                result[element]++;
+        }
+
+        return result;
     }
 }
