@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Kotz.Tests.Extensions;
 
 public sealed class StringExtTest
@@ -22,8 +24,23 @@ public sealed class StringExtTest
         => Assert.Equal(result, source.MaxLength(length, append));
 
     [Theory]
+    [InlineData(null, null)]
+    [InlineData("", "")]
+    [InlineData("1234", "1234")]
+    [InlineData("u1234", "U1234")]
+    [InlineData("Hello", "Hello")]
+    [InlineData("world", "World")]
+    [InlineData("HelloWorld", "Helloworld")]
+    [InlineData("hello world", "Hello World")]
+    [InlineData("hello_world", "Hello_World")]
+    [InlineData("   uppercase", "   Uppercase")]
+    internal void ToTitleCaseTest(string? source, string result)
+        => Assert.Equal(source.ToTitleCase(new CultureInfo("en-US")), result);
+
+    [Theory]
     [InlineData(null, null, null)]
     [InlineData("", "", "")]
+    [InlineData("1234", "1234", "1234")]
     [InlineData("hello", "hello", "hello")]
     [InlineData("Hello", "hello", "hello")]
     [InlineData("hello there", "hello there", "hello_there")]

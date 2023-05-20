@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 
 namespace Kotz.Extensions;
@@ -90,7 +91,23 @@ public static class StringExt
             : (text.MaxLength(Math.Max(0, maxLength - append.Length)) + append)[..maxLength];
 
     /// <summary>
-    /// Converts a string to the snake_case format.
+    /// Converts a string to the "Title Case" format.
+    /// </summary>
+    /// <param name="text">This string.</param>
+    /// <param name="cultureInfo">The culture info to be used. Defaults to <see cref="CultureInfo.CurrentCulture"/>.</param>
+    /// <returns>This <see cref="string"/> converted to Title Case.</returns>
+    [return: NotNullIfNotNull("text")]
+    public static string? ToTitleCase(this string? text, CultureInfo? cultureInfo = default)
+    {
+        cultureInfo ??= CultureInfo.CurrentCulture;
+
+        return (string.IsNullOrWhiteSpace(text))
+            ? text
+            : cultureInfo.TextInfo.ToTitleCase(text);
+    }
+
+    /// <summary>
+    /// Converts a string to the "snake_case" format.
     /// </summary>
     /// <param name="text">This string.</param>
     /// <param name="joinSpaces"><see langword="true"/> to , <see langword="false"/></param>

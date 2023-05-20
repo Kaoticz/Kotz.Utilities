@@ -67,6 +67,7 @@ Defines the following extension methods:
     - Occurrences: Gets the amount of occurences of a given character in the current string.
     - StartsWith: Checks whether the beginning of the current string matches any string stored in the provided collection.
     - ToSnakeCase: Converts the current string to the *snake_case* format.
+    - ToTitleCase: Converts the current string to the *Title Case* format.
 - **StringBuilder Extensions**
     - ReplaceAll: Replaces all instances of a substring with another substring, even if the new substring is a substring of the old substring.
     - ToStringAndClear: Returns the `string` value of the current builder and clears the builder.
