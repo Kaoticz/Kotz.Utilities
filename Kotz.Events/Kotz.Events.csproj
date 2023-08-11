@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\BaseCsproj.props" />
+
+  <PropertyGroup>
+      <Description>Provides generic and async event handlers.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <None Include="README.md">
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
+      </None>
+  </ItemGroup>
+
+</Project>

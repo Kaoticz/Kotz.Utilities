@@ -7,13 +7,15 @@
 General C# utilities commonly used on my personal projects.
 
 Currently contains:
-- Kotz.Utilities (Metapackage that contains all other packages)
+- Kotz.Utilities (Metapackage that contains all packages below)
 - [Kotz.Collections]
+- [Kotz.Events]
 - [Kotz.Extensions]
 - [Kotz.ObjectPool]
 
 
 [Kotz.Collections]: https://github.com/Kaoticz/Kotz.Utilities/tree/main/Kotz.Collections/README.md
+[Kotz.Events]: https://github.com/Kaoticz/Kotz.Utilities/tree/main/Kotz.Events/README.md
 [Kotz.Extensions]: https://github.com/Kaoticz/Kotz.Utilities/tree/main/Kotz.Extensions/README.md
 [Kotz.ObjectPool]: https://github.com/Kaoticz/Kotz.Utilities/tree/main/Kotz.ObjectPool/README.md
 [CodeFactor-Url]: https://www.codefactor.io/repository/github/kaoticz/kotz.utilities/overview/main
