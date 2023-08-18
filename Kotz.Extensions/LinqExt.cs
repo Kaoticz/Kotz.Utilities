@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Kotz.Extensions;
 
 /// <summary>
@@ -29,22 +31,50 @@ public static class LinqExt
         => (predicate(collection)) ? action(collection) : elseAction(collection);
 
     /// <summary>
-    /// Checks if the current collection contains all elements of a given collection.
+    /// Produces a sequence of tuples with elements from the two specified sequences.
     /// </summary>
-    /// <typeparam name="T">Data type contained in the collection.</typeparam>
-    /// <param name="collection">This collection.</param>
-    /// <param name="targetCollection">The collection to compare to.</param>
-    /// <returns>
-    /// <see langword="true"/> if all elements contained in <paramref name="targetCollection"/> are present
-    /// in <paramref name="collection"/>, <see langword="false"/> otherwise.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">Occurs when either collections are <see langword="null"/>.</exception>
-    public static bool ContainsSubcollection<T>(this IEnumerable<T> collection, IEnumerable<T> targetCollection)
-    {
-        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-        ArgumentNullException.ThrowIfNull(targetCollection, nameof(targetCollection));
+    /// <typeparam name="T1">The type of the elements of the first input sequence.</typeparam>
+    /// <typeparam name="T2">The type of the elements of the second input sequence.</typeparam>
+    /// <param name="firstCollection">The first sequence to merge.</param>
+    /// <param name="secondCollection">The second sequence to merge.</param>
+    /// <returns>A sequence of tuples with elements taken from the first and second sequences, in that order.</returns>
+    public static IEnumerable<(T1 First, T2 Second)> Zip<T1, T2>(this IEnumerable<T1> firstCollection, params T2[] secondCollection)
+        => firstCollection.Zip<T1, T2>(secondCollection.AsEnumerable());
 
-        return collection.Any() && targetCollection.Any() && targetCollection.All(x => collection.Contains(x));
+    /// <summary>
+    /// Produces a sequence of tuples with elements from the two specified sequences. If one of the
+    /// sequences is larger than the other, the exceeding elements from the larger sequence will be
+    /// paired with default values.
+    /// </summary>
+    /// <typeparam name="T1">The type of the elements of the first input sequence.</typeparam>
+    /// <typeparam name="T2">The type of the elements of the second input sequence.</typeparam>
+    /// <param name="firstCollection">The first sequence to merge.</param>
+    /// <param name="secondCollection">The second sequence to merge.</param>
+    /// <param name="firstDefault">The default value for the first sequence.</param>
+    /// <param name="secondDefault">The default value for the second sequence.</param>
+    /// <returns>A sequence of tuples with elements taken from the first and second sequences, in that order.</returns>
+    public static IEnumerable<(T1? First, T2? Second)> ZipOrDefault<T1, T2>(this IEnumerable<T1> firstCollection, IEnumerable<T2> secondCollection, T1? firstDefault = default, T2? secondDefault = default)
+    {
+        ArgumentNullException.ThrowIfNull(firstCollection, nameof(firstCollection));
+        ArgumentNullException.ThrowIfNull(secondCollection, nameof(secondCollection));
+
+        using var firstEnumerator = firstCollection.GetEnumerator();
+        using var secondEnumerator = secondCollection.GetEnumerator();
+
+        while (true)
+        {
+            var canFirstMove = firstEnumerator.MoveNext();
+            var canSecondMove = secondEnumerator.MoveNext();
+
+            // If neither collections can be enumerated, exit.
+            if (!canFirstMove && !canSecondMove)
+                break;
+
+            yield return (
+                (canFirstMove) ? firstEnumerator.Current : firstDefault,
+                (canSecondMove) ? secondEnumerator.Current : secondDefault
+            );
+        }
     }
 
     /// <summary>
@@ -80,6 +110,25 @@ public static class LinqExt
         return collection
             .Intersect(targetCollection)
             .Any();
+    }
+
+    /// <summary>
+    /// Checks if the current collection contains all elements of a given collection.
+    /// </summary>
+    /// <typeparam name="T">Data type contained in the collection.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="targetCollection">The collection to compare to.</param>
+    /// <returns>
+    /// <see langword="true"/> if all elements contained in <paramref name="targetCollection"/> are present
+    /// in <paramref name="collection"/>, <see langword="false"/> otherwise.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Occurs when either collections are <see langword="null"/>.</exception>
+    public static bool ContainsSubcollection<T>(this IEnumerable<T> collection, IEnumerable<T> targetCollection)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(targetCollection, nameof(targetCollection));
+
+        return collection.Any() && targetCollection.Any() && targetCollection.All(x => collection.Contains(x));
     }
 
     /// <summary>

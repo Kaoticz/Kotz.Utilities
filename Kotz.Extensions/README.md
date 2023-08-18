@@ -19,6 +19,7 @@ Defines the following extension methods:
     - ToggleFlag: Returns an enum with the provided bit flag set if it's not currently set, and vice-versa.
 - **IEnumerable\<T> Extensions**
     - AtLeast: Checks if the current collection contains at least the specified amount of elements and exits early if it does.
+    - ChunkBy: Splits a collection into a collection of collections based on the provided key selector.
     - ContainsOne: Checks if the current collection contains at least one element of a given collection.
     - ContainsSubcollection: Checks if the current collection contains all elements of a given collection.
     - NestedFill: Adds a sample object to the inner collections of a collection of collections until they all have the same length.
@@ -30,7 +31,7 @@ Defines the following extension methods:
     - When: Fluent version of an `if` statement.
     - WhenAllAsync: Awaits all tasks in the current `IEnumerable<Task>` and returns when all of them have completed.
     - WhenAnyAsync: Awaits all tasks in the current `IEnumerable<Task>` and returns when any of them have completed.
-    - ChunkBy: Splits a collection into a collection of collections based on the provided key selector.
+    - ZipOrDefault:  Produces a sequence of tuples with elements from the two specified sequences. If one of the sequences is larger than the other, the exceeding elements from the larger sequence get paired with default values.
     - A variety of **"To"** methods:
         - ToConcurrentDictionary
         - ToQueue

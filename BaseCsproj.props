@@ -11,6 +11,7 @@
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <VersionPrefix>2.1.1</VersionPrefix>
     <Authors>Kotz</Authors>
     <Copyright>Copyright © Kotz 2022</Copyright>
     <PackageProjectUrl>https://github.com/Kaoticz/Kotz.Utilities</PackageProjectUrl>

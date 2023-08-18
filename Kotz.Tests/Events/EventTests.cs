@@ -33,7 +33,7 @@ public sealed class EventTests
             GenericEventHandler += TargetMethod;
 
         // Invocation
-        GenericEventHandler?.Invoke(this, new());
+        GenericEventHandler?.Invoke(this, EventArgs.Empty);
 
         Assert.Equal(registrationAmount, Counter);
 
@@ -42,7 +42,7 @@ public sealed class EventTests
             GenericEventHandler -= TargetMethod;
 
         // Invocation
-        Assert.Throws<NullReferenceException>(() => GenericEventHandler!.Invoke(this, new()));
+        Assert.Throws<NullReferenceException>(() => GenericEventHandler!.Invoke(this, EventArgs.Empty));
     }
 
     [Theory]
@@ -55,7 +55,7 @@ public sealed class EventTests
             GenericAsyncEventHandler += TargetMethodAsync;
 
         // Invocation
-        await (GenericAsyncEventHandler?.Invoke(this, new()) ?? Task.CompletedTask);
+        await (GenericAsyncEventHandler?.Invoke(this, EventArgs.Empty) ?? Task.CompletedTask);
 
         Assert.Equal(registrationAmount, Counter);
 
@@ -64,7 +64,7 @@ public sealed class EventTests
             GenericAsyncEventHandler -= TargetMethodAsync;
 
         // Invocation
-        Assert.Null(GenericAsyncEventHandler?.Invoke(this, new()));
+        Assert.Null(GenericAsyncEventHandler?.Invoke(this, EventArgs.Empty));
     }
 
     [Theory]
@@ -77,7 +77,7 @@ public sealed class EventTests
             ObjectAsyncEventHandler += TargetMethodAsync;
 
         // Invocation
-        await (ObjectAsyncEventHandler?.Invoke(this, new()) ?? Task.CompletedTask);
+        await (ObjectAsyncEventHandler?.Invoke(this, EventArgs.Empty) ?? Task.CompletedTask);
 
         Assert.Equal(registrationAmount, Counter);
 
@@ -86,7 +86,7 @@ public sealed class EventTests
             ObjectAsyncEventHandler -= TargetMethodAsync;
 
         // Invocation
-        Assert.Null(ObjectAsyncEventHandler?.Invoke(this, new()));
+        Assert.Null(ObjectAsyncEventHandler?.Invoke(this, EventArgs.Empty));
     }
 
     /// <summary>
