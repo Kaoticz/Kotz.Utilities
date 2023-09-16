@@ -2,7 +2,7 @@ using Kotz.Events;
 
 namespace Kotz.Tests.Events;
 
-public sealed class EventTests
+public sealed class EventHandlersTests
 {
     internal Guid Id { get; } = Guid.NewGuid();
 
@@ -11,12 +11,12 @@ public sealed class EventTests
     /// <summary>
     /// A generic event handler.
     /// </summary>
-    internal event EventHandler<EventTests, EventArgs>? GenericEventHandler;
+    internal event EventHandler<EventHandlersTests, EventArgs>? GenericEventHandler;
 
     /// <summary>
     /// A generic async event handler.
     /// </summary>
-    internal event AsyncEventHandler<EventTests, EventArgs>? GenericAsyncEventHandler;
+    internal event AsyncEventHandler<EventHandlersTests, EventArgs>? GenericAsyncEventHandler;
 
     /// <summary>
     /// An async event handler.
@@ -93,7 +93,7 @@ public sealed class EventTests
     /// Invocation test for <see cref="EventHandler{T1, T2}"/>
     /// </summary>
     /// <exception cref="InvalidOperationException" />.
-    private void TargetMethod(EventTests sender, EventArgs eventArgs)
+    private void TargetMethod(EventHandlersTests sender, EventArgs eventArgs)
     {
         if (Id != sender.Id)
             throw new InvalidOperationException("Event test ID did not match.");
@@ -105,7 +105,7 @@ public sealed class EventTests
     /// Invocation test for <see cref="AsyncEventHandler{T1, T2}"/>.
     /// </summary>
     /// <exception cref="InvalidOperationException" />
-    private Task TargetMethodAsync(EventTests sender, EventArgs eventArgs)
+    private Task TargetMethodAsync(EventHandlersTests sender, EventArgs eventArgs)
     {
         if (Id != sender.Id)
             throw new InvalidOperationException("Event test ID did not match.");
@@ -121,7 +121,7 @@ public sealed class EventTests
     /// <exception cref="InvalidOperationException" />
     private Task TargetMethodAsync(object? sender, EventArgs eventArgs)
     {
-        if (Id != (sender as EventTests)?.Id)
+        if (Id != (sender as EventHandlersTests)?.Id)
             throw new InvalidOperationException("Event test ID did not match.");
 
         Counter += 1;
