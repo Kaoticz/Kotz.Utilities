@@ -8,20 +8,32 @@ public sealed class StringExtTest
     [InlineData(5, "hello", "hello")]
     [InlineData(5, "avocado", "avoca")]
     [InlineData(0, "banana", "")]
+    [InlineData(0, "", "")]
     [InlineData(5, null, null)]
     internal void MaxLengthTest(int length, string source, string result)
         => Assert.Equal(result, source.MaxLength(length));
 
     [Theory]
     [InlineData(11, "banana cheesecake", "banana[...]", "[...]")]
-    [InlineData(11, "banana chee", "banana chee", "[...]")]
     [InlineData(11, "banana chees", "banana[...]", "[...]")]
-    [InlineData(0, "banana", "", "[...]")]
+    [InlineData(11, "banana chee", "banana chee", "[...]")]
+    [InlineData(6, "banana cheesecake", "b[...]", "[...]")]
+    [InlineData(6, "banana", "banana", "[...]")]
+    [InlineData(1, "banana", "b", null)]
     [InlineData(5, "", "", "[...]")]
     [InlineData(5, "a", "a", "[...]")]
     [InlineData(5, "a", "a", null)]
-    internal void MaxLengthWithAppendTest(int length, string source, string result, string append)
-        => Assert.Equal(result, source.MaxLength(length, append));
+    [InlineData(5, null, null, null)]
+    [InlineData(5, null, null, "")]
+    internal void MaxLengthWithAppendTest(int maxLength, string source, string result, string append)
+        => Assert.Equal(result, source.MaxLength(maxLength, append));
+
+    [Theory]
+    [InlineData(0, "banana", "[...]")]
+    [InlineData(1, "banana", "[...]")]
+    [InlineData(5, "banana", "[...]")]
+    internal void MaxLengthWithAppendErrorTest(int maxLength, string source, string append)
+        => Assert.Throws<ArgumentOutOfRangeException>(() => source.MaxLength(maxLength, append));
 
     [Theory]
     [InlineData(null, null)]

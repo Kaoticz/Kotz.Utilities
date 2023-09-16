@@ -129,4 +129,14 @@ public static class ReadOnlySpanCharExt
 
         return firstTextWord.Equals(firstSampleWord, comparisonType);
     }
+
+    /// <summary>
+    /// Truncates the string to the maximum specified length.
+    /// </summary>
+    /// <param name="text">This string.</param>
+    /// <param name="maxLength">The maximum length the string should have.</param>
+    /// <returns>This string with length equal to or lower than <paramref name="maxLength"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="maxLength"/> is less than zero.</exception>
+    public static ReadOnlySpan<char> MaxLength(this ReadOnlySpan<char> text, int maxLength)
+        => text[..Math.Min(text.Length, maxLength)];
 }

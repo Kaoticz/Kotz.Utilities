@@ -73,7 +73,18 @@ public static class StringExt
     /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="maxLength"/> is less than zero.</exception>
     [return: NotNullIfNotNull("text")]
     public static string? MaxLength(this string? text, int maxLength)
-        => text?[..Math.Min(text.Length, maxLength)];
+    {
+        if (maxLength < 0)
+            throw new ArgumentOutOfRangeException(nameof(maxLength), maxLength, "Maximum length cannot be less than 0.");
+        else if (string.IsNullOrWhiteSpace(text))
+            return text;
+
+        var result = ReadOnlySpanCharExt.MaxLength(text, maxLength);
+
+        return (result.Length == text.Length)
+            ? text
+            : result.ToString();
+    }
 
     /// <summary>
     /// Truncates the string to the maximum specified length.
@@ -83,12 +94,28 @@ public static class StringExt
     /// <param name="append">The string to be appended to the end of the truncated string.</param>
     /// <remarks>The <paramref name="append"/> only gets added to the truncated string if this string exceeds <paramref name="maxLength"/> in length.</remarks>
     /// <returns>This string with length equal to or lower than <paramref name="maxLength"/>.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="maxLength"/> is less than zero.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Occurs when <paramref name="append"/> exceeds or is equal to <paramref name="maxLength"/>
+    /// or when <paramref name="maxLength"/> is less than zero.
+    /// </exception>
     [return: NotNullIfNotNull("text")]
     public static string? MaxLength(this string? text, int maxLength, string append)
-        => (text is null || text.Length <= maxLength)
-            ? text
-            : (text.MaxLength(Math.Max(0, maxLength - append.Length)) + append)[..maxLength];
+    {
+        if (text is null || text.Length <= maxLength)
+            return text;
+        else if (maxLength < 0)
+            throw new ArgumentOutOfRangeException(nameof(maxLength), maxLength, "Maximum length cannot be less than 0.");
+        else if (string.IsNullOrEmpty(append))
+            return text.MaxLength(maxLength);
+        else if (append.Length >= maxLength)
+            throw new ArgumentOutOfRangeException(nameof(append), append.Length, "Append exceeds or is equal to maximum length size.");
+
+        var truncatedText = ReadOnlySpanCharExt.MaxLength(text, maxLength);
+
+        return (truncatedText.Length == maxLength && truncatedText.Length - append.Length > 0)
+            ? truncatedText[..^append.Length].ToString() + append
+            : truncatedText.ToString();
+    }
 
     /// <summary>
     /// Converts a string to the "Title Case" format.
