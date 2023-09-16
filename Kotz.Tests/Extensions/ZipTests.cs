@@ -9,7 +9,7 @@ public sealed partial class LinqExtTests
     [InlineData(new[] { 10, 20 })]
     [InlineData(new int[] { }, 'a')]
     [InlineData(new int[] { })]
-    internal void ZipTest(int[] firstCollection,  params char[] secondCollection)
+    internal void ZipTest(int[] firstCollection, params char[] secondCollection)
     {
         var actualResult = firstCollection
             .Zip(secondCollection)

@@ -99,11 +99,9 @@ public static class StringExt
     [return: NotNullIfNotNull("text")]
     public static string? ToTitleCase(this string? text, CultureInfo? cultureInfo = default)
     {
-        cultureInfo ??= CultureInfo.CurrentCulture;
-
         return (string.IsNullOrWhiteSpace(text))
             ? text
-            : cultureInfo.TextInfo.ToTitleCase(text);
+            : (cultureInfo ?? CultureInfo.CurrentCulture).TextInfo.ToTitleCase(text);
     }
 
     /// <summary>
