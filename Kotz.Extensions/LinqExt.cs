@@ -413,6 +413,26 @@ public static class LinqExt
     }
 
     /// <summary>
+    /// Executes an <paramref name="action"/> on every element of this <paramref name="collection"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="action">The action to be performed.</param>
+    /// <remarks>This method does nothing on Release mode.</remarks>
+    /// <returns>This <paramref name="collection"/> unaltered.</returns>
+    public static IEnumerable<T> Tap<T>(this IEnumerable<T> collection, Action<T> action)
+    {
+#if DEBUG
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(action, nameof(action));
+
+        foreach (var element in collection)
+            action(element);
+#endif
+        return collection;
+    }
+
+    /// <summary>
     /// Counts the occurences of elements in a <paramref name="collection"/>.
     /// </summary>
     /// <typeparam name="T">The type of the elements.</typeparam>
