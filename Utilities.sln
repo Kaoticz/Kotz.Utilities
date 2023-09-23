@@ -26,6 +26,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kotz.Events", "Kotz.Events\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kotz.DependencyInjection", "Kotz.DependencyInjection\Kotz.DependencyInjection.csproj", "{9E0460C8-14FD-4611-B0C9-18BDF7B61F85}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{99B7B48D-C665-45A5-9C55-9E0DFCF5BBAF}"
+	ProjectSection(SolutionItems) = preProject
+		.github\FUNDING.yml = .github\FUNDING.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{5548E74D-E7A4-434E-A7A4-ED37124F22C3}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		.github\workflows\publish_nightly.yml = .github\workflows\publish_nightly.yml
+		.github\workflows\publish_release.yml = .github\workflows\publish_release.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +76,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{99B7B48D-C665-45A5-9C55-9E0DFCF5BBAF} = {F23FF6A8-D2D2-4F12-B265-81097347DE99}
+		{5548E74D-E7A4-434E-A7A4-ED37124F22C3} = {99B7B48D-C665-45A5-9C55-9E0DFCF5BBAF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {392CB218-DE99-4DDD-8E51-A6C4DCA7DAF1}

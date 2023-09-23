@@ -7,7 +7,7 @@ on:
 jobs:
   publish_nightly:
     runs-on: ubuntu-latest
-    if: "!contains(format('{0} {1}', github.event.head_commit.message, github.event.pull_request.title), '[ci-skip]')"
+    if: "!contains(format('{0} {1} {2}', github.event.head_commit.message, github.event.pull_request.title), '[ci-skip]', '[nuget-skip]')"
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v3"
@@ -15,9 +15,7 @@ jobs:
       - name: "Setup .NET"
         uses: "actions/setup-dotnet@v2"
         with:
-          dotnet-version: |
-            6.0.x
-            7.0.x
+          dotnet-version: 7.x
 
       - name: Build
         run: dotnet build -c Release
