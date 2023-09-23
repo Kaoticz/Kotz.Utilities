@@ -15,7 +15,7 @@ Defines the following types:
 
 - ServiceAttributeBase: It's the base class for dependency injection registrations.
 - ServiceAttribute: Marks a class or struct for registration via the `IServiceCollection.RegisterServices` extension method.
-- ServiceAttribute<T>: Marks a class or struct for registration under the type `T` via the `IServiceCollection.RegisterServices` extension method.
+- ServiceAttribute\<T>: Marks a class or struct for registration under the type `T` via the `IServiceCollection.RegisterServices` extension method.
 
 ## How to use the attributes
 
@@ -49,4 +49,15 @@ public sealed class MyService2 : ISomething { ... }
 
 [Service<ISomething>(ServiceLifetime.Transient, true)]
 public sealed class MyService3 : ISomething { ... }
+```
+
+4. Registering the services in the `IServiceCollection`.
+```cs
+// To register services from the current assembly.
+serviceCollection.RegisterServices();
+
+// OR
+
+// To register services from a specific assembly.
+serviceCollection.RegisterServices(assembly);
 ```
