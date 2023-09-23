@@ -15,7 +15,7 @@ public sealed class FluentObjectPool<T> : ObjectPool<T> where T : class
     /// Creates a fluent instance of <see cref="ObjectPool{T}"/>.
     /// </summary>
     /// <param name="objectPolicy">The pooling policy to use.</param>
-    /// <param name="maximumRetained">The maximum number of objects to retain in the pool.</param>
+    /// <param name="maximumRetained">The maximum number of objects to retain in the pool. Set to zero to disable the limit.</param>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="objectPolicy"/> is <see langword="null"/>.</exception>
     public FluentObjectPool(IPooledObjectPolicy<T> objectPolicy, int maximumRetained = default)
     {
@@ -37,7 +37,7 @@ public sealed class FluentObjectPool<T> : ObjectPool<T> where T : class
     /// If the filter returns <see langword="true"/>, the object is returned to the pool, otherwise it is not and the object may become
     /// eligible for garbage collection.
     /// </param>
-    /// <param name="maximumRetained">The maximum number of objects to retain in the pool.</param>
+    /// <param name="maximumRetained">The maximum number of objects to retain in the pool. Set to zero to disable the limit.</param>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="objectFactory"/> is <see langword="null"/>.</exception>
     public FluentObjectPool(Func<T> objectFactory, Func<T, T>? objectResetter = default, Func<T, bool>? objectFilter = default, int maximumRetained = default)
     {

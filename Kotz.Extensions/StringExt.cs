@@ -71,7 +71,7 @@ public static class StringExt
     /// <param name="maxLength">The maximum length the string should have.</param>
     /// <returns>This string with length equal to or lower than <paramref name="maxLength"/>.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="maxLength"/> is less than zero.</exception>
-    [return: NotNullIfNotNull("text")]
+    [return: NotNullIfNotNull(nameof(text))]
     public static string? MaxLength(this string? text, int maxLength)
     {
         if (maxLength < 0)
@@ -98,7 +98,7 @@ public static class StringExt
     /// Occurs when <paramref name="append"/> exceeds or is equal to <paramref name="maxLength"/>
     /// or when <paramref name="maxLength"/> is less than zero.
     /// </exception>
-    [return: NotNullIfNotNull("text")]
+    [return: NotNullIfNotNull(nameof(text))]
     public static string? MaxLength(this string? text, int maxLength, string append)
     {
         if (text is null || text.Length <= maxLength)
@@ -123,7 +123,7 @@ public static class StringExt
     /// <param name="text">This string.</param>
     /// <param name="cultureInfo">The culture info to be used. Defaults to <see cref="CultureInfo.CurrentCulture"/>.</param>
     /// <returns>This <see cref="string"/> converted to Title Case.</returns>
-    [return: NotNullIfNotNull("text")]
+    [return: NotNullIfNotNull(nameof(text))]
     public static string? ToTitleCase(this string? text, CultureInfo? cultureInfo = default)
     {
         return (string.IsNullOrWhiteSpace(text))
@@ -137,7 +137,7 @@ public static class StringExt
     /// <param name="text">This string.</param>
     /// <param name="joinSpaces"><see langword="true"/> to , <see langword="false"/></param>
     /// <returns>This <see cref="string"/> converted to snake_case.</returns>
-    [return: NotNullIfNotNull("text")]
+    [return: NotNullIfNotNull(nameof(text))]
     public static string? ToSnakeCase(this string? text, bool joinSpaces = false)
     {
         if (string.IsNullOrWhiteSpace(text))

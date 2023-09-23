@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		Avatar.png = Avatar.png
 		BaseCsproj.props = BaseCsproj.props
 		LICENSE = LICENSE
 		README.md = README.md
@@ -21,7 +22,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kotz.ObjectPool", "Kotz.Obj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kotz.Utilities", "Kotz.Utilities\Kotz.Utilities.csproj", "{5346077C-B053-40F9-8489-3C20E38A2346}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kotz.Events", "Kotz.Events\Kotz.Events.csproj", "{0047EDF3-0B16-4A01-ACC2-6FF0E16E1916}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kotz.Events", "Kotz.Events\Kotz.Events.csproj", "{0047EDF3-0B16-4A01-ACC2-6FF0E16E1916}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kotz.DependencyInjection", "Kotz.DependencyInjection\Kotz.DependencyInjection.csproj", "{9E0460C8-14FD-4611-B0C9-18BDF7B61F85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +56,10 @@ Global
 		{0047EDF3-0B16-4A01-ACC2-6FF0E16E1916}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0047EDF3-0B16-4A01-ACC2-6FF0E16E1916}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0047EDF3-0B16-4A01-ACC2-6FF0E16E1916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E0460C8-14FD-4611-B0C9-18BDF7B61F85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E0460C8-14FD-4611-B0C9-18BDF7B61F85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E0460C8-14FD-4611-B0C9-18BDF7B61F85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E0460C8-14FD-4611-B0C9-18BDF7B61F85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
