@@ -43,6 +43,9 @@ public sealed class EventAyncTests
     private async Task WaitAndSetCountAsync(TimeSpan time)
     {
         await Task.Delay(time);
+
         Count = time.Milliseconds;
+
+        await Task.Delay(TimeSpan.FromMilliseconds(10));
     }
 }

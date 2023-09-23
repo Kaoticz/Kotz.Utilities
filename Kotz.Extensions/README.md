@@ -27,6 +27,7 @@ Defines the following extension methods:
     - OrderByDescendingAmount: Sorts the elements of a sequence in descending order according to how many times they appear in the sequence.
     - RandomElement: Gets a random element from the current collection.
     - Split: Splits the current collection into multiple collections based on the specified separator.
+    - Tap: Executes an action on every element of the collection. Due to poor performance, this method should only be used for testing purposes!
     - Unique: Gets the symetric difference between all elements in the current and specified collections.
     - When: Fluent version of an `if` statement.
     - WhenAllAsync: Awaits all tasks in the current `IEnumerable<Task>` and returns when all of them have completed.

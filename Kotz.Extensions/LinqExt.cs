@@ -418,17 +418,16 @@ public static class LinqExt
     /// <typeparam name="T">The type of the elements.</typeparam>
     /// <param name="collection">This collection.</param>
     /// <param name="action">The action to be performed.</param>
-    /// <remarks>This method does nothing on Release mode.</remarks>
+    /// <remarks>This method has poor performance and should only be used for testing purposes!</remarks>
     /// <returns>This <paramref name="collection"/> unaltered.</returns>
     public static IEnumerable<T> Tap<T>(this IEnumerable<T> collection, Action<T> action)
     {
-#if DEBUG
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
         ArgumentNullException.ThrowIfNull(action, nameof(action));
 
         foreach (var element in collection)
             action(element);
-#endif
+
         return collection;
     }
 

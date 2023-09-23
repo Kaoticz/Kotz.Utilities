@@ -8,6 +8,9 @@ public sealed class TapTests
     internal void TapTest(IReadOnlyList<int> collection)
     {
         var counter = 0;
+        var copy = collection.ToArray();
+
         collection.Tap(x => Assert.Equal(collection[counter++], x));
+        Assert.Equal(copy, collection);
     }
 }
