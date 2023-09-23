@@ -18,9 +18,9 @@ var pool = new FluentObjectPool<StringBuilder>(() => new StringBuilder());
 var pool = new FluentObjectPool<StringBuilder>(
     () => new StringBuilder(),  // How the object should be instantiated.
     stringBuilder => stringBuilder.Clear(),  // Optional: what should be done to all objects that are returned to the pool.
-    stringBuilder => stringBuilder.Length > 50000,  // Optional: what objects should be accepted when they are returned to the pool. If false, the object is not returned to the pool and may be eligible for garbage collection.
+    stringBuilder => stringBuilder.Length > 50000,  // Optional: what objects should be accepted when they are returned to the pool. If false, the object is not returned to the pool and may become eligible for garbage collection.
     10  // Optional: the maximum amount of objects the pool is allowed to hold.  Set to zero to disable the limit.
 );
 ```
 
-Alternatively, can call `FluentObjectPool.Create()` to create an object pool.
+Alternatively, you can call `FluentObjectPool.Create()` to create an object pool.
