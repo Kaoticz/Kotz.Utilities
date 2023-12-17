@@ -1,18 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\BaseCsproj.props" />
+  <Import Project="..\BaseCsproj.props" />
 
-    <PropertyGroup>
-        <TargetFrameworks>net7.0</TargetFrameworks>
-        <Description>Provides utility methods and attributes for "Microsoft.Extensions.DependencyInjection".</Description>
-    </PropertyGroup>
+  <PropertyGroup>
+      <TargetFrameworks>net7.0</TargetFrameworks>
+      <Description>Provides utility methods and attributes for "Microsoft.Extensions.DependencyInjection".</Description>
+  </PropertyGroup>
 
   <ItemGroup>
     <None Include="README.md">
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net7.0'">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

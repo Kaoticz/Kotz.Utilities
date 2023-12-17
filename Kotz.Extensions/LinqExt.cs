@@ -36,6 +36,7 @@ public static class LinqExt
     /// <param name="firstCollection">The first sequence to merge.</param>
     /// <param name="secondCollection">The second sequence to merge.</param>
     /// <returns>A sequence of tuples with elements taken from the first and second sequences, in that order.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when either collections are <see langword="null"/>.</exception>
     public static IEnumerable<(T1 First, T2 Second)> Zip<T1, T2>(this IEnumerable<T1> firstCollection, params T2[] secondCollection)
         => firstCollection.Zip<T1, T2>(secondCollection.AsEnumerable());
 
@@ -51,6 +52,7 @@ public static class LinqExt
     /// <param name="firstDefault">The default value for the first sequence.</param>
     /// <param name="secondDefault">The default value for the second sequence.</param>
     /// <returns>A sequence of tuples with elements taken from the first and second sequences, in that order.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when either collections are <see langword="null"/>.</exception>
     public static IEnumerable<(T1? First, T2? Second)> ZipOrDefault<T1, T2>(this IEnumerable<T1> firstCollection, IEnumerable<T2> secondCollection, T1? firstDefault = default, T2? secondDefault = default)
     {
         ArgumentNullException.ThrowIfNull(firstCollection, nameof(firstCollection));
@@ -286,7 +288,7 @@ public static class LinqExt
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
 
         if (minAmount <= 0)
-            throw new ArgumentOutOfRangeException(nameof(minAmount), minAmount, "Amount must be higher than 0.");
+            throw new ArgumentOutOfRangeException(nameof(minAmount), minAmount, "Amount must be greater than 0.");
 
         if (collection is ICollection<T> mutableCollection)
             return mutableCollection.Count >= minAmount;
@@ -325,7 +327,7 @@ public static class LinqExt
         ArgumentNullException.ThrowIfNull(predicate, nameof(predicate));
 
         if (minAmount <= 0)
-            throw new ArgumentOutOfRangeException(nameof(minAmount), minAmount, "Amount must be higher than 0.");
+            throw new ArgumentOutOfRangeException(nameof(minAmount), minAmount, "Amount must be greater than 0.");
 
         var counter = 0;
 

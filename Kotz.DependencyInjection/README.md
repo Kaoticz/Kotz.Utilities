@@ -6,7 +6,7 @@
 Defines the following extension methods:
 
 - **IServiceCollection Extensions**
-    - RegisterServices: Registers all classes and structs from an assembly that have a `ServiceAttributeBase` applied to them.
+    - RegisterServices: Registers all classes and structs from an assembly that have a `ServiceAttributeBase` attribute applied to them.
 - **IServiceProvider and IServiceScopeFactory Extensions**
     - GetParameterizedService: Gets a service that requires arguments that are not registered in the IoC container.
     - GetScopedService: Gets a service that needs to be resolved from a scope.
@@ -17,7 +17,7 @@ Defines the following types:
 - ServiceAttribute: Marks a class or struct for registration via the `IServiceCollection.RegisterServices` extension method.
 - ServiceAttribute\<T>: Marks a class or struct for registration under the type `T` via the `IServiceCollection.RegisterServices` extension method.
 
-## How to use the attributes
+## Using the registration attributes
 
 1. Registering the type directly
 ```cs
@@ -59,5 +59,5 @@ serviceCollection.RegisterServices();
 // OR
 
 // To register services from a specific assembly.
-serviceCollection.RegisterServices(assembly);
+serviceCollection.RegisterServices(someAssembly);
 ```
