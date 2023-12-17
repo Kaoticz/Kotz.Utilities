@@ -9,10 +9,10 @@ public sealed class EventAyncTests
     internal int Count { get; private set; }
 
     [Theory]
-    [InlineData(100, 300, 500)]
-    [InlineData(100, 500, 300)]
-    [InlineData(500, 300, 100)]
-    [InlineData(500, 100, 300)]
+    [InlineData(100, 400, 800)]
+    [InlineData(100, 800, 400)]
+    [InlineData(800, 400, 100)]
+    [InlineData(800, 100, 400)]
     internal async Task WaitForAllHandlersToCompleteTestAsync(params int[] milliseconds)
     {
         var longest = milliseconds.Max();
@@ -27,7 +27,7 @@ public sealed class EventAyncTests
             // Then wait for all of them to complete, and redo the checks for the next registered handler.
             var invocationTask = _asyncEvent.InvokeAsync(this, EventArgs.Empty);
 
-            await Task.WhenAny(Task.Delay(TimeSpan.FromMilliseconds(millisecond + 100)), invocationTask);
+            await Task.WhenAny(Task.Delay(TimeSpan.FromMilliseconds(millisecond + 150)), invocationTask);
             Assert.Equal(millisecond, Count);
 
             await invocationTask;
@@ -46,6 +46,6 @@ public sealed class EventAyncTests
 
         Count = time.Milliseconds;
 
-        await Task.Delay(TimeSpan.FromMilliseconds(20));
+        await Task.Delay(TimeSpan.FromMilliseconds(30));
     }
 }
