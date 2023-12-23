@@ -26,6 +26,24 @@ public sealed class StringBuilderExtTest
         => Assert.Throws<ArgumentException>(() => new StringBuilder(input).ReplaceAll(toReplace, replacement));
 
     [Theory]
+    [InlineData("hello", "world", "", false)]
+    [InlineData("", "", "helloworld", false)]
+    [InlineData("hello", "world", "blep", false)]
+    [InlineData("hello", "world", "helloblep", false)]
+    [InlineData("hello", "world", "helloworld", true)]
+    [InlineData("helloworld", "hello", "helloworld", true)]
+    [InlineData("helloworld", "hello", "worldhello", true)]
+    internal void ContainsTest(string firstChunk, string secondChunk, string toSearch, bool expected)
+    {
+        var stringBuilder = new StringBuilder();
+        stringBuilder.Append(firstChunk);
+        stringBuilder.Append(secondChunk);
+
+        Assert.Equal(expected, stringBuilder.Contains(toSearch));
+        stringBuilder.Clear();
+    }
+
+    [Theory]
     [InlineData("")]
     [InlineData("hello")]
     internal void ToStringAndClear(string input)

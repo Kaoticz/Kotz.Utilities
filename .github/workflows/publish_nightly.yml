@@ -7,7 +7,7 @@ on:
 jobs:
   publish_nightly:
     runs-on: ubuntu-latest
-    if: "!contains(format('{0} {1}', github.event.head_commit.message, github.event.pull_request.title), '[ci-skip]') || !contains(format('{0} {1}', github.event.head_commit.message, github.event.pull_request.title), '[nuget-skip]')"
+    if: "!contains(format('{0} {1}', github.event.head_commit.message, github.event.pull_request.title), '[ci-skip]') && !contains(format('{0} {1}', github.event.head_commit.message, github.event.pull_request.title), '[nuget-skip]')"
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v3"
@@ -23,10 +23,12 @@ jobs:
         run: dotnet build -c Release
 
       - name: Test
-        run: dotnet test
+        run: dotnet test --no-build -c Release
 
       - name: "Build Nightly Nuget Packages"
-        run: "mkdir build && dotnet pack -p:SymbolPackageFormat=snupkg --include-symbols --include-source -o build -p:VersionSuffix='nightly-0${{ github.run_number }}' -p:BuildNumber=0$(( ${{ github.run_number }} ))"
+        run: |
+          mkdir build
+          dotnet pack -p:SymbolPackageFormat=snupkg --include-symbols --include-source -p:VersionSuffix='nightly-0${{ github.run_number }}' -p:BuildNumber=0$(( ${{ github.run_number }} )) -c Release -o build
 
       - name: "Publish Nightly Nuget Packages"
         run: "dotnet nuget push \"build/*\" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json" # If the package version does not comply with SemVer, it will be set as a pre-release version automatically.

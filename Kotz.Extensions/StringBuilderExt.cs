@@ -58,6 +58,35 @@ public static class StringBuilderExt
     }
 
     /// <summary>
+    /// Checks if <paramref name="text"/> is present in this string builder.
+    /// </summary>
+    /// <param name="stringBuilder">This string builder.</param>
+    /// <param name="text">The text to check for.</param>
+    /// <returns><see langword="true"/> if <paramref name="text"/> is present, <see langword="false"/> otherwise.</returns>
+    public static bool Contains(this StringBuilder stringBuilder, ReadOnlySpan<char> text)
+    {
+        if (stringBuilder.Length is 0 || text.Length is 0)
+            return false;
+
+        var textIndex = 0;
+
+        foreach (var chunk in stringBuilder.GetChunks())
+        {
+            for (var chunkIndex = 0; chunkIndex < chunk.Span.Length; chunkIndex++)
+            {
+                textIndex = (chunk.Span[chunkIndex] == text[textIndex])
+                    ? textIndex + 1
+                    : 0;
+
+                if (textIndex == text.Length)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Converts the value of this instance to a <see langword="string"/>, then clears its buffer.
     /// </summary>
     /// <param name="stringBuilder">This builder.</param>
