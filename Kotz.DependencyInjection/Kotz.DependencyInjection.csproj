@@ -3,7 +3,6 @@
   <Import Project="..\BaseCsproj.props" />
 
   <PropertyGroup>
-      <TargetFrameworks>net7.0</TargetFrameworks>
       <Description>Provides utility methods and attributes for "Microsoft.Extensions.DependencyInjection".</Description>
   </PropertyGroup>
 

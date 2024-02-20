@@ -6,15 +6,15 @@
 
 # Kotz.Utilities
 
-General C# utilities commonly used on my personal projects.
+General C# utilities commonly used on projects I work on.
 
 Currently contains:
 - Kotz.Utilities (Metapackage that contains all Kotz packages with no third-party dependencies)
-- [Kotz.Collections]
-- [Kotz.DependencyInjection]
-- [Kotz.Events]
-- [Kotz.Extensions]
-- [Kotz.ObjectPool]
+- [Kotz.Collections] [![Kotz.Collections-NuGet Downloads][Kotz.Collections-Nuget-Downloads]][Kotz.Collections-Nuget-Url]
+- [Kotz.DependencyInjection] [![Kotz.DependencyInjection-NuGet Downloads][Kotz.DependencyInjection-Nuget-Downloads]][Kotz.DependencyInjection-Nuget-Url]
+- [Kotz.Events] [![Kotz.Events-NuGet Downloads][Kotz.Events-Nuget-Downloads]][Kotz.Events-Nuget-Url]
+- [Kotz.Extensions] [![Kotz.Extensions-NuGet Downloads][Kotz.Extensions-Nuget-Downloads]][Kotz.Extensions-Nuget-Url]
+- [Kotz.ObjectPool] [![Kotz.ObjectPool-NuGet Downloads][Kotz.ObjectPool-Nuget-Downloads]][Kotz.ObjectPool-Nuget-Url]
 
 
 [Kotz.Collections]: ./Kotz.Collections/README.md
@@ -31,3 +31,14 @@ Currently contains:
 [Nuget-Badge]: https://img.shields.io/nuget/v/Kotz.Utilities.svg?label=NuGet
 [Nuget-Nightly-Badge]: https://img.shields.io/nuget/vpre/Kotz.Utilities?color=00007f&label=NuGet%20Nightly
 [Nuget-Url]: https://www.nuget.org/packages/Kotz.Utilities
+
+[Kotz.Collections-Nuget-Downloads]: https://img.shields.io/nuget/dt/Kotz.Collections?color=00aa00
+[Kotz.Collections-Nuget-Url]: https://www.nuget.org/packages/Kotz.Collections
+[Kotz.Extensions-Nuget-Downloads]: https://img.shields.io/nuget/dt/Kotz.Extensions?color=00aa00
+[Kotz.Extensions-Nuget-Url]: https://www.nuget.org/packages/Kotz.Extensions
+[Kotz.ObjectPool-Nuget-Downloads]: https://img.shields.io/nuget/dt/Kotz.ObjectPool?color=00aa00
+[Kotz.ObjectPool-Nuget-Url]: https://www.nuget.org/packages/Kotz.ObjectPool
+[Kotz.Events-Nuget-Downloads]: https://img.shields.io/nuget/dt/Kotz.Events?color=00aa00
+[Kotz.Events-Nuget-Url]: https://www.nuget.org/packages/Kotz.Events
+[Kotz.DependencyInjection-Nuget-Downloads]: https://img.shields.io/nuget/dt/Kotz.DependencyInjection?color=00aa00
+[Kotz.DependencyInjection-Nuget-Url]: https://www.nuget.org/packages/Kotz.DependencyInjection

@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace Kotz.Extensions;
 
 /// <summary>
@@ -422,6 +424,7 @@ public static class LinqExt
     /// <param name="action">The action to be performed.</param>
     /// <remarks>This method has poor performance and should only be used for testing purposes!</remarks>
     /// <returns>This <paramref name="collection"/> unaltered.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)] 
     public static IEnumerable<T> Tap<T>(this IEnumerable<T> collection, Action<T> action)
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
@@ -439,7 +442,7 @@ public static class LinqExt
     /// <typeparam name="T">The type of the elements.</typeparam>
     /// <param name="collection">This collection.</param>
     /// <returns>A dictionary with the element as the key and how many times it appears in the <paramref name="collection"/> as the value.</returns>
-    private static IReadOnlyDictionary<T, uint> CountElements<T>(IEnumerable<T> collection) where T : notnull
+    private static Dictionary<T, uint> CountElements<T>(IEnumerable<T> collection) where T : notnull
     {
         var result = new Dictionary<T, uint>();
 
