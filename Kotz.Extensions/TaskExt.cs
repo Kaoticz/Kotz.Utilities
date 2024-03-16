@@ -13,7 +13,7 @@ public static class TaskExt
     public static async Task WhenAllAsync(this IEnumerable<Task> collection)
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-        await Task.WhenAll(collection).ConfigureAwait(false);
+        await Task.WhenAll(collection);
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public static class TaskExt
     public static async Task<T[]> WhenAllAsync<T>(this IEnumerable<Task<T>> collection)
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-        return await Task.WhenAll(collection).ConfigureAwait(false);
+        return await Task.WhenAll(collection);
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public static class TaskExt
     public static async Task WhenAnyAsync(this IEnumerable<Task> collection)
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-        await (await Task.WhenAny(collection).ConfigureAwait(false)).ConfigureAwait(false);
+        await await Task.WhenAny(collection);
     }
 
     /// <summary>
@@ -50,6 +50,6 @@ public static class TaskExt
     public static async Task<T> WhenAnyAsync<T>(this IEnumerable<Task<T>> collection)
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-        return await (await Task.WhenAny(collection).ConfigureAwait(false)).ConfigureAwait(false);
+        return await await Task.WhenAny(collection);
     }
 }
