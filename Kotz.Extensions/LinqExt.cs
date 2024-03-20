@@ -424,6 +424,7 @@ public static class LinqExt
     /// <param name="action">The action to be performed.</param>
     /// <remarks>This method has poor performance and should only be used for testing purposes!</remarks>
     /// <returns>This <paramref name="collection"/> unaltered.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> or <paramref name="action"/> are <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)] 
     public static IEnumerable<T> Tap<T>(this IEnumerable<T> collection, Action<T> action)
     {
@@ -434,6 +435,76 @@ public static class LinqExt
             action(element);
 
         return collection;
+    }
+
+    /// <summary>
+    /// Returns the maximum value in a generic sequence or <see langword="null"/> if the sequence is empty.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <returns>The maximum value in the sequence or the default value for <typeparamref name="T"/>.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
+    public static T? MaxOrDefault<T>(this IEnumerable<T> collection)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        return collection
+            .DefaultIfEmpty()
+            .Max();
+    }
+
+    /// <summary>
+    /// Returns the maximum value in a generic sequence according to a specified key <paramref name="selector"/>
+    /// function or <see langword="null"/> if the sequence is empty.
+    /// </summary>
+    /// <typeparam name="T1">The type of the elements.</typeparam>
+    /// <typeparam name="T2">The type of the selected key.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="selector">A function to extract the key for each element.</param>
+    /// <returns>The maximum value in the sequence or the default value for <typeparamref name="T1"/>.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> or <paramref name="selector"/> are <see langword="null"/>.</exception>
+    public static T1? MaxByOrDefault<T1, T2>(this IEnumerable<T1> collection, Func<T1?, T2> selector)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        return collection
+            .DefaultIfEmpty()
+            .MaxBy(selector);
+    }
+
+    /// <summary>
+    /// Returns the minimum value in a generic sequence or <see langword="null"/> if the sequence is empty.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <returns>The minimum value in the sequence or the default value for <typeparamref name="T"/>.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
+    public static T? MinOrDefault<T>(this IEnumerable<T> collection)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        return collection
+            .DefaultIfEmpty()
+            .Min();
+    }
+
+    /// <summary>
+    /// Returns the minimum value in a generic sequence according to a specified key <paramref name="selector"/>
+    /// function or <see langword="null"/> if the sequence is empty.
+    /// </summary>
+    /// <typeparam name="T1">The type of the elements.</typeparam>
+    /// <typeparam name="T2">The type of the selected key.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="selector">A function to extract the key for each element.</param>
+    /// <returns>The minimum value in the sequence or the default value for <typeparamref name="T1"/>.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> or <paramref name="selector"/> are <see langword="null"/>.</exception>
+    public static T1? MinByOrDefault<T1, T2>(this IEnumerable<T1> collection, Func<T1?, T2> selector)
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+
+        return collection
+            .DefaultIfEmpty()
+            .MinBy(selector);
     }
 
     /// <summary>

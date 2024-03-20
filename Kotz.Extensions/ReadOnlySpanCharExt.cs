@@ -60,12 +60,11 @@ public static class ReadOnlySpanCharExt
         if (occurrence < 0)
             occurrence = 0;
 
-        var textSpan = text;
         int counter = -1, result = -1;
 
-        for (var index = 0; index < textSpan.Length - 1; index++)
+        for (var index = 0; index < text.Length - 1; index++)
         {
-            if (textSpan[index].Equals(character) && ++counter == occurrence)
+            if (text[index].Equals(character) && ++counter == occurrence)
             {
                 result = index;
                 break;
@@ -91,12 +90,11 @@ public static class ReadOnlySpanCharExt
         if (occurrence < 0)
             occurrence = 0;
 
-        var textSpan = text;
         int counter = -1, result = -1;
 
-        for (var index = textSpan.Length - 1; index >= 0; index--)
+        for (var index = text.Length - 1; index >= 0; index--)
         {
-            if (textSpan[index].Equals(character) && ++counter == occurrence)
+            if (text[index].Equals(character) && ++counter == occurrence)
             {
                 result = index;
                 break;

@@ -10,11 +10,11 @@ General C# utilities commonly used on projects I work on.
 
 Currently contains:
 - Kotz.Utilities (Metapackage that contains all Kotz packages with no third-party dependencies)
-- [Kotz.Collections] [![Kotz.Collections-NuGet Downloads][Kotz.Collections-Nuget-Downloads]][Kotz.Collections-Nuget-Url]
-- [Kotz.DependencyInjection] [![Kotz.DependencyInjection-NuGet Downloads][Kotz.DependencyInjection-Nuget-Downloads]][Kotz.DependencyInjection-Nuget-Url]
-- [Kotz.Events] [![Kotz.Events-NuGet Downloads][Kotz.Events-Nuget-Downloads]][Kotz.Events-Nuget-Url]
-- [Kotz.Extensions] [![Kotz.Extensions-NuGet Downloads][Kotz.Extensions-Nuget-Downloads]][Kotz.Extensions-Nuget-Url]
-- [Kotz.ObjectPool] [![Kotz.ObjectPool-NuGet Downloads][Kotz.ObjectPool-Nuget-Downloads]][Kotz.ObjectPool-Nuget-Url]
+- [![Kotz.Collections-NuGet Downloads][Kotz.Collections-Nuget-Downloads]][Kotz.Collections-Nuget-Url] [Kotz.Collections]
+- [![Kotz.DependencyInjection-NuGet Downloads][Kotz.DependencyInjection-Nuget-Downloads]][Kotz.DependencyInjection-Nuget-Url] [Kotz.DependencyInjection]
+- [![Kotz.Events-NuGet Downloads][Kotz.Events-Nuget-Downloads]][Kotz.Events-Nuget-Url] [Kotz.Events]
+- [![Kotz.Extensions-NuGet Downloads][Kotz.Extensions-Nuget-Downloads]][Kotz.Extensions-Nuget-Url] [Kotz.Extensions]
+- [![Kotz.ObjectPool-NuGet Downloads][Kotz.ObjectPool-Nuget-Downloads]][Kotz.ObjectPool-Nuget-Url] [Kotz.ObjectPool]
 
 
 [Kotz.Collections]: ./Kotz.Collections/README.md
