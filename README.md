@@ -9,7 +9,7 @@
 General C# utilities commonly used on projects I work on.
 
 Currently contains:
-- Kotz.Utilities (Metapackage that contains all Kotz packages with no third-party dependencies)
+- Kotz.Utilities (Metapackage that contains all Kotz packages)
 - [![Kotz.Collections-NuGet Downloads][Kotz.Collections-Nuget-Downloads]][Kotz.Collections-Nuget-Url] [Kotz.Collections]
 - [![Kotz.DependencyInjection-NuGet Downloads][Kotz.DependencyInjection-Nuget-Downloads]][Kotz.DependencyInjection-Nuget-Url] [Kotz.DependencyInjection]
 - [![Kotz.Events-NuGet Downloads][Kotz.Events-Nuget-Downloads]][Kotz.Events-Nuget-Url] [Kotz.Events]

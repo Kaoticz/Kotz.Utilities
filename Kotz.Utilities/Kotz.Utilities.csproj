@@ -3,7 +3,7 @@
   <Import Project="..\BaseCsproj.props" />
 
   <PropertyGroup>
-    <Description>Provides utility types and methods for common tasks. This is a metapackage that includes all Kotz utility packages with no third-party dependencies.</Description>
+    <Description>Provides utility types and methods for common tasks. This is a metapackage that includes all Kotz utility packages.</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,8 +15,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kotz.Collections\Kotz.Collections.csproj" />
+    <ProjectReference Include="..\Kotz.DependencyInjection\Kotz.DependencyInjection.csproj" />
     <ProjectReference Include="..\Kotz.Events\Kotz.Events.csproj" />
     <ProjectReference Include="..\Kotz.Extensions\Kotz.Extensions.csproj" />
+    <ProjectReference Include="..\Kotz.ObjectPool\Kotz.ObjectPool.csproj" />
   </ItemGroup>
 
 </Project>
