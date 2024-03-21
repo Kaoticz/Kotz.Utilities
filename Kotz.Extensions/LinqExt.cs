@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Kotz.Extensions;
 
@@ -393,7 +394,7 @@ public static class LinqExt
     /// <param name="collection">This collection.</param>
     /// <returns>An <see cref="IOrderedEnumerable{TElement}"/> whose elements are sorted according to their frequency in the sequence.</returns>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
-    public static IOrderedEnumerable<T> OrderByAmount<T>(this IEnumerable<T> collection) where T : notnull
+    public static IOrderedEnumerable<T> OrderAmount<T>(this IEnumerable<T> collection) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
 
@@ -402,18 +403,54 @@ public static class LinqExt
     }
 
     /// <summary>
-    /// Sorts the elements of a sequence in descending order according to how many times they appear in the sequence.
+    /// Sorts the elements of a sequence in ascending order according to how many times the selected property appear in the sequence.
+    /// </summary>
+    /// <typeparam name="T1">The type of the elements.</typeparam>
+    /// <typeparam name="T2">The type of the selected property.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="selector">The selector function.</param>
+    /// <returns>An <see cref="IOrderedEnumerable{TElement}"/> whose elements are sorted according to the frequency of the selected properties.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> or <paramref name="selector"/> are <see langword="null"/>.</exception>
+    public static IOrderedEnumerable<T1> OrderByAmount<T1, T2>(this IEnumerable<T1> collection, Func<T1, T2> selector) where T2 : notnull
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+
+        var result = CountElements(collection, selector);
+        return collection.OrderBy(x => result[selector(x)]);
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in descending order according to how many times they appears in the sequence.
     /// </summary>
     /// <typeparam name="T">The type of the elements.</typeparam>
     /// <param name="collection">This collection.</param>
     /// <returns>An <see cref="IOrderedEnumerable{TElement}"/> whose elements are sorted according to their frequency in the sequence.</returns>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> is <see langword="null"/>.</exception>
-    public static IOrderedEnumerable<T> OrderByDescendingAmount<T>(this IEnumerable<T> collection) where T : notnull
+    public static IOrderedEnumerable<T> OrderDescendingAmount<T>(this IEnumerable<T> collection) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
 
         var result = CountElements(collection);
         return collection.OrderByDescending(x => result[x]);
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in descending order according to how many times the selected property appears in the sequence.
+    /// </summary>
+    /// <typeparam name="T1">The type of the elements.</typeparam>
+    /// <typeparam name="T2">The type of the selected property.</typeparam>
+    /// <param name="collection">This collection.</param>
+    /// <param name="selector">The selector function.</param>
+    /// <returns>An <see cref="IOrderedEnumerable{TElement}"/> whose elements are sorted according to the frequency of the selected properties.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> or <paramref name="selector"/> are <see langword="null"/>.</exception>
+    public static IOrderedEnumerable<T1> OrderByDescendingAmount<T1, T2>(this IEnumerable<T1> collection, Func<T1, T2> selector) where T2 : notnull
+    {
+        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
+        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+
+        var result = CountElements(collection, selector);
+        return collection.OrderByDescending(x => result[selector(x)]);
     }
 
     /// <summary>
@@ -438,7 +475,7 @@ public static class LinqExt
     }
 
     /// <summary>
-    /// Returns the maximum value in a generic sequence or <see langword="null"/> if the sequence is empty.
+    /// Returns the maximum value in a generic sequence or <see langword="default"/> if the sequence is empty.
     /// </summary>
     /// <typeparam name="T">The type of the elements.</typeparam>
     /// <param name="collection">This collection.</param>
@@ -455,7 +492,7 @@ public static class LinqExt
 
     /// <summary>
     /// Returns the maximum value in a generic sequence according to a specified key <paramref name="selector"/>
-    /// function or <see langword="null"/> if the sequence is empty.
+    /// function or <see langword="default"/> if the sequence is empty.
     /// </summary>
     /// <typeparam name="T1">The type of the elements.</typeparam>
     /// <typeparam name="T2">The type of the selected key.</typeparam>
@@ -473,7 +510,7 @@ public static class LinqExt
     }
 
     /// <summary>
-    /// Returns the minimum value in a generic sequence or <see langword="null"/> if the sequence is empty.
+    /// Returns the minimum value in a generic sequence or <see langword="default"/> if the sequence is empty.
     /// </summary>
     /// <typeparam name="T">The type of the elements.</typeparam>
     /// <param name="collection">This collection.</param>
@@ -490,7 +527,7 @@ public static class LinqExt
 
     /// <summary>
     /// Returns the minimum value in a generic sequence according to a specified key <paramref name="selector"/>
-    /// function or <see langword="null"/> if the sequence is empty.
+    /// function or <see langword="default"/> if the sequence is empty.
     /// </summary>
     /// <typeparam name="T1">The type of the elements.</typeparam>
     /// <typeparam name="T2">The type of the selected key.</typeparam>
@@ -511,16 +548,36 @@ public static class LinqExt
     /// Counts the occurences of elements in a <paramref name="collection"/>.
     /// </summary>
     /// <typeparam name="T">The type of the elements.</typeparam>
-    /// <param name="collection">This collection.</param>
-    /// <returns>A dictionary with the element as the key and how many times it appears in the <paramref name="collection"/> as the value.</returns>
+    /// <param name="collection">The collection.</param>
+    /// <returns>
+    /// A dictionary with the element as the key and how many times it appears in
+    ///  the <paramref name="collection"/> as the value.
+    /// </returns>
     private static Dictionary<T, uint> CountElements<T>(IEnumerable<T> collection) where T : notnull
+        => CountElements(collection, x => x);
+
+    /// <summary>
+    /// Counts the occurences of elements in a <paramref name="collection"/> according to
+    /// a specified key <paramref name="selector"/> function.
+    /// </summary>
+    /// <typeparam name="T1">The type of the elements.</typeparam>
+    /// <typeparam name="T2">The selected type.</typeparam>
+    /// <param name="collection">The collection.</param>
+    /// <param name="selector">The selector function.</param>
+    /// <returns>
+    /// A dictionary with the selected element as the key and how many times it appears in
+    /// the <paramref name="collection"/> as the value.
+    /// </returns>
+    private static Dictionary<T2, uint> CountElements<T1, T2>(IEnumerable<T1> collection, Func<T1, T2> selector) where T2 : notnull
     {
-        var result = new Dictionary<T, uint>();
+        var result = new Dictionary<T2, uint>();
 
         foreach (var element in collection)
         {
-            if (!result.TryAdd(element, 1))
-                result[element]++;
+            var newKey = selector(element);
+
+            if (!result.TryAdd(newKey, 1))
+                result[newKey]++;
         }
 
         return result;

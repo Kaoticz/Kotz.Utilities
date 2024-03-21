@@ -22,13 +22,15 @@ Defines the following extension methods:
     - ChunkBy: Splits a collection into a collection of collections based on the provided key selector.
     - ContainsOne: Checks if the current collection contains at least one element of a given collection.
     - ContainsSubcollection: Checks if the current collection contains all elements of a given collection.
-    - MaxOrDefault: Returns the maximum value in a generic sequence or null if the sequence is empty.
-    - MaxByOrDefault: Returns the maximum value in a generic sequence according to a specified key selector function or null if the sequence is empty.
-    - MinOrDefault: Returns the minimum value in a generic sequence or null if the sequence is empty.
-    - MinByOrDefault: Returns the minimum value in a generic sequence according to a specified key selector function or null if the sequence is empty.
+    - MaxOrDefault: Returns the maximum value in a generic sequence or default if the sequence is empty.
+    - MaxByOrDefault: Returns the maximum value in a generic sequence according to a specified key selector function or default if the sequence is empty.
+    - MinOrDefault: Returns the minimum value in a generic sequence or default if the sequence is empty.
+    - MinByOrDefault: Returns the minimum value in a generic sequence according to a specified key selector function or default if the sequence is empty.
     - NestedFill: Adds a sample object to the inner collections of a collection of collections until they all have the same length.
-    - OrderByAmount: Sorts the elements of a sequence in ascending order according to how many times they appear in the sequence.
-    - OrderByDescendingAmount: Sorts the elements of a sequence in descending order according to how many times they appear in the sequence.
+    - OrderAmount: Sorts the elements of a sequence in ascending order according to how many times they appear in the sequence.
+    - OrderDescendingAmount: Sorts the elements of a sequence in descending order according to how many times they appear in the sequence.
+    - OrderByAmount: Sorts the elements of a sequence in ascending order according to how many times the selected property appears in the sequence.
+    - OrderByDescendingAmount: Sorts the elements of a sequence in descending order according to how many times the selected property appears in the sequence.
     - RandomElement: Gets a random element from the current collection.
     - Split: Splits the current collection into multiple collections based on the specified separator.
     - Tap: Executes an action on every element of the collection. Due to poor performance, this method should only be used for testing purposes!

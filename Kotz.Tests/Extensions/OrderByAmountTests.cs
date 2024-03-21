@@ -1,6 +1,6 @@
 namespace Kotz.Tests.Extensions;
 
-public sealed class OrderByAmountTest
+public sealed class OrderByAmountTests
 {
     [Theory]
     [InlineData(new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4, 5 })]
@@ -10,7 +10,7 @@ public sealed class OrderByAmountTest
     internal void OrderByAmountSortTest(int[] collection, int[] expected)
     {
         var result = collection
-            .OrderByAmount()
+            .OrderByAmount(x => x)
             .ToArray();
 
         for (var index = 0; index < expected.Length; index++)
@@ -22,7 +22,7 @@ public sealed class OrderByAmountTest
     internal void OrderByAmountEmptyTest(int[] collection)
     {
         var result = collection
-            .OrderByAmount()
+            .OrderByAmount(x => x)
             .ToArray();
 
         Assert.Empty(result);
@@ -30,5 +30,5 @@ public sealed class OrderByAmountTest
 
     [Fact]
     internal void OrderByAmountFailTest()
-        => Assert.Throws<ArgumentNullException>(() => LinqExt.OrderByAmount<int>(null!).ToArray());
+        => Assert.Throws<ArgumentNullException>(() => LinqExt.OrderByAmount(null!, (int x) => x).ToArray());
 }
