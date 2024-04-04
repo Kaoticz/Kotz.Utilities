@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\BaseCsproj.props" />
-
   <PropertyGroup>
-    <Description>Provides a fluent wrapper for "Microsoft.Extensions.ObjectPool".</Description>
+    <Description>Provides a wrapper for "Microsoft.Extensions.ObjectPool".</Description>
   </PropertyGroup>
 
   <ItemGroup>

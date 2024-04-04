@@ -1,5 +1,5 @@
+using Kotz.Extensions.InternalUtilities;
 using System.ComponentModel;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Kotz.Extensions;
 
@@ -198,9 +198,11 @@ public static class LinqExt
     public static T RandomElement<T>(this IEnumerable<T> collection, Random? random = default)
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-
         random ??= Random.Shared;
-        return collection.ElementAt(random.Next(collection.Count()));
+
+        return (Utilities.TryGetRandom(collection, random, out var randomElement))
+            ? randomElement
+            : collection.ElementAt(random.Next(collection.Count()));
     }
 
     /// <summary>
@@ -216,9 +218,11 @@ public static class LinqExt
     public static T RandomElement<T>(this IEnumerable<T> collection, int maxIndex, Random? random = default)
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-
         random ??= Random.Shared;
-        return collection.ElementAt(random.Next(Math.Min(collection.Count(), Math.Abs(maxIndex))));
+
+        return (Utilities.TryGetRandom(collection, random, maxIndex, out var randomElement))
+            ? randomElement
+            : collection.ElementAt(random.Next(Math.Min(collection.Count(), Math.Abs(maxIndex))));
     }
 
     /// <summary>
@@ -232,9 +236,11 @@ public static class LinqExt
     public static T? RandomElementOrDefault<T>(this IEnumerable<T> collection, Random? random = default)
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-
         random ??= Random.Shared;
-        return collection.ElementAtOrDefault(random.Next(collection.Count()));
+
+        return (Utilities.TryGetRandom(collection, random, out var randomElement))
+            ? randomElement
+            : default;
     }
 
     /// <summary>
@@ -249,9 +255,11 @@ public static class LinqExt
     public static T? RandomElementOrDefault<T>(this IEnumerable<T> collection, int maxIndex, Random? random = default)
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-
         random ??= Random.Shared;
-        return collection.ElementAtOrDefault(random.Next(Math.Min(collection.Count(), Math.Abs(maxIndex))));
+
+        return (Utilities.TryGetRandom(collection, random, maxIndex, out var randomElement))
+            ? randomElement
+            : default;
     }
 
     /// <summary>
@@ -398,7 +406,7 @@ public static class LinqExt
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
 
-        var result = CountElements(collection);
+        var result = Utilities.CountElements(collection);
         return collection.OrderBy(x => result[x]);
     }
 
@@ -416,7 +424,7 @@ public static class LinqExt
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
         ArgumentNullException.ThrowIfNull(selector, nameof(selector));
 
-        var result = CountElements(collection, selector);
+        var result = Utilities.CountElements(collection, selector);
         return collection.OrderBy(x => result[selector(x)]);
     }
 
@@ -431,7 +439,7 @@ public static class LinqExt
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
 
-        var result = CountElements(collection);
+        var result = Utilities.CountElements(collection);
         return collection.OrderByDescending(x => result[x]);
     }
 
@@ -449,7 +457,7 @@ public static class LinqExt
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
         ArgumentNullException.ThrowIfNull(selector, nameof(selector));
 
-        var result = CountElements(collection, selector);
+        var result = Utilities.CountElements(collection, selector);
         return collection.OrderByDescending(x => result[selector(x)]);
     }
 
@@ -542,44 +550,5 @@ public static class LinqExt
         return collection
             .DefaultIfEmpty()
             .MinBy(selector);
-    }
-
-    /// <summary>
-    /// Counts the occurences of elements in a <paramref name="collection"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the elements.</typeparam>
-    /// <param name="collection">The collection.</param>
-    /// <returns>
-    /// A dictionary with the element as the key and how many times it appears in
-    ///  the <paramref name="collection"/> as the value.
-    /// </returns>
-    private static Dictionary<T, uint> CountElements<T>(IEnumerable<T> collection) where T : notnull
-        => CountElements(collection, x => x);
-
-    /// <summary>
-    /// Counts the occurences of elements in a <paramref name="collection"/> according to
-    /// a specified key <paramref name="selector"/> function.
-    /// </summary>
-    /// <typeparam name="T1">The type of the elements.</typeparam>
-    /// <typeparam name="T2">The selected type.</typeparam>
-    /// <param name="collection">The collection.</param>
-    /// <param name="selector">The selector function.</param>
-    /// <returns>
-    /// A dictionary with the selected element as the key and how many times it appears in
-    /// the <paramref name="collection"/> as the value.
-    /// </returns>
-    private static Dictionary<T2, uint> CountElements<T1, T2>(IEnumerable<T1> collection, Func<T1, T2> selector) where T2 : notnull
-    {
-        var result = new Dictionary<T2, uint>();
-
-        foreach (var element in collection)
-        {
-            var newKey = selector(element);
-
-            if (!result.TryAdd(newKey, 1))
-                result[newKey]++;
-        }
-
-        return result;
     }
 }

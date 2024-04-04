@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\BaseCsproj.props" />
-
   <PropertyGroup>
     <Description>Provides collection types for common tasks.</Description>
   </PropertyGroup>

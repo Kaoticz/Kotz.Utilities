@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\BaseCsproj.props" />
-
   <PropertyGroup>
       <Description>Provides utility methods and attributes for "Microsoft.Extensions.DependencyInjection".</Description>
   </PropertyGroup>
