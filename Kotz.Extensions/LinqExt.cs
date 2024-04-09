@@ -167,26 +167,6 @@ public static class LinqExt
     }
 
     /// <summary>
-    /// Splits the elements of this <paramref name="collection"/> into several subcollections according to the value of the property defined by <paramref name="selector"/>.
-    /// </summary>
-    /// <typeparam name="T1">Type of the elements.</typeparam>
-    /// <typeparam name="T2">Type of the selected property.</typeparam>
-    /// <param name="collection">This collection.</param>
-    /// <param name="selector">A method that defines the property to filter the elements.</param>
-    /// <returns>An <see cref="IEnumerable{T1}"/> where all <typeparamref name="T1"/> have the same value for the property defined by <paramref name="selector"/>.</returns>
-    /// <exception cref="ArgumentNullException">Occurs when the collection or the selector are <see langword="null"/>.</exception>
-    public static IEnumerable<IEnumerable<T1>> ChunkBy<T1, T2>(this IEnumerable<T1> collection, Func<T1, T2> selector) where T2 : notnull
-    {
-        ArgumentNullException.ThrowIfNull(collection, nameof(collection));
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
-
-        return collection
-            .Select(selector)
-            .Distinct()
-            .Select(x => collection.Where(y => EqualityComparer<T2>.Default.Equals(x, selector(y))));
-    }
-
-    /// <summary>
     /// Gets a random <typeparamref name="T"/> from the current collection.
     /// </summary>
     /// <param name="collection">This collection.</param>
