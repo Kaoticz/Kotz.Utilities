@@ -8,6 +8,23 @@ namespace Kotz.Extensions;
 /// </summary>
 public static class ArrayExt
 {
+#if NET8_0_OR_GREATER
+    /// <summary>
+    /// Performs an in-place shuffle of this array.
+    /// </summary>
+    /// <param name="array">The array to shuffle.</param>
+    /// <param name="random">The <see cref="Random"/> object to suffle with.</param>
+    /// <typeparam name="T">Data type contained in the <paramref name="array"/>.</typeparam>
+    /// <returns>The shuffled <paramref name="array"/>.</returns>
+    public static T[] Shuffle<T>(this T[] array, Random? random)
+    {
+        random ??= Random.Shared;
+        random.Shuffle(array);
+
+        return array;
+    }
+#endif
+    
     /// <summary>
     /// Creates a new <see cref="ReadOnlySpan{T}"/> over the entirety of the specified <paramref name="array"/>.
     /// </summary>

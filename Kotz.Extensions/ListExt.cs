@@ -7,6 +7,23 @@ namespace Kotz.Extensions;
 /// </summary>
 public static class ListExt
 {
+#if NET8_0_OR_GREATER
+    /// <summary>
+    /// Performs an in-place shuffle of this span.
+    /// </summary>
+    /// <param name="list">The span to shuffle.</param>
+    /// <param name="random">The <see cref="Random"/> object to suffle with.</param>
+    /// <typeparam name="T">Data type contained in the <paramref name="list"/>.</typeparam>
+    /// <returns>The shuffled <paramref name="list"/>.</returns>
+    public static List<T> Shuffle<T>(this List<T> list, Random? random)
+    {
+        random ??= Random.Shared;
+        random.Shuffle(CollectionsMarshal.AsSpan(list));
+
+        return list;
+    }
+#endif
+
     /// <summary>
     ///  Gets a <see cref="Span{T}"/> view over the data in a list. Items should not be
     ///  added or removed from the <see cref="List{T}"/> while the <see cref="Span{T}"/>

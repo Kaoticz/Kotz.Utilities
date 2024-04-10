@@ -5,6 +5,23 @@ namespace Kotz.Extensions;
 /// </summary>
 public static class SpanExt
 {
+#if NET8_0_OR_GREATER
+    /// <summary>
+    /// Performs an in-place shuffle of this span.
+    /// </summary>
+    /// <param name="span">The span to shuffle.</param>
+    /// <param name="random">The <see cref="Random"/> object to suffle with.</param>
+    /// <typeparam name="T">Data type contained in the <paramref name="span"/>.</typeparam>
+    /// <returns>The shuffled <paramref name="span"/>.</returns>
+    public static Span<T> Shuffle<T>(this Span<T> span, Random? random)
+    {
+        random ??= Random.Shared;
+        random.Shuffle(span);
+
+        return span;
+    }
+#endif
+
     /// <summary>
     /// Rotates a span from a starting position by the specified <paramref name="amount"/> of indices.
     /// </summary>
