@@ -28,7 +28,7 @@ public sealed class RentedArrayTest
     internal void AddTest(MockObject[] collection)
     {
         using var rentedArray = new RentedArray<MockObject>(collection);
-        Assert.Throws<NotSupportedException>(() => rentedArray.Add(collection[0]));
+        Assert.Throws<NotSupportedException>(() => ((ICollection<MockObject>)rentedArray).Add(collection[0]));
     }
 
     [Theory]

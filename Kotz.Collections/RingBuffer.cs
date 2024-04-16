@@ -44,7 +44,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Determines whether this collection is read-only.
     /// </summary>
-    public bool IsReadOnly { get; }
+    bool ICollection<T>.IsReadOnly { get; }
 
     /// <summary>
     /// Defines the current index of the buffer for writing.
@@ -56,7 +56,7 @@ public sealed class RingBuffer<T> : IList<T>, IReadOnlyList<T>
     /// </summary>
     public RingBuffer()
     {
-        _internalList = new();
+        _internalList = [];
         FillWithDefault(_internalList);
     }
 

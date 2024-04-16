@@ -24,7 +24,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// <summary>
     /// Determines whether this collection is read-only.
     /// </summary>
-    public bool IsReadOnly { get; }
+    bool ICollection<T>.IsReadOnly { get; }
 
     /// <summary>
     /// The size of this <see cref="RentedArray{T}"/>.
@@ -66,7 +66,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
             : collection.Count();
 
         _internalArray = (Count is 0)
-            ? Array.Empty<T>()
+            ? []
             : ArrayPool<T>.Shared.Rent(Count);
 
         var counter = 0;
@@ -111,7 +111,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
     /// This method is not supported. Use <see cref="RentedArray{T}.Insert(int, T)"/> instead.
     /// </summary>
     /// <exception cref="NotSupportedException" />
-    public void Add(T item)
+    void ICollection<T>.Add(T item)
         => throw new NotSupportedException($"{nameof(RentedArray<T>)} does not support this method. Use \"{nameof(RentedArray<T>.Insert)}\" instead.");
 
     /// <summary>
@@ -288,7 +288,7 @@ public sealed class RentedArray<T> : IList<T>, IReadOnlyList<T>, IDisposable
             return;
 
         ArrayPool<T>.Shared.Return(_internalArray, true);
-        _internalArray = Array.Empty<T>();
+        _internalArray = [];
         Count = 0;
     }
 

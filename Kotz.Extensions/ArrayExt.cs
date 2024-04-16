@@ -60,7 +60,7 @@ public static class ArrayExt
         => Array.AsReadOnly(array);
 
     /// <summary>
-    /// Searches an entire one-dimensional sorted array for a specific element, using the <see cref="IComparable{T}"/>
+    /// Searches an entire one-dimensional sorted array for a specific elemenT1, T2sing the <see cref="IComparable{T}"/>
     /// generic interface implemented by each element of the <see cref="Array"/> and by the specified object.
     /// </summary>
     /// <param name="array">The sorted one-dimensional, zero-based <see cref="Array"/> to search.</param>
@@ -214,11 +214,11 @@ public static class ArrayExt
     /// </summary>
     /// <param name="array">The one-dimensional, zero-based <see cref="Array"/> to convert to a target type.</param>
     /// <param name="converter">A <see cref="Converter{TInput, TOutput}"/>> that converts each element from one type to another type.</param>
-    /// <typeparam name="T">The type of the elements of the source array.</typeparam>
-    /// <typeparam name="U">The type of the elements of the target array.</typeparam>
+    /// <typeparam name="T1">The type of the elements of the source array.</typeparam>
+    /// <typeparam name="T2">The type of the elements of the target array.</typeparam>
     /// <returns>An array of the target type containing the converted elements from the source array.</returns>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="array"/> is null. -or- <paramref name="converter"/> is null.</exception>
-    public static U[] ConvertAll<T, U>(this T[] array, Converter<T, U> converter)
+    public static T2[] ConvertAll<T1, T2>(this T1[] array, Converter<T1, T2> converter)
         => Array.ConvertAll(array, converter);
 
     /// <summary>
@@ -635,14 +635,14 @@ public static class ArrayExt
     /// The one-dimensional, zero-based <see cref="Array"/> that contains the items that correspond to the keys in
     /// <paramref name="keys"/>, or <see langword="null"/> to sort only keys.
     /// </param>
-    /// <typeparam name="T">Data type contained in the <paramref name="keys"/> array.</typeparam>
-    /// <typeparam name="U">Data type contained in the <paramref name="items"/> array.</typeparam>
+    /// <typeparam name="T1">Data type contained in the <paramref name="keys"/> array.</typeparam>
+    /// <typeparam name="T2">Data type contained in the <paramref name="items"/> array.</typeparam>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="keys"/> is null.</exception>
     /// <exception cref="ArgumentException">
     /// Occurs when <paramref name="items"/> is not null, and the lower bound of keys does not match the lower bound of items.
     /// -or- <paramref name="items"/> is not null, and the length of <paramref name="keys"/> is greater than the length of items.
     /// </exception>
-    public static void Sort<T, U>(this T[] keys, U[]? items) where T : IComparable<T>
+    public static void Sort<T1, T2>(this T1[] keys, T2[]? items) where T1 : IComparable<T1>
         => Array.Sort(keys, items);
 
     /// <summary>
@@ -676,8 +676,8 @@ public static class ArrayExt
     /// </param>
     /// <param name="index">The starting index of the range to sort.</param>
     /// <param name="length">The number of elements in the range to sort.</param>
-    /// <typeparam name="T">Data type contained in the <paramref name="keys"/> array.</typeparam>
-    /// <typeparam name="U">Data type contained in the <paramref name="items"/> array.</typeparam>
+    /// <typeparam name="T1">Data type contained in the <paramref name="keys"/> array.</typeparam>
+    /// <typeparam name="T2">Data type contained in the <paramref name="items"/> array.</typeparam>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="keys"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Occurs when <paramref name="index"/> is less than the lower bound of keys. -or- <paramref name="length"/> is less than zero.
@@ -689,7 +689,7 @@ public static class ArrayExt
     /// in the <paramref name="keys"/> <see cref="Array"/>. -or- <paramref name="items"/> is not null, and <paramref name="index"/> and
     /// <paramref name="length"/> do not specify a valid range in the <paramref name="items"/> <see cref="Array"/>.
     /// </exception>
-    public static void Sort<T, U>(this T[] keys, U[]? items, int index, int length) where T : IComparable<T>
+    public static void Sort<T1, T2>(this T1[] keys, T2[]? items, int index, int length) where T1 : IComparable<T1>
         => Array.Sort(keys, items, index, length);
 
     /// <summary>
@@ -708,8 +708,8 @@ public static class ArrayExt
     /// The <see cref="IComparer{T}"/> generic interface implementation to use when comparing elements, or <see langword="null"/> to
     /// use the <see cref="IComparable{T}"/> generic interface implementation of each element.
     /// </param>
-    /// <typeparam name="T">Data type contained in the <paramref name="keys"/> array.</typeparam>
-    /// <typeparam name="U">Data type contained in the <paramref name="items"/> array.</typeparam>
+    /// <typeparam name="T1">Data type contained in the <paramref name="keys"/> array.</typeparam>
+    /// <typeparam name="T2">Data type contained in the <paramref name="items"/> array.</typeparam>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="keys"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Occurs when <paramref name="index"/> is less than the lower bound of keys. -or- <paramref name="length"/> is less than zero.
@@ -723,7 +723,7 @@ public static class ArrayExt
     /// -or- The implementation of <paramref name="comparer"/> caused an error during the sort. For example, comparer might not
     /// return 0 when comparing an item with itself.
     /// </exception>
-    public static void Sort<T, U>(this T[] keys, U[]? items, int index, int length, IComparer<T> comparer) where T : IComparable<T>
+    public static void Sort<T1, T2>(this T1[] keys, T2[]? items, int index, int length, IComparer<T1> comparer) where T1 : IComparable<T1>
         => Array.Sort(keys, items, index, length, comparer);
 
     /// <summary>
@@ -749,8 +749,8 @@ public static class ArrayExt
     /// The <see cref="IComparer{T}"/> generic interface implementation to use when comparing elements, or <see langword="null"/>
     /// to use the <see cref="IComparable{T}"/> generic interface implementation of each element.
     /// </param>
-    /// <typeparam name="T">Data type contained in the <paramref name="keys"/> array.</typeparam>
-    /// <typeparam name="U">Data type contained in the <paramref name="items"/> array.</typeparam>
+    /// <typeparam name="T1">Data type contained in the <paramref name="keys"/> array.</typeparam>
+    /// <typeparam name="T2">Data type contained in the <paramref name="items"/> array.</typeparam>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="keys"/> is null.</exception>
     /// <exception cref="ArgumentException">
     /// Occurs when <paramref name="items"/> is not null, and the lower bound of <paramref name="keys"/> does not match the lower
@@ -762,7 +762,7 @@ public static class ArrayExt
     /// Occurs when <paramref name="comparer"/> is null, and one or more elements in the <paramref name="keys"/> <see cref="Array"/>
     /// do not implement the <see cref="IComparable{T}"/> generic interface.
     /// </exception>
-    public static void Sort<T, U>(this T[] keys, U[]? items, IComparer<T> comparer)
+    public static void Sort<T1, T2>(this T1[] keys, T2[]? items, IComparer<T1> comparer)
         => Array.Sort(keys, items, comparer);
 
     /// <summary>
