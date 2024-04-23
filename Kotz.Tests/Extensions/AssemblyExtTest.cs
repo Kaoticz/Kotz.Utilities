@@ -85,6 +85,7 @@ public sealed class AssemblyExtTest
     }
 }
 
+#pragma warning disable SA1402 // FileMayOnlyContainASingleType
 internal interface IInterfaceA { }
 internal abstract class AbstractA { }
 internal class ConcreteA { }
@@ -93,3 +94,4 @@ internal class ConcreteC : ConcreteB { }
 internal class ConcreteD : AbstractA, IInterfaceA { }
 internal abstract class AbstractB : ConcreteC { }
 internal class ConcreteE : AbstractB { }
+#pragma warning restore SA1402 // FileMayOnlyContainASingleType

@@ -3,7 +3,6 @@
     <IsPackable>False</IsPackable>
     <Description>Unit tests</Description>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <SuppressMessage Namespaces="*" CheckId="SA1402" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
