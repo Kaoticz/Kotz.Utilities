@@ -40,7 +40,7 @@ public static class SpanExt
 
         // Normalize the amount requested
         amount = (startIndex + (amount % span.Length) > span.Length - startIndex)
-            ? amount % span.Length % startIndex
+            ? (amount % span.Length) % startIndex
             : amount % span.Length;
 
         if (amount is 0)
