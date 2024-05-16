@@ -4,7 +4,7 @@ public sealed class HasWritePermissionAtTests
 {
     [Fact]
     internal void HasWritePermissionAtTrueTest()
-        => Assert.True(KotzUtilities.HasWritePermissionAt(AppContext.BaseDirectory));
+        => Assert.True(KotzUtilities.HasWritePermissionAt(Path.GetTempPath()));
 
     [Fact]
     internal void HasWritePermissionAtFalseTest()
