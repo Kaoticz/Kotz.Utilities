@@ -2,9 +2,9 @@ using Kotz.Events;
 
 namespace Kotz.Tests.Events;
 
-public sealed class EventAyncTests
+public sealed class EventAsyncTests
 {
-    private readonly AsyncEvent<EventAyncTests, EventArgs> _asyncEvent = new();
+    private readonly AsyncEvent<EventAsyncTests, EventArgs> _asyncEvent = new();
 
     internal int Count { get; private set; }
 
