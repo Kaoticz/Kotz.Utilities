@@ -78,7 +78,6 @@ public static class KotzUtilities
         }
     }
 
-
     /// <summary>
     /// Checks if a program exists at the specified absolute path or the PATH environment variable.
     /// </summary>

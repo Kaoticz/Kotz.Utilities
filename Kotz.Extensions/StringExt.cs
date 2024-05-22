@@ -132,13 +132,57 @@ public static class StringExt
     }
 
     /// <summary>
+    /// Converts a string to the PascalCase format.
+    /// </summary>
+    /// <param name="text">This string.</param>
+    /// <returns>This <see cref="string"/> converted to PascalCase.</returns>
+    [return: NotNullIfNotNull(nameof(text))]
+    public static string? ToPascalCase(this string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return text;
+
+        var textSpan = text.AsSpan();
+        var result = new StringBuilder();
+        var isNewWord = true;
+
+        for (var index = 0; index < textSpan.Length; index++)
+        {
+            var currentChar = textSpan[index];
+
+            if (!char.IsLetterOrDigit(currentChar))
+            {
+                isNewWord = true;
+                continue;
+            }
+
+            if (isNewWord)
+            {
+                result.Append(char.ToUpperInvariant(currentChar));
+                isNewWord = false;
+            }
+            else
+            {
+                result.Append(
+                    (index < text.Length - 1 && char.IsUpper(currentChar) && char.IsLower(text[index + 1]))
+                        ? currentChar
+                        : char.ToLowerInvariant(currentChar)
+                );
+            }
+
+            isNewWord &= index < text.Length - 1 && char.IsLower(text[index]) && char.IsUpper(text[index + 1]);
+        }
+
+        return result.ToStringAndClear();
+    }
+
+    /// <summary>
     /// Converts a string to the "snake_case" format.
     /// </summary>
     /// <param name="text">This string.</param>
-    /// <param name="joinSpaces"><see langword="true"/> to , <see langword="false"/></param>
     /// <returns>This <see cref="string"/> converted to snake_case.</returns>
     [return: NotNullIfNotNull(nameof(text))]
-    public static string? ToSnakeCase(this string? text, bool joinSpaces = false)
+    public static string? ToSnakeCase(this string? text)
     {
         if (string.IsNullOrWhiteSpace(text))
             return text;
@@ -152,7 +196,12 @@ public static class StringExt
 
             if (chainLength <= 0)
             {
-                buffer.Append(char.ToLowerInvariant(textSpan[index]));
+                buffer.Append(
+                    (char.IsLetterOrDigit(textSpan[index]))
+                        ? char.ToLowerInvariant(textSpan[index])
+                        : '_'
+                );
+                
                 continue;
             }
 
@@ -164,14 +213,16 @@ public static class StringExt
             index += chainLength - 1;
         }
 
-        if (buffer[0] is '_')
+        // Remove trailing underscores.
+        while (buffer[0] is '_')
             buffer.Remove(0, 1);
 
-        buffer.Replace(" _", " ")
-            .Replace("_ ", "_");
+        while (buffer[^1] is '_')
+            buffer.Remove(buffer.Length - 1, 1);
 
-        if (joinSpaces)
-            buffer.Replace(' ', '_');
+        buffer.Replace(" _", " ")
+            .Replace("_ ", "_")
+            .Replace(' ', '_');
 
         buffer.ReplaceAll("__", "_");
 

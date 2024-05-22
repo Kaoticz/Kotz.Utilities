@@ -9,8 +9,8 @@ public sealed class HasWritePermissionAtTests
     [Fact]
     internal void HasWritePermissionAtFalseTest()
     {
-        var directoryUri = OperatingSystem.IsWindows()
-            ? Environment.GetFolderPath(Environment.SpecialFolder.System)
+        var directoryUri = (OperatingSystem.IsWindows())
+            ? @"C:\Windows\Boot"
             : "/";
 
         Assert.False(KotzUtilities.HasWritePermissionAt(directoryUri));

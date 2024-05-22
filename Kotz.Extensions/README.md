@@ -74,6 +74,7 @@ Defines the following extension methods:
     - MaxLength: Truncates the string to the maximum specified length.
     - Occurrences: Gets the amount of occurences of a given character in the current string.
     - StartsWith: Checks whether the beginning of the current string matches any string stored in the provided collection.
+    - ToPascalCase: Converts the current string to the *PascalCase* format.
     - ToSnakeCase: Converts the current string to the *snake_case* format.
     - ToTitleCase: Converts the current string to the *Title Case* format.
 - **StringBuilder Extensions**
