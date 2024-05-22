@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Kotz.Tests.Extensions;
 
-public sealed class StringBuilderExtTest
+public sealed class StringBuilderExtTests
 {
     [Theory]
     [InlineData("double__space!", "__", "_", "double_space!")]
@@ -46,7 +46,7 @@ public sealed class StringBuilderExtTest
     [Theory]
     [InlineData("")]
     [InlineData("hello")]
-    internal void ToStringAndClear(string input)
+    internal void ToStringAndClearTest(string input)
     {
         var stringBuilder = new StringBuilder(input);
 
@@ -56,11 +56,56 @@ public sealed class StringBuilderExtTest
 
     [Theory]
     [InlineData("hello", 2, 2)]
-    internal void ToSubstringAndClear(string input, int startIndex, int length)
+    internal void ToSubstringAndClearTest(string input, int startIndex, int length)
     {
         var stringBuilder = new StringBuilder(input);
 
         Assert.Equal(input.Substring(startIndex, length), stringBuilder.ToStringAndClear(startIndex, length));
         Assert.True(stringBuilder.Length is 0);
+    }
+
+    [Theory]
+    [InlineData("", "", ' ')]
+    [InlineData("abc", "abc", ' ')]
+    [InlineData("   abc", "abc", ' ')]
+    [InlineData("abc   ", "abc", ' ')]
+    [InlineData("   abc   ", "abc", ' ')]
+    [InlineData("_abc__", "abc", '_')]
+    internal void TrimTest(string input, string expected, char trimChar)
+    {
+        var stringBuilder = new StringBuilder(input)
+            .Trim(trimChar);
+
+        Assert.Equal(expected, stringBuilder.ToStringAndClear());
+    }
+
+    [Theory]
+    [InlineData("", "", ' ')]
+    [InlineData("abc", "abc", ' ')]
+    [InlineData("   abc", "   abc", ' ')]
+    [InlineData("abc  ", "abc", ' ')]
+    [InlineData("   abc  ", "   abc", ' ')]
+    [InlineData("_abc__", "_abc", '_')]
+    internal void TrimEndTest(string input, string expected, char trimChar)
+    {
+        var stringBuilder = new StringBuilder(input)
+            .TrimEnd(trimChar);
+
+        Assert.Equal(expected, stringBuilder.ToStringAndClear());
+    }
+
+    [Theory]
+    [InlineData("", "", ' ')]
+    [InlineData("abc", "abc", ' ')]
+    [InlineData("   abc", "abc", ' ')]
+    [InlineData("abc   ", "abc   ", ' ')]
+    [InlineData("   abc   ", "abc   ", ' ')]
+    [InlineData("_abc__", "abc__", '_')]
+    internal void TrimStartTest(string input, string expected, char trimChar)
+    {
+        var stringBuilder = new StringBuilder(input)
+            .TrimStart(trimChar);
+
+        Assert.Equal(expected, stringBuilder.ToStringAndClear());
     }
 }

@@ -80,6 +80,9 @@ Defines the following extension methods:
 - **StringBuilder Extensions**
     - ReplaceAll: Replaces all instances of a substring with another substring, even if the new substring is a substring of the old substring.
     - ToStringAndClear: Returns the `string` value of the current builder and clears the builder.
+    - Trim: Removes all leading and trailing instances of a character from the current string builder.
+    - TrimEnd: Removes all trailing instances of a character from the current string builder.
+    - TrimStart: Removes all leading instances of a character from the current string builder.
 
 Defines the following types:
 
