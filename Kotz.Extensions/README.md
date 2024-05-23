@@ -79,6 +79,7 @@ Defines the following extension methods:
     - ToTitleCase: Converts the current string to the *Title Case* format.
 - **StringBuilder Extensions**
     - ReplaceAll: Replaces all instances of a substring with another substring, even if the new substring is a substring of the old substring.
+    - Remove: Removes the specified string chunks from the current StringBuilder.
     - ToStringAndClear: Returns the `string` value of the current builder and clears the builder.
     - Trim: Removes all leading and trailing instances of a character from the current string builder.
     - TrimEnd: Removes all trailing instances of a character from the current string builder.

@@ -44,6 +44,24 @@ public sealed class StringBuilderExtTests
     }
 
     [Theory]
+    [InlineData("Hello World", "Hello World")]
+    [InlineData("Hello World", "Hello World", "")]
+    [InlineData("Hello World", "Hell Wrld", "o")]
+    [InlineData("Hello World", "Hll Wrld", "o", "e")]
+    [InlineData("Hello World", "Hello ", "World")]
+    internal void RemoveTest(string input, string expected, params string[] toRemove)
+    {
+        var stringBuilder = new StringBuilder(input)
+            .Remove(toRemove);
+
+        Assert.Equal(expected, stringBuilder.ToString());
+    }
+
+    [Fact]
+    internal void RemoveExceptionTest()
+        => Assert.Throws<ArgumentNullException>(() => new StringBuilder().Remove(null!));
+
+    [Theory]
     [InlineData("")]
     [InlineData("hello")]
     internal void ToStringAndClearTest(string input)

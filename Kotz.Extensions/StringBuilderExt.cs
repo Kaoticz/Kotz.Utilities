@@ -87,6 +87,36 @@ public static class StringBuilderExt
     }
 
     /// <summary>
+    /// Removes the specified text chunks from this string builder.
+    /// </summary>
+    /// <param name="stringBuilder">This string builder.</param>
+    /// <param name="chunksToRemove">The text chunks to be removed.</param>
+    /// <returns>This string builder with the text chunks removed.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="chunksToRemove"/> is <see langword="null"/>.</exception>
+    public static StringBuilder Remove(this StringBuilder stringBuilder, params string[] chunksToRemove)
+        => Remove(stringBuilder, chunksToRemove.AsEnumerable());
+
+    /// <summary>
+    /// Removes the specified text chunks from this string builder.
+    /// </summary>
+    /// <param name="stringBuilder">This string builder.</param>
+    /// <param name="chunksToRemove">The text chunks to be removed.</param>
+    /// <returns>This string builder with the text chunks removed.</returns>
+    /// <exception cref="ArgumentNullException">Occurs when <paramref name="chunksToRemove"/> is <see langword="null"/>.</exception>
+    public static StringBuilder Remove(this StringBuilder stringBuilder, IEnumerable<string> chunksToRemove)
+    {
+        ArgumentNullException.ThrowIfNull(chunksToRemove);
+
+        foreach (var textChunk in chunksToRemove.Where(x => !string.IsNullOrEmpty(x)))
+            stringBuilder.Replace(textChunk, string.Empty);
+
+        return stringBuilder;
+    }
+
+    // TODO: unit tests for the methods above
+    // TODO: RemoveAt(int)
+
+    /// <summary>
     /// Converts the value of this instance to a <see langword="string"/>, then clears its buffer.
     /// </summary>
     /// <param name="stringBuilder">This builder.</param>
