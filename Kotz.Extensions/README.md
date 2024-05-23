@@ -9,6 +9,8 @@ Defines the following extension methods:
     - GetAbstractTypes: Gets all abstract types from the current assembly.
     - GetConcreteTypesOf: Gets the concrete types from the current assembly that derive from another type.
     - GetAbstractTypesOf: Gets the abstract types from the current assembly that derive from another type.
+- **Char Extensions**
+    - Several wrappers for `System.Char` static methods.
 - **DateTimeOffset Extensions**
     - StartOfDay: Gets the beginning of the day for the current DateTimeOffset object.
 - **Enum Extensions**

@@ -95,7 +95,6 @@ public static class KotzUtilities
         return process.ExitCode is 0;
     }
 
-
     /// <summary>
     /// Starts the specified program in the background.
     /// </summary>
@@ -218,11 +217,6 @@ public static class KotzUtilities
     /// <returns><see langword="true"/> if the File System Object was deleted, <see langword="false"/> otherwise.</returns>
     /// <exception cref="ArgumentException" />
     /// <exception cref="ArgumentNullException" />
-    /// <exception cref="IOException" />
-    /// <exception cref="DirectoryNotFoundException" />
-    /// <exception cref="NotSupportedException" />
-    /// <exception cref="PathTooLongException" />
-    /// <exception cref="UnauthorizedAccessException" />
     public static bool TryDeleteFSO(string fsoUri, bool isRecursive = true)
         => TryDeleteFile(fsoUri) || TryDeleteDirectory(fsoUri, isRecursive);
 
