@@ -113,8 +113,19 @@ public static class StringBuilderExt
         return stringBuilder;
     }
 
-    // TODO: unit tests for the methods above
-    // TODO: RemoveAt(int)
+    /// <summary>
+    /// Removes the character at the specified <paramref name="index"/> from this string builder.
+    /// </summary>
+    /// <param name="stringBuilder">This string builder.</param>
+    /// <param name="index">The index of the character to be removed.</param>
+    /// <returns>A reference to this instance with the character removed.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Occurs when the index is less than zero or  greater than the length of the string builder.</exception>
+    public static StringBuilder RemoveAt(this StringBuilder stringBuilder, int index)
+    {
+        return (index >= stringBuilder.Length)
+            ? throw new ArgumentOutOfRangeException(nameof(index), index, "Index cannot be less than zero or greater than the length of the StringBuilder.")
+            : stringBuilder.Remove(index, 1);
+    }
 
     /// <summary>
     /// Converts the value of this instance to a <see langword="string"/>, then clears its buffer.

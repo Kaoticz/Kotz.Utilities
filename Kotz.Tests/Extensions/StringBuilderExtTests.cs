@@ -46,6 +46,7 @@ public sealed class StringBuilderExtTests
     [Theory]
     [InlineData("Hello World", "Hello World")]
     [InlineData("Hello World", "Hello World", "")]
+    [InlineData("Hello World", "HelloWorld", " ")]
     [InlineData("Hello World", "Hell Wrld", "o")]
     [InlineData("Hello World", "Hll Wrld", "o", "e")]
     [InlineData("Hello World", "Hello ", "World")]
@@ -60,6 +61,24 @@ public sealed class StringBuilderExtTests
     [Fact]
     internal void RemoveExceptionTest()
         => Assert.Throws<ArgumentNullException>(() => new StringBuilder().Remove(null!));
+
+    [Theory]
+    [InlineData("Hello", "ello", 0)]
+    [InlineData("Hello", "Helo", 2)]
+    [InlineData("Hello", "Hell", 4)]
+    internal void RemoveAtTest(string input, string expected, int index)
+    {
+        var stringBuilder = new StringBuilder(input)
+            .RemoveAt(index);
+
+        Assert.Equal(expected, stringBuilder.ToString());
+    }
+
+    [Theory]
+    [InlineData("Hello", 5)]
+    [InlineData("Hello", -1)]
+    internal void RemoveAtException(string input, int index)
+        => Assert.Throws<ArgumentOutOfRangeException>(() => new StringBuilder(input).RemoveAt(index));
 
     [Theory]
     [InlineData("")]
