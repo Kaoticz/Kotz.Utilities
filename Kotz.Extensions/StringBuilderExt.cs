@@ -178,8 +178,13 @@ public static class StringBuilderExt
         if (stringBuilder.Length is 0)
             return stringBuilder;
 
-        while (stringBuilder.Length is not 0 && stringBuilder[^1] == trimChar)
-            stringBuilder.Remove(stringBuilder.Length - 1, 1);
+        var counter = 0;
+
+        for (var index = stringBuilder.Length - 1; index > 0 && stringBuilder[index] == trimChar; index--)
+            counter++;
+
+        if (counter > 0)
+            stringBuilder.Remove(stringBuilder.Length - counter, counter);
 
         return stringBuilder;
     }
@@ -195,8 +200,13 @@ public static class StringBuilderExt
         if (stringBuilder.Length is 0)
             return stringBuilder;
 
-        while (stringBuilder.Length is not 0 && stringBuilder[0] == trimChar)
-            stringBuilder.Remove(0, 1);
+        var counter = 0;
+
+        for (var index = 0; index < stringBuilder.Length - 1 && stringBuilder[index] == trimChar; index++)
+            counter++;
+
+        if (counter > 0)
+            stringBuilder.Remove(0, counter);
 
         return stringBuilder;
     }
