@@ -68,7 +68,7 @@ public static class KotzUtilities
             using var fileStream = File.Create(tempFileUri);
             return true;
         }
-        catch (UnauthorizedAccessException)
+        catch (Exception ex) when (ex is not PathTooLongException and not DirectoryNotFoundException)
         {
             return false;
         }
