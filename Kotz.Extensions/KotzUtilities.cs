@@ -103,8 +103,8 @@ public static class KotzUtilities
     /// or the absolute path to its executable.
     /// </param>
     /// <param name="arguments">The arguments to the program.</param>
-    /// <param name="stdoutRedirectHandlers">Defines the handlers for redirected Standard Output data.</param>
-    /// <param name="stderrRedirectHandlers">Defines the handlers for redirected Standard Error data.</param>
+    /// <param name="stdoutHandlers">Defines the handlers for redirected Standard Output data.</param>
+    /// <param name="stderrHandlers">Defines the handlers for redirected Standard Error data.</param>
     /// <remarks>
     /// The <paramref name="arguments"/> parameter is not escaped, you can either escape it yourself or use
     /// <see cref="StartProcess(string, IEnumerable{string}, IReadOnlyCollection{DataReceivedEventHandler}?, IReadOnlyCollection{DataReceivedEventHandler}?)"/>
@@ -118,8 +118,8 @@ public static class KotzUtilities
     public static Process StartProcess(
             string program,
             string arguments = "",
-            IReadOnlyCollection<DataReceivedEventHandler>? stdoutRedirectHandlers = default,
-            IReadOnlyCollection<DataReceivedEventHandler>? stderrRedirectHandlers = default
+            IReadOnlyCollection<DataReceivedEventHandler>? stdoutHandlers = default,
+            IReadOnlyCollection<DataReceivedEventHandler>? stderrHandlers = default
         )
     {
         ArgumentException.ThrowIfNullOrEmpty(program, nameof(program));
@@ -131,11 +131,11 @@ public static class KotzUtilities
             Arguments = arguments,
             UseShellExecute = false,
             CreateNoWindow = true,
-            RedirectStandardOutput = stdoutRedirectHandlers is { Count: not 0 },
-            RedirectStandardError = stderrRedirectHandlers is { Count: not 0 }
+            RedirectStandardOutput = stdoutHandlers is { Count: not 0 },
+            RedirectStandardError = stderrHandlers is { Count: not 0 }
         }) ?? throw new InvalidOperationException($"Failed spawing process for: {program} {arguments}");
 
-        return EnableProcessEvents(process, stdoutRedirectHandlers, stderrRedirectHandlers);
+        return EnableProcessEvents(process, stdoutHandlers, stderrHandlers);
     }
 
     /// <summary>
@@ -146,8 +146,8 @@ public static class KotzUtilities
     /// or the absolute path to its executable.
     /// </param>
     /// <param name="arguments">The arguments to the program.</param>
-    /// <param name="stdoutRedirectHandlers">Defines the handlers for redirected Standard Output data.</param>
-    /// <param name="stderrRedirectHandlers">Defines the handlers for redirected Standard Error data.</param>
+    /// <param name="stdoutHandlers">Defines the handlers for redirected Standard Output data.</param>
+    /// <param name="stderrHandlers">Defines the handlers for redirected Standard Error data.</param>
     /// <remarks>The <paramref name="arguments"/> get automatically escaped.</remarks>
     /// <returns>The process of the specified program.</returns>
     /// <exception cref="ArgumentException" />
@@ -157,8 +157,8 @@ public static class KotzUtilities
     public static Process StartProcess(
             string program,
             IEnumerable<string> arguments,
-            IReadOnlyCollection<DataReceivedEventHandler>? stdoutRedirectHandlers = default,
-            IReadOnlyCollection<DataReceivedEventHandler>? stderrRedirectHandlers = default
+            IReadOnlyCollection<DataReceivedEventHandler>? stdoutHandlers = default,
+            IReadOnlyCollection<DataReceivedEventHandler>? stderrHandlers = default
         )
     {
         ArgumentException.ThrowIfNullOrEmpty(program, nameof(program));
@@ -169,8 +169,8 @@ public static class KotzUtilities
             FileName = program,
             UseShellExecute = false,
             CreateNoWindow = true,
-            RedirectStandardOutput = stdoutRedirectHandlers is { Count: not 0 },
-            RedirectStandardError = stderrRedirectHandlers is { Count: not 0 }
+            RedirectStandardOutput = stdoutHandlers is { Count: not 0 },
+            RedirectStandardError = stderrHandlers is { Count: not 0 }
         };
 
         foreach (var argument in arguments)
@@ -179,7 +179,7 @@ public static class KotzUtilities
         var process =  Process.Start(processInfo)
             ?? throw new InvalidOperationException($"Failed spawing process for: {program} {string.Join(' ', processInfo.ArgumentList)}");
 
-        return EnableProcessEvents(process, stdoutRedirectHandlers, stderrRedirectHandlers);
+        return EnableProcessEvents(process, stdoutHandlers, stderrHandlers);
     }
 
     /// <summary>
@@ -367,34 +367,37 @@ public static class KotzUtilities
     /// Enables event raising for the specified handlers, if there are any,
     /// </summary>
     /// <param name="process">The process to enable events.</param>
-    /// <param name="stdoutRedirectHandlers">The handlers for redirected Standard Output data.</param>
-    /// <param name="stderrRedirectHandlers">The handlers for redirected Standard Error data.</param>
+    /// <param name="stdoutHandlers">The handlers for redirected Standard Output data.</param>
+    /// <param name="stderrHandlers">The handlers for redirected Standard Error data.</param>
     /// <returns>The <paramref name="process"/> with events enabled or not if no handlers are provided.</returns>
     private static Process EnableProcessEvents(
             Process process,
-            IReadOnlyCollection<DataReceivedEventHandler>? stdoutRedirectHandlers,
-            IReadOnlyCollection<DataReceivedEventHandler>? stderrRedirectHandlers
+            IReadOnlyCollection<DataReceivedEventHandler>? stdoutHandlers,
+            IReadOnlyCollection<DataReceivedEventHandler>? stderrHandlers
         )
     {
-        if (stdoutRedirectHandlers is { Count: not 0 })
+        if (stdoutHandlers is { Count: not 0 })
         {
             process.EnableRaisingEvents = true;
+            process.Exited += static (sender, _) => { try { (sender as Process)!.CancelOutputRead(); } catch { } };
 
-            foreach (var handler in stdoutRedirectHandlers)
+            foreach (var handler in stdoutHandlers)
                 process.OutputDataReceived += handler;
 
             process.BeginOutputReadLine();
         }
 
-        if (stderrRedirectHandlers is { Count: not 0 })
+        if (stderrHandlers is { Count: not 0 })
         {
             process.EnableRaisingEvents = true;
+            process.Exited += static (sender, _) => { try { (sender as Process)!.CancelErrorRead(); } catch { } };
 
-            foreach (var handler in stderrRedirectHandlers)
+            foreach (var handler in stderrHandlers)
                 process.ErrorDataReceived += handler;
 
             process.BeginErrorReadLine();
         }
+        process.Exited += (sender, args) => { };
 
         return process;
     }
