@@ -24,7 +24,7 @@ public static class ArrayExt
         return array;
     }
 #endif
-    
+
     /// <summary>
     /// Creates a new <see cref="ReadOnlySpan{T}"/> over the entirety of the specified <paramref name="array"/>.
     /// </summary>

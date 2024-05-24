@@ -450,7 +450,7 @@ public static class LinqExt
     /// <remarks>This method has poor performance and should only be used for testing purposes!</remarks>
     /// <returns>This <paramref name="collection"/> unaltered.</returns>
     /// <exception cref="ArgumentNullException">Occurs when <paramref name="collection"/> or <paramref name="action"/> are <see langword="null"/>.</exception>
-    [EditorBrowsable(EditorBrowsableState.Never)] 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static IEnumerable<T> Tap<T>(this IEnumerable<T> collection, Action<T> action)
     {
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));

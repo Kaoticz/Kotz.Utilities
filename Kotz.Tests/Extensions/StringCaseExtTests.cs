@@ -4,7 +4,6 @@ namespace Kotz.Tests.Extensions;
 
 public sealed class StringCaseExtTests
 {
-
     [Theory]
     [InlineData(null, null)]
     [InlineData("", "")]
@@ -52,7 +51,7 @@ public sealed class StringCaseExtTests
     [InlineData("snake&ampersand", "SnakeAmpersand")]
     [InlineData("snake*asterisk", "SnakeAsterisk")]
     [InlineData("__trailingUnderscore_", "TrailingUnderscore")]
-    [InlineData("_private_stuff", "PrivateStuff")]
+    [InlineData("_private__stuff", "PrivateStuff")]
     internal void ToPascalCaseTest(string input, string expected)
         => Assert.Equal(expected, input.ToPascalCase());
 
@@ -89,7 +88,7 @@ public sealed class StringCaseExtTests
     [InlineData("snake&ampersand", "snake_ampersand")]
     [InlineData("snake*asterisk", "snake_asterisk")]
     [InlineData("__trailingUnderscore_", "trailing_underscore")]
-    [InlineData("_private_stuff", "private_stuff")]
+    [InlineData("_private__stuff", "private_stuff")]
     internal void ToSnakeCaseTest(string source, string result)
         => Assert.Equal(result, source.ToSnakeCase());
 
@@ -126,7 +125,44 @@ public sealed class StringCaseExtTests
     [InlineData("snake&ampersand", "snakeAmpersand")]
     [InlineData("snake*asterisk", "snakeAsterisk")]
     [InlineData("__trailingUnderscore_", "trailingUnderscore")]
-    [InlineData("_private_stuff", "privateStuff")]
+    [InlineData("_private__stuff", "privateStuff")]
     internal void ToCamelCaseTest(string source, string result)
         => Assert.Equal(result, source.ToCamelCase());
+
+    [Theory]
+    [InlineData(null, null)]
+    [InlineData("", "")]
+    [InlineData("1234", "1234")]
+    [InlineData("hello", "hello")]
+    [InlineData("Hello", "hello")]
+    [InlineData("hello there", "hello-there")]
+    [InlineData("heLlo tHere", "he-llo-t-here")]
+    [InlineData("heLLo tHeRE", "he-l-lo-t-he-re")]
+    [InlineData("LongChannelName", "long-channel-name")]
+    [InlineData("Long Channel Name", "long-channel-name")]
+    [InlineData("Double  space!", "double-space")]
+    [InlineData("Triple   space!", "triple-space")]
+    [InlineData("ALL CAPS", "all-caps")]
+    [InlineData("SOMECaps", "some-caps")]
+    [InlineData("has_Underscore", "has-underscore")]
+    [InlineData("has_ Underscore", "has-underscore")]
+    [InlineData("has_ underscore", "has-underscore")]
+    [InlineData("snake_case", "snake-case")]
+    [InlineData("PascalCase", "pascal-case")]
+    [InlineData("SCREAMINGCASE", "screamingcase")]
+    [InlineData("SCREAMING_SNAKE", "screaming-snake")]
+    [InlineData("kebab-case", "kebab-case")]
+    [InlineData("Pascal_Snake", "pascal-snake")]
+    [InlineData("snake_case:colon", "snake-case-colon")]
+    [InlineData("snake.dot", "snake-dot")]
+    [InlineData("snake@at", "snake-at")]
+    [InlineData("snake#hash", "snake-hash")]
+    [InlineData("snake$dollar", "snake-dollar")]
+    [InlineData("snake%percentage", "snake-percentage")]
+    [InlineData("snake&ampersand", "snake-ampersand")]
+    [InlineData("snake*asterisk", "snake-asterisk")]
+    [InlineData("__trailingUnderscore_", "trailing-underscore")]
+    [InlineData("_private__stuff", "private-stuff")]
+    internal void ToKebabCaseTest(string source, string result)
+        => Assert.Equal(result, source.ToKebabCase());
 }

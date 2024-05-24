@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
@@ -176,7 +176,7 @@ public static class KotzUtilities
         foreach (var argument in arguments)
             processInfo.ArgumentList.Add(argument);
 
-        var process =  Process.Start(processInfo)
+        var process = Process.Start(processInfo)
             ?? throw new InvalidOperationException($"Failed spawing process for: {program} {string.Join(' ', processInfo.ArgumentList)}");
 
         return EnableProcessEvents(process, stdoutHandlers, stderrHandlers);

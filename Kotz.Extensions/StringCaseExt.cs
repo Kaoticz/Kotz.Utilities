@@ -10,7 +10,7 @@ namespace Kotz.Extensions;
 public static class StringCaseExt
 {
     /// <summary>
-    /// Converts a string to the "Title Case" format.
+    /// Converts this string to the "Title Case" format.
     /// </summary>
     /// <param name="text">This string.</param>
     /// <param name="cultureInfo">The culture info to be used. Defaults to <see cref="CultureInfo.CurrentCulture"/>.</param>
@@ -24,7 +24,7 @@ public static class StringCaseExt
     }
 
     /// <summary>
-    /// Converts a string to the PascalCase format.
+    /// Converts this string to the "PascalCase" format.
     /// </summary>
     /// <param name="text">This string.</param>
     /// <returns>This <see cref="string"/> converted to PascalCase.</returns>
@@ -69,7 +69,7 @@ public static class StringCaseExt
     }
 
     /// <summary>
-    /// Converts a string to the "snake_case" format.
+    /// Converts this string to the "snake_case" format.
     /// </summary>
     /// <param name="text">This string.</param>
     /// <returns>This <see cref="string"/> converted to snake_case.</returns>
@@ -116,7 +116,7 @@ public static class StringCaseExt
     }
 
     /// <summary>
-    /// Converts a string to the "camelCase" format.
+    /// Converts this string to the "camelCase" format.
     /// </summary>
     /// <param name="text">This string.</param>
     /// <returns>This <see cref="string"/> converted to camelCase.</returns>
@@ -153,6 +153,54 @@ public static class StringCaseExt
             result[0] = char.ToLowerInvariant(result[0]);
 
         return result.ToStringAndClear();
+    }
+
+    /// <summary>
+    /// Converts this string to the "kebab-case" format.
+    /// </summary>
+    /// <param name="text">This string.</param>
+    /// <returns>This <see cref="string"/> converted to kebab-case.</returns>
+    [return: NotNullIfNotNull(nameof(text))]
+    public static string? ToKebabCase(this string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return text;
+
+        var result = new StringBuilder(Math.Max(text.Length + 5, 16));
+        var textSpan = text.AsSpan();
+        var previousCharIsSeparator = true;
+
+        for (var index = 0; index < textSpan.Length; index++)
+        {
+            var currentChar = textSpan[index];
+
+            if (char.IsUpper(currentChar) || char.IsDigit(currentChar))
+            {
+                // Add a hyphen if the previous character is not a separator and the current
+                // character is preceded by a lowercase letter or followed by a lowercase letter
+                if (!previousCharIsSeparator && (index > 0 && (char.IsLower(textSpan[index - 1]) || (index < textSpan.Length - 1 && char.IsLower(textSpan[index + 1])))))
+                    result.Append('-');
+
+                result.Append(char.ToLowerInvariant(currentChar));
+                previousCharIsSeparator = false;
+            }
+            else if (char.IsLower(currentChar))
+            {
+                result.Append(currentChar);
+                previousCharIsSeparator = false;
+            }
+            else if (!char.IsLetterOrDigit(currentChar))
+            {
+                if (!previousCharIsSeparator)
+                    result.Append('-');
+
+                previousCharIsSeparator = true;
+            }
+        }
+
+        return result
+            .Trim('-')
+            .ToStringAndClear();
     }
 
     /// <summary>
