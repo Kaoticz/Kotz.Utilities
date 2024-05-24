@@ -147,7 +147,7 @@ public static class EnumExt
     }
 
     /// <summary>
-    /// Checks if <paramref name="x"/> contains the <paramref name="y"/> flag
+    /// Checks if <paramref name="x"/> contains the <paramref name="y"/> flag.
     /// </summary>
     /// <typeparam name="T">The type of the enum.</typeparam>
     /// <param name="x">The first flag.</param>

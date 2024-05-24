@@ -1,8 +1,6 @@
-using System.Globalization;
-
 namespace Kotz.Tests.Extensions;
 
-public sealed class StringExtTest
+public sealed class StringExtTestss
 {
     [Theory]
     [InlineData(5, "hello", "hello")]
@@ -34,94 +32,6 @@ public sealed class StringExtTest
     [InlineData(5, "banana", "[...]")]
     internal void MaxLengthWithAppendErrorTest(int maxLength, string source, string append)
         => Assert.Throws<ArgumentOutOfRangeException>(() => source.MaxLength(maxLength, append));
-
-    [Theory]
-    [InlineData(null, null)]
-    [InlineData("", "")]
-    [InlineData("1234", "1234")]
-    [InlineData("u1234", "U1234")]
-    [InlineData("Hello", "Hello")]
-    [InlineData("world", "World")]
-    [InlineData("HelloWorld", "Helloworld")]
-    [InlineData("hello world", "Hello World")]
-    [InlineData("hello_world", "Hello_World")]
-    [InlineData("   uppercase", "   Uppercase")]
-    internal void ToTitleCaseTest(string? source, string result)
-        => Assert.Equal(source.ToTitleCase(new CultureInfo("en-US")), result);
-
-    [Theory]
-    [InlineData(null, null)]
-    [InlineData("", "")]
-    [InlineData("1234", "1234")]
-    [InlineData("hello", "Hello")]
-    [InlineData("Hello", "Hello")]
-    [InlineData("hello there", "HelloThere")]
-    [InlineData("Pascal_CASE", "PascalCase")]
-    [InlineData("Pascal_CASe", "PascalCaSe")]
-    [InlineData("LongChannelName", "LongChannelName")]
-    [InlineData("Long Channel Name", "LongChannelName")]
-    [InlineData("Double  space!", "DoubleSpace")]
-    [InlineData("Triple   space!", "TripleSpace")]
-    [InlineData("ALL CAPS", "AllCaps")]
-    [InlineData("SOMECaps", "SomeCaps")]
-    [InlineData("has_Underscore", "HasUnderscore")]
-    [InlineData("has_ Underscore", "HasUnderscore")]
-    [InlineData("has_ underscore", "HasUnderscore")]
-    [InlineData("snake_case", "SnakeCase")]
-    [InlineData("PascalCase", "PascalCase")]
-    [InlineData("SCREAMINGCASE", "Screamingcase")]
-    [InlineData("SCREAMING_SNAKE", "ScreamingSnake")]
-    [InlineData("kebab-case", "KebabCase")]
-    [InlineData("Pascal_Snake", "PascalSnake")]
-    [InlineData("snake_case:colon", "SnakeCaseColon")]
-    [InlineData("snake.dot", "SnakeDot")]
-    [InlineData("snake@at", "SnakeAt")]
-    [InlineData("snake#hash", "SnakeHash")]
-    [InlineData("snake$dollar", "SnakeDollar")]
-    [InlineData("snake%percentage", "SnakePercentage")]
-    [InlineData("snake&ampersand", "SnakeAmpersand")]
-    [InlineData("snake*asterisk", "SnakeAsterisk")]
-    [InlineData("__trailingUnderscore_", "TrailingUnderscore")]
-    [InlineData("_private_stuff", "PrivateStuff")]
-    internal void ToPascalCaseTest(string input, string expected)
-        => Assert.Equal(expected, input.ToPascalCase());
-
-    [Theory]
-    [InlineData(null, null)]
-    [InlineData("", "")]
-    [InlineData("1234", "1234")]
-    [InlineData("hello", "hello")]
-    [InlineData("Hello", "hello")]
-    [InlineData("hello there", "hello_there")]
-    [InlineData("heLlo tHere", "he_llo_t_here")]
-    [InlineData("heLLo tHeRE", "he_llo_t_he_re")]
-    [InlineData("LongChannelName", "long_channel_name")]
-    [InlineData("Long Channel Name", "long_channel_name")]
-    [InlineData("Double  space!", "double_space")]
-    [InlineData("Triple   space!", "triple_space")]
-    [InlineData("ALL CAPS", "all_caps")]
-    [InlineData("SOMECaps", "somecaps")]
-    [InlineData("has_Underscore", "has_underscore")]
-    [InlineData("has_ Underscore", "has_underscore")]
-    [InlineData("has_ underscore", "has_underscore")]
-    [InlineData("snake_case", "snake_case")]
-    [InlineData("PascalCase", "pascal_case")]
-    [InlineData("SCREAMINGCASE", "screamingcase")]
-    [InlineData("SCREAMING_SNAKE", "screaming_snake")]
-    [InlineData("kebab-case", "kebab_case")]
-    [InlineData("Pascal_Snake", "pascal_snake")]
-    [InlineData("snake_case:colon", "snake_case_colon")]
-    [InlineData("snake.dot", "snake_dot")]
-    [InlineData("snake@at", "snake_at")]
-    [InlineData("snake#hash", "snake_hash")]
-    [InlineData("snake$dollar", "snake_dollar")]
-    [InlineData("snake%percentage", "snake_percentage")]
-    [InlineData("snake&ampersand", "snake_ampersand")]
-    [InlineData("snake*asterisk", "snake_asterisk")]
-    [InlineData("__trailingUnderscore_", "trailing_underscore")]
-    [InlineData("_private_stuff", "private_stuff")]
-    internal void ToSnakeCaseTest(string source, string resultNoJoin)
-        => Assert.Equal(resultNoJoin, source.ToSnakeCase());
 
     [Theory]
     [InlineData("hello", 'l', 2)]

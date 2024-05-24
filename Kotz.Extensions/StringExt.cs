@@ -1,6 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Text;
 
 namespace Kotz.Extensions;
 
@@ -118,118 +116,6 @@ public static class StringExt
     }
 
     /// <summary>
-    /// Converts a string to the "Title Case" format.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <param name="cultureInfo">The culture info to be used. Defaults to <see cref="CultureInfo.CurrentCulture"/>.</param>
-    /// <returns>This <see cref="string"/> converted to Title Case.</returns>
-    [return: NotNullIfNotNull(nameof(text))]
-    public static string? ToTitleCase(this string? text, CultureInfo? cultureInfo = default)
-    {
-        return (string.IsNullOrWhiteSpace(text))
-            ? text
-            : (cultureInfo ?? CultureInfo.CurrentCulture).TextInfo.ToTitleCase(text);
-    }
-
-    /// <summary>
-    /// Converts a string to the PascalCase format.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <returns>This <see cref="string"/> converted to PascalCase.</returns>
-    [return: NotNullIfNotNull(nameof(text))]
-    public static string? ToPascalCase(this string? text)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-            return text;
-
-        var textSpan = text.AsSpan();
-        var result = new StringBuilder();
-        var isNewWord = true;
-
-        for (var index = 0; index < textSpan.Length; index++)
-        {
-            var currentChar = textSpan[index];
-
-            if (!char.IsLetterOrDigit(currentChar))
-            {
-                isNewWord = true;
-                continue;
-            }
-
-            if (isNewWord)
-            {
-                result.Append(char.ToUpperInvariant(currentChar));
-                isNewWord = false;
-            }
-            else
-            {
-                result.Append(
-                    (index < text.Length - 1 && char.IsUpper(currentChar) && char.IsLower(text[index + 1]))
-                        ? currentChar
-                        : char.ToLowerInvariant(currentChar)
-                );
-            }
-
-            isNewWord &= index < text.Length - 1 && char.IsLower(text[index]) && char.IsUpper(text[index + 1]);
-        }
-
-        return result.ToStringAndClear();
-    }
-
-    /// <summary>
-    /// Converts a string to the "snake_case" format.
-    /// </summary>
-    /// <param name="text">This string.</param>
-    /// <returns>This <see cref="string"/> converted to snake_case.</returns>
-    [return: NotNullIfNotNull(nameof(text))]
-    public static string? ToSnakeCase(this string? text)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-            return text;
-
-        var textSpan = text.AsSpan();
-        var buffer = new StringBuilder();
-
-        for (var index = 0; index < textSpan.Length; index++)
-        {
-            var chainLength = UpperChainLength(textSpan, index);
-
-            if (chainLength <= 0)
-            {
-                buffer.Append(
-                    (char.IsLetterOrDigit(textSpan[index]))
-                        ? char.ToLowerInvariant(textSpan[index])
-                        : '_'
-                );
-                
-                continue;
-            }
-
-            buffer.Append('_');
-
-            foreach (var upperLetter in textSpan.Slice(index, chainLength))
-                buffer.Append(char.ToLowerInvariant(upperLetter));
-
-            index += chainLength - 1;
-        }
-
-        // Remove trailing underscores.
-        while (buffer[0] is '_')
-            buffer.Remove(0, 1);
-
-        while (buffer[^1] is '_')
-            buffer.Remove(buffer.Length - 1, 1);
-
-        buffer.Replace(" _", " ")
-            .Replace("_ ", "_")
-            .Replace(' ', '_');
-
-        buffer.ReplaceAll("__", "_");
-
-        return buffer.ToStringAndClear();
-    }
-
-    /// <summary>
     /// Get the length of the longest string of this collection.
     /// </summary>
     /// <param name="collection">This collection of strings.</param>
@@ -337,34 +223,5 @@ public static class StringExt
         }
 
         return false;
-    }
-
-    /// <summary>
-    /// Returns the length of an "ALL CAPS" substring in the specified span.
-    /// </summary>
-    /// <param name="text">The span to check.</param>
-    /// <param name="startIndex">The index where the substring starts.</param>
-    /// <returns>The length of the substring.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Occurs when <paramref name="startIndex"/> is greater than the length of the span.</exception>
-    private static int UpperChainLength(ReadOnlySpan<char> text, int startIndex)
-    {
-        if (startIndex > text.Length - 1)
-            throw new ArgumentOutOfRangeException(nameof(startIndex), startIndex, "Start index cannot be greater than length of the span.");
-        else if (text.Length is 0)
-            return 0;
-        else if (startIndex < 0)
-            startIndex = 0;
-
-        var result = 0;
-
-        for (var count = startIndex; count < text.Length; count++)
-        {
-            if (!char.IsLetter(text[count]) || char.IsLower(text[count]))
-                break;
-
-            result++;
-        }
-
-        return result;
     }
 }

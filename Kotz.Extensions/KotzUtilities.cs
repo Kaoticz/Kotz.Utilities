@@ -397,7 +397,6 @@ public static class KotzUtilities
 
             process.BeginErrorReadLine();
         }
-        process.Exited += (sender, args) => { };
 
         return process;
     }
