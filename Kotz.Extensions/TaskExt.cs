@@ -52,4 +52,41 @@ public static class TaskExt
         ArgumentNullException.ThrowIfNull(collection, nameof(collection));
         return await (await Task.WhenAny(collection).ConfigureAwait(false)).ConfigureAwait(false);
     }
+
+    /// <summary>
+    /// Executes this task asynchronously and safely returns the awaited task.
+    /// </summary>
+    /// <param name="task">This task.</param>
+    /// <returns>This awaited task.</returns>
+    public static async Task<Task> AwaitAsync(this Task task)
+    {
+        try
+        {
+            await task.ConfigureAwait(false);
+            return task;
+        }
+        catch
+        {
+            return task;
+        }
+    }
+
+    /// <summary>
+    /// Executes this task asynchronously and safely returns the awaited task.
+    /// </summary>
+    /// <typeparam name="T">Data type held by <paramref name="task"/>.</typeparam>
+    /// <param name="task">This task.</param>
+    /// <returns>This awaited task.</returns>
+    public static async Task<Task<T>> AwaitAsync<T>(this Task<T> task)
+    {
+        try
+        {
+            await task.ConfigureAwait(false);
+            return task;
+        }
+        catch
+        {
+            return task;
+        }
+    }
 }

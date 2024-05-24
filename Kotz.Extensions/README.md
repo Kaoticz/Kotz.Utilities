@@ -88,6 +88,8 @@ Defines the following extension methods:
     - Trim: Removes all leading and trailing instances of a character from the current string builder.
     - TrimEnd: Removes all trailing instances of a character from the current string builder.
     - TrimStart: Removes all leading instances of a character from the current string builder.
+- **Task Extensions**
+    - Executes the current task asynchronously and safely returns it.
 
 Defines the following types:
 
