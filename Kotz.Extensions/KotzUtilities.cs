@@ -328,21 +328,23 @@ public static class KotzUtilities
     /// </summary>
     /// <param name="source">The path to the source file or directory.</param>
     /// <param name="destination">The path to the destination file or directory.</param>
+    /// <param name="overwriteFile">Determines whether the destination file should be overwritten if it already exists.</param>
     /// <returns><see langword="true"/> if the file system object got successfully moved, <see langword="false"/> otherwise.</returns>
     /// <exception cref="ArgumentException" />
     /// <exception cref="ArgumentNullException" />
-    public static bool TryMoveFSO(string source, string destination)
-        => TryMoveFile(source, destination) || TryMoveDirectory(source, destination);
+    public static bool TryMoveFSO(string source, string destination, bool overwriteFile = false)
+        => TryMoveFile(source, destination, overwriteFile) || TryMoveDirectory(source, destination);
 
     /// <summary>
     /// Safely moves a file.
     /// </summary>
     /// <param name="source">The path to the source file.</param>
     /// <param name="destination">The path to the destination file.</param>
+    /// <param name="overwrite">Determines whether the destination file should be overwritten if it already exists.</param>
     /// <returns><see langword="true"/> if the file got successfully moved, <see langword="false"/> otherwise.</returns>
     /// <exception cref="ArgumentException" />
     /// <exception cref="ArgumentNullException" />
-    public static bool TryMoveFile(string source, string destination)
+    public static bool TryMoveFile(string source, string destination, bool overwrite = false)
     {
         ArgumentException.ThrowIfNullOrEmpty(source, nameof(source));
         ArgumentException.ThrowIfNullOrEmpty(destination, nameof(destination));
@@ -358,7 +360,7 @@ public static class KotzUtilities
             if (!directoryUri.Exists)
                 directoryUri.Create();
 
-            File.Move(source, destination);
+            File.Move(source, destination, overwrite);
 
             return true;
         }
