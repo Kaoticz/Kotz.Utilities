@@ -105,16 +105,17 @@ public static class KotzUtilities
     /// <param name="arguments">The arguments to the program.</param>
     /// <param name="redirectStdout">Determines whether Standard Output should be redirected.</param>
     /// <param name="redirectStderr">Determines whether Standard Error should be redirected.</param>
+    /// <param name="redirectStdin">Determines whether Standard Input should be redirected.</param>
     /// <remarks>
     /// The <paramref name="arguments"/> parameter is not escaped, you can either escape it yourself or use
-    /// <see cref="StartProcess(string, IEnumerable{string}, bool, bool)"/> instead.
+    /// <see cref="StartProcess(string, IEnumerable{string}, bool, bool, bool)"/> instead.
     /// </remarks>
     /// <returns>The process of the specified program.</returns>
     /// <exception cref="ArgumentException" />
     /// <exception cref="ArgumentNullException" />
     /// <exception cref="Win32Exception">Occurs when <paramref name="program"/> does not exist.</exception>
     /// <exception cref="InvalidOperationException">Occurs when the process fails to execute.</exception>
-    public static Process StartProcess(string program, string arguments = "", bool redirectStdout = false, bool redirectStderr = false)
+    public static Process StartProcess(string program, string arguments = "", bool redirectStdout = false, bool redirectStderr = false, bool redirectStdin = false)
     {
         ArgumentException.ThrowIfNullOrEmpty(program, nameof(program));
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
@@ -126,7 +127,8 @@ public static class KotzUtilities
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardOutput = redirectStdout,
-            RedirectStandardError = redirectStderr
+            RedirectStandardError = redirectStderr,
+            RedirectStandardInput = redirectStdin
         }) ?? throw new InvalidOperationException($"Failed spawing process for: {program} {arguments}");
     }
 
@@ -140,12 +142,13 @@ public static class KotzUtilities
     /// <param name="arguments">The arguments to the program.</param>
     /// <param name="redirectStdout">Determines whether Standard Output should be redirected.</param>
     /// <param name="redirectStderr">Determines whether Standard Error should be redirected.</param>
+    /// <param name="redirectStdin">Determines whether Standard Input should be redirected.</param>
     /// <returns>The process of the specified program.</returns>
     /// <exception cref="ArgumentException" />
     /// <exception cref="ArgumentNullException" />
     /// <exception cref="Win32Exception">Occurs when <paramref name="program"/> does not exist.</exception>
     /// <exception cref="InvalidOperationException">Occurs when the process fails to execute.</exception>
-    public static Process StartProcess(string program, IEnumerable<string> arguments, bool redirectStdout = false, bool redirectStderr = false)
+    public static Process StartProcess(string program, IEnumerable<string> arguments, bool redirectStdout = false, bool redirectStderr = false, bool redirectStdin = false)
     {
         ArgumentException.ThrowIfNullOrEmpty(program, nameof(program));
         ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
@@ -156,7 +159,8 @@ public static class KotzUtilities
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardOutput = redirectStdout,
-            RedirectStandardError = redirectStderr
+            RedirectStandardError = redirectStderr,
+            RedirectStandardInput = redirectStdin
         };
 
         foreach (var argument in arguments)
@@ -188,9 +192,9 @@ public static class KotzUtilities
     /// <exception cref="InvalidOperationException">Occurs when the process fails to execute.</exception>
     public static Process StartProcess(
             string program,
-            string arguments = "",
-            IReadOnlyCollection<DataReceivedEventHandler>? stdoutHandlers = default,
-            IReadOnlyCollection<DataReceivedEventHandler>? stderrHandlers = default
+            string arguments,
+            IReadOnlyCollection<DataReceivedEventHandler> stdoutHandlers,
+            IReadOnlyCollection<DataReceivedEventHandler> stderrHandlers
         )
     {
         var process = StartProcess(program, arguments, stdoutHandlers is { Count: not 0 }, stderrHandlers is { Count: not 0 });
@@ -216,8 +220,8 @@ public static class KotzUtilities
     public static Process StartProcess(
             string program,
             IEnumerable<string> arguments,
-            IReadOnlyCollection<DataReceivedEventHandler>? stdoutHandlers = default,
-            IReadOnlyCollection<DataReceivedEventHandler>? stderrHandlers = default
+            IReadOnlyCollection<DataReceivedEventHandler> stdoutHandlers,
+            IReadOnlyCollection<DataReceivedEventHandler> stderrHandlers
         )
     {
         var process = StartProcess(program, arguments, stdoutHandlers is { Count: not 0 }, stderrHandlers is { Count: not 0 });

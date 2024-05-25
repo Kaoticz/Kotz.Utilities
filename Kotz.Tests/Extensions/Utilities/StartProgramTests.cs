@@ -7,8 +7,8 @@ public sealed class StartProgramTests
     [Fact]
     internal void StartProgramSuccessTest()
     {
-        using var process1 = KotzUtilities.StartProcess("echo", "Hello from xUnit!", [(_, _) => { }]);
-        using var process2 = KotzUtilities.StartProcess("echo", ["Hello from xUnit!"], [(_, _) => { }]);
+        using var process1 = KotzUtilities.StartProcess("echo", "Hello from xUnit!", [(_, _) => { }], []);
+        using var process2 = KotzUtilities.StartProcess("echo", ["Hello from xUnit!"], [(_, _) => { }], []);
 
         Assert.NotNull(process1);
         Assert.NotNull(process2);
