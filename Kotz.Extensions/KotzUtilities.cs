@@ -103,6 +103,77 @@ public static class KotzUtilities
     /// or the absolute path to its executable.
     /// </param>
     /// <param name="arguments">The arguments to the program.</param>
+    /// <param name="redirectStdout">Determines whether Standard Output should be redirected.</param>
+    /// <param name="redirectStderr">Determines whether Standard Error should be redirected.</param>
+    /// <remarks>
+    /// The <paramref name="arguments"/> parameter is not escaped, you can either escape it yourself or use
+    /// <see cref="StartProcess(string, IEnumerable{string}, bool, bool)"/> instead.
+    /// </remarks>
+    /// <returns>The process of the specified program.</returns>
+    /// <exception cref="ArgumentException" />
+    /// <exception cref="ArgumentNullException" />
+    /// <exception cref="Win32Exception">Occurs when <paramref name="program"/> does not exist.</exception>
+    /// <exception cref="InvalidOperationException">Occurs when the process fails to execute.</exception>
+    public static Process StartProcess(string program, string arguments = "", bool redirectStdout = false, bool redirectStderr = false)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(program, nameof(program));
+        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+
+        return Process.Start(new ProcessStartInfo()
+        {
+            FileName = program,
+            Arguments = arguments,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardOutput = redirectStdout,
+            RedirectStandardError = redirectStderr
+        }) ?? throw new InvalidOperationException($"Failed spawing process for: {program} {arguments}");
+    }
+
+    /// <summary>
+    /// Starts the specified program in the background.
+    /// </summary>
+    /// <param name="program">
+    /// The name of the program in the PATH environment variable,
+    /// or the absolute path to its executable.
+    /// </param>
+    /// <param name="arguments">The arguments to the program.</param>
+    /// <param name="redirectStdout">Determines whether Standard Output should be redirected.</param>
+    /// <param name="redirectStderr">Determines whether Standard Error should be redirected.</param>
+    /// <returns>The process of the specified program.</returns>
+    /// <exception cref="ArgumentException" />
+    /// <exception cref="ArgumentNullException" />
+    /// <exception cref="Win32Exception">Occurs when <paramref name="program"/> does not exist.</exception>
+    /// <exception cref="InvalidOperationException">Occurs when the process fails to execute.</exception>
+    public static Process StartProcess(string program, IEnumerable<string> arguments, bool redirectStdout = false, bool redirectStderr = false)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(program, nameof(program));
+        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
+
+        var processInfo = new ProcessStartInfo()
+        {
+            FileName = program,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardOutput = redirectStdout,
+            RedirectStandardError = redirectStderr
+        };
+
+        foreach (var argument in arguments)
+            processInfo.ArgumentList.Add(argument);
+
+        return Process.Start(processInfo)
+            ?? throw new InvalidOperationException($"Failed spawing process for: {program} {string.Join(' ', processInfo.ArgumentList)}");
+    }
+
+    /// <summary>
+    /// Starts the specified program in the background.
+    /// </summary>
+    /// <param name="program">
+    /// The name of the program in the PATH environment variable,
+    /// or the absolute path to its executable.
+    /// </param>
+    /// <param name="arguments">The arguments to the program.</param>
     /// <param name="stdoutHandlers">Defines the handlers for redirected Standard Output data.</param>
     /// <param name="stderrHandlers">Defines the handlers for redirected Standard Error data.</param>
     /// <remarks>
@@ -122,19 +193,7 @@ public static class KotzUtilities
             IReadOnlyCollection<DataReceivedEventHandler>? stderrHandlers = default
         )
     {
-        ArgumentException.ThrowIfNullOrEmpty(program, nameof(program));
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
-
-        var process = Process.Start(new ProcessStartInfo()
-        {
-            FileName = program,
-            Arguments = arguments,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            RedirectStandardOutput = stdoutHandlers is { Count: not 0 },
-            RedirectStandardError = stderrHandlers is { Count: not 0 }
-        }) ?? throw new InvalidOperationException($"Failed spawing process for: {program} {arguments}");
-
+        var process = StartProcess(program, arguments, stdoutHandlers is { Count: not 0 }, stderrHandlers is { Count: not 0 });
         return EnableProcessEvents(process, stdoutHandlers, stderrHandlers);
     }
 
@@ -161,24 +220,7 @@ public static class KotzUtilities
             IReadOnlyCollection<DataReceivedEventHandler>? stderrHandlers = default
         )
     {
-        ArgumentException.ThrowIfNullOrEmpty(program, nameof(program));
-        ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
-
-        var processInfo = new ProcessStartInfo()
-        {
-            FileName = program,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            RedirectStandardOutput = stdoutHandlers is { Count: not 0 },
-            RedirectStandardError = stderrHandlers is { Count: not 0 }
-        };
-
-        foreach (var argument in arguments)
-            processInfo.ArgumentList.Add(argument);
-
-        var process = Process.Start(processInfo)
-            ?? throw new InvalidOperationException($"Failed spawing process for: {program} {string.Join(' ', processInfo.ArgumentList)}");
-
+        var process = StartProcess(program, arguments, stdoutHandlers is { Count: not 0 }, stderrHandlers is { Count: not 0 });
         return EnableProcessEvents(process, stdoutHandlers, stderrHandlers);
     }
 
@@ -437,10 +479,10 @@ public static class KotzUtilities
             {
                 // Else, delete all file system objects directly.
                 foreach (var fileUri in Directory.EnumerateFiles(source))
-                    File.Delete(fileUri);
+                    TryDeleteFile(fileUri);
 
                 foreach (var directoryUri in Directory.EnumerateDirectories(source))
-                    Directory.Delete(directoryUri, true);
+                    TryDeleteDirectory(directoryUri, true);
             }
         }
 
