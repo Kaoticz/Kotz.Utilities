@@ -180,9 +180,10 @@ public static class KotzUtilities
     /// <param name="arguments">The arguments to the program.</param>
     /// <param name="stdoutHandlers">Defines the handlers for redirected Standard Output data.</param>
     /// <param name="stderrHandlers">Defines the handlers for redirected Standard Error data.</param>
+    /// <param name="redirectStdin">Determines whether Standard Input should be redirected.</param>
     /// <remarks>
     /// The <paramref name="arguments"/> parameter is not escaped, you can either escape it yourself or use
-    /// <see cref="StartProcess(string, IEnumerable{string}, IReadOnlyCollection{DataReceivedEventHandler}?, IReadOnlyCollection{DataReceivedEventHandler}?)"/>
+    /// <see cref="StartProcess(string, IEnumerable{string}, IReadOnlyCollection{DataReceivedEventHandler}, IReadOnlyCollection{DataReceivedEventHandler}, bool)"/>
     /// instead.
     /// </remarks>
     /// <returns>The process of the specified program.</returns>
@@ -194,10 +195,11 @@ public static class KotzUtilities
             string program,
             string arguments,
             IReadOnlyCollection<DataReceivedEventHandler> stdoutHandlers,
-            IReadOnlyCollection<DataReceivedEventHandler> stderrHandlers
+            IReadOnlyCollection<DataReceivedEventHandler> stderrHandlers,
+            bool redirectStdin = false
         )
     {
-        var process = StartProcess(program, arguments, stdoutHandlers is { Count: not 0 }, stderrHandlers is { Count: not 0 });
+        var process = StartProcess(program, arguments, stdoutHandlers is { Count: not 0 }, stderrHandlers is { Count: not 0 }, redirectStdin);
         return EnableProcessEvents(process, stdoutHandlers, stderrHandlers);
     }
 
@@ -211,6 +213,7 @@ public static class KotzUtilities
     /// <param name="arguments">The arguments to the program.</param>
     /// <param name="stdoutHandlers">Defines the handlers for redirected Standard Output data.</param>
     /// <param name="stderrHandlers">Defines the handlers for redirected Standard Error data.</param>
+    /// <param name="redirectStdin">Determines whether Standard Input should be redirected.</param>
     /// <remarks>The <paramref name="arguments"/> get automatically escaped.</remarks>
     /// <returns>The process of the specified program.</returns>
     /// <exception cref="ArgumentException" />
@@ -221,10 +224,11 @@ public static class KotzUtilities
             string program,
             IEnumerable<string> arguments,
             IReadOnlyCollection<DataReceivedEventHandler> stdoutHandlers,
-            IReadOnlyCollection<DataReceivedEventHandler> stderrHandlers
+            IReadOnlyCollection<DataReceivedEventHandler> stderrHandlers,
+            bool redirectStdin = false
         )
     {
-        var process = StartProcess(program, arguments, stdoutHandlers is { Count: not 0 }, stderrHandlers is { Count: not 0 });
+        var process = StartProcess(program, arguments, stdoutHandlers is { Count: not 0 }, stderrHandlers is { Count: not 0 }, redirectStdin);
         return EnableProcessEvents(process, stdoutHandlers, stderrHandlers);
     }
 
