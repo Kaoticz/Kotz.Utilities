@@ -57,6 +57,9 @@ Defines the following extension methods:
 - **List\<T> Extensions**
     - AsSpan: Gets the current list as a `Span<T>` object.
     - AsReadOnlySpan: Gets the current list as a `ReadOnlySpan<T>` object.
+- **Number Extensions**
+    - FromBase: Converts the string representation of a number in the specified base to an integer of the specified type.
+    - ToBase: Converts the specified number to its representation in the given base.
 - **Object Extensions**
     - EqualsAny: Checks whether the current object equals any of the specified objects.
 - **ReadOnlySpan\<T> Extensions**
