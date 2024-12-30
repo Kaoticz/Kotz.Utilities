@@ -294,7 +294,7 @@ public static class CharExt
     /// if the character is already lowercase or not alphabetic.
     /// </returns>
     public static char ToLower(this char character)
-        => char.ToLower(character);
+        => char.ToLower(character, CultureInfo.CurrentCulture);
 
     /// <summary>
     /// Converts the value of this character to its lowercase equivalent using the specified 
@@ -331,7 +331,7 @@ public static class CharExt
     /// if it's already uppercase, has no uppercase equivalent, or is not alphabetic.
     /// </returns>
     public static char ToUpper(this char character)
-        => char.ToUpper(character);
+        => char.ToUpper(character, CultureInfo.CurrentCulture);
 
     /// <summary>
     /// Converts the value of this character to its uppercase equivalent using the specified

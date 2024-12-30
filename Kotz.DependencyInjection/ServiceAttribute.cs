@@ -7,7 +7,7 @@ namespace Kotz.DependencyInjection;
 /// This attribute marks the class or struct it is applied to for
 /// registration in the IoC container for dependency injection.
 /// </summary>
-public sealed class ServiceAttribute : ServiceAttributeBase
+public sealed class ServiceAttribute : ServiceBaseAttribute
 {
     /// <summary>
     /// Marks this class for registration in the IoC container for dependency injection.

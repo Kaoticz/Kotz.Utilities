@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Provides utility types and methods for common tasks. This is a metapackage that includes all Kotz utility packages.</Description>
+    <Description>Provides utility methods for common tasks.</Description>
+    <VersionPrefix>3.0.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,14 +10,6 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Kotz.Collections\Kotz.Collections.csproj" />
-    <ProjectReference Include="..\Kotz.DependencyInjection\Kotz.DependencyInjection.csproj" />
-    <ProjectReference Include="..\Kotz.Events\Kotz.Events.csproj" />
-    <ProjectReference Include="..\Kotz.Extensions\Kotz.Extensions.csproj" />
-    <ProjectReference Include="..\Kotz.ObjectPool\Kotz.ObjectPool.csproj" />
   </ItemGroup>
 
 </Project>

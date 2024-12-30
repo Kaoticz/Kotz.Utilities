@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Kotz.Extensions;
+namespace Kotz.Utilities;
 
 /// <summary>
 /// A collection of utility methods.

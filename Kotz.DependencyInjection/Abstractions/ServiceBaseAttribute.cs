@@ -12,7 +12,7 @@ namespace Kotz.DependencyInjection.Abstractions;
 /// don't forget to also apply this attribute to the derived class.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
-public abstract class ServiceAttributeBase : Attribute
+public abstract class ServiceBaseAttribute : Attribute
 {
     private readonly Action<IServiceCollection, Type> _serviceRegister;
 
@@ -36,7 +36,7 @@ public abstract class ServiceAttributeBase : Attribute
     /// services under the same interface, <see langword="false"/> otherwise.
     /// </param>
     /// <exception cref="UnreachableException"> Occurs when a value for <paramref name="lifespan"/> is not implemented.</exception>
-    protected ServiceAttributeBase(ServiceLifetime lifespan, bool allowMultiple)
+    protected ServiceBaseAttribute(ServiceLifetime lifespan, bool allowMultiple)
     {
         Lifetime = lifespan;
         AllowMultiple = allowMultiple;
@@ -121,7 +121,7 @@ public abstract class ServiceAttributeBase : Attribute
 
         return (registeredConcreteType ?? registeredService.ServiceType.Name,
             registeredService.ServiceType.Name +
-            ((string.IsNullOrWhiteSpace(registeredConcreteType) || registeredService.ServiceType.Name.Equals(registeredConcreteType))
+            ((string.IsNullOrWhiteSpace(registeredConcreteType) || registeredService.ServiceType.Name.Equals(registeredConcreteType, StringComparison.Ordinal))
                 ? string.Empty
                 : ": " + registeredConcreteType));
     }

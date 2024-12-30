@@ -3,29 +3,39 @@
     <IsPackable>False</IsPackable>
     <Description>Unit tests</Description>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <NoWarn>xUnit1012;IDE0005</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+  </ItemGroup>
+    
+  <ItemGroup Condition="'$(TargetFramework)'=='net9.0'">
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+  </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
-    <PackageReference Include="xunit" Version="2.4.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="3.2.0">
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Kotz.Utilities\Kotz.Utilities.csproj" />
-    <ProjectReference Include="..\Kotz.ObjectPool\Kotz.ObjectPool.csproj" />
+    <ProjectReference Include="..\Kotz.Collections\Kotz.Collections.csproj" />
     <ProjectReference Include="..\Kotz.DependencyInjection\Kotz.DependencyInjection.csproj" />
+    <ProjectReference Include="..\Kotz.Events\Kotz.Events.csproj" />
+    <ProjectReference Include="..\Kotz.Extensions\Kotz.Extensions.csproj" />
+    <ProjectReference Include="..\Kotz.ObjectPool\Kotz.ObjectPool.csproj" />
+    <ProjectReference Include="..\Kotz.Utilities\Kotz.Utilities.csproj" />
   </ItemGroup>
 </Project>

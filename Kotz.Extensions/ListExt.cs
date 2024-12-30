@@ -7,7 +7,6 @@ namespace Kotz.Extensions;
 /// </summary>
 public static class ListExt
 {
-#if NET8_0_OR_GREATER
     /// <summary>
     /// Performs an in-place shuffle of this span.
     /// </summary>
@@ -22,7 +21,6 @@ public static class ListExt
 
         return list;
     }
-#endif
 
     /// <summary>
     ///  Gets a <see cref="Span{T}"/> view over the data in a list. Items should not be

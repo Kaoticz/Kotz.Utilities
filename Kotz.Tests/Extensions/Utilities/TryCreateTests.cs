@@ -1,3 +1,4 @@
+using Kotz.Utilities;
 using System.Text;
 
 namespace Kotz.Tests.Extensions.Utilities;

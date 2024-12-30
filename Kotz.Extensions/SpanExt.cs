@@ -5,7 +5,6 @@ namespace Kotz.Extensions;
 /// </summary>
 public static class SpanExt
 {
-#if NET8_0_OR_GREATER
     /// <summary>
     /// Performs an in-place shuffle of this span.
     /// </summary>
@@ -20,7 +19,6 @@ public static class SpanExt
 
         return span;
     }
-#endif
 
     /// <summary>
     /// Rotates a span from a starting position by the specified <paramref name="amount"/> of indices.

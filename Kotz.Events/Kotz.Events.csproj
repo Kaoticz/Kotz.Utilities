@@ -2,6 +2,8 @@
 
   <PropertyGroup>
       <Description>Provides generic and async event handlers.</Description>
+      <VersionPrefix>3.0.0</VersionPrefix>
+      <NoWarn>CA1711</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

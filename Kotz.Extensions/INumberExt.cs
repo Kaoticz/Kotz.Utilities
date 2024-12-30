@@ -30,7 +30,7 @@ public static class NumberBaseExt
     {
         if (!number.All(char.IsAsciiLetterOrDigit))
             throw new ArgumentException("The string must contain ASCII letters or digits only.", nameof(number));
-        
+
         if (number.Any(x => (char.IsAsciiDigit(x)) ? x >= '0' + @base : (char.IsAsciiLetterUpper(x)) ? x >= 'A' + @base - 10 : x >= 'a' + @base - 10))
             throw new ArgumentException($"The number '{number}' cannot be represented in base {@base}", nameof(@base));
 
@@ -174,7 +174,7 @@ public static class NumberBaseExt
         {
             if (++buffer[index] != @base + '0')
                 break;
-                
+
             buffer[index] = '0';
         }
 

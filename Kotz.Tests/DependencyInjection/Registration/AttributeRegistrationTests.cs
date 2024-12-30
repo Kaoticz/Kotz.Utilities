@@ -27,7 +27,7 @@ public sealed class AttributeRegistrationTests
         using var scope = _serviceProvider.CreateScope();
         var service1 = scope.ServiceProvider.GetRequiredService(serviceType);
         var service2 = scope.ServiceProvider.GetRequiredService(serviceType);
-        var attribute = serviceType.GetCustomAttribute<ServiceAttributeBase>()!;
+        var attribute = serviceType.GetCustomAttribute<ServiceBaseAttribute>()!;
 
         if (attribute.Lifetime is ServiceLifetime.Transient)
             Assert.False(ReferenceEquals(service1, service2));
@@ -41,7 +41,7 @@ public sealed class AttributeRegistrationTests
     [InlineData(typeof(EmptyInterfacedTransientService), typeof(IEmpty))]
     internal void AbstractResolutionTest(Type serviceType, Type abstractType)
     {
-        var attribute = serviceType.GetCustomAttribute<ServiceAttributeBase>()!;
+        var attribute = serviceType.GetCustomAttribute<ServiceBaseAttribute>()!;
         var serviceCollection = new ServiceCollection()
             .RegisterServices()
             .RemoveAll(abstractType);

@@ -1,3 +1,5 @@
+using Kotz.Utilities;
+
 namespace Kotz.Tests.Extensions.Utilities;
 
 public sealed class TryMoveDirectoryTests

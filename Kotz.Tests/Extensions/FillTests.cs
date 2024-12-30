@@ -2,10 +2,12 @@ namespace Kotz.Tests.Extensions;
 
 public sealed partial class LinqExtTests
 {
+    private static readonly string[] _sourceArray = ["Some strings", "This should create 5 slots"];
+
     [Fact]
     internal void FillTest()
     {
-        var sample = new string[] { "Some strings", "This should create 5 slots" }
+        var sample = _sourceArray
             .Select(x => x.Split(' '))
             .NestedFill(string.Empty);
 

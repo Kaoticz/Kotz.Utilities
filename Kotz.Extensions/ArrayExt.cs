@@ -8,7 +8,6 @@ namespace Kotz.Extensions;
 /// </summary>
 public static class ArrayExt
 {
-#if NET8_0_OR_GREATER
     /// <summary>
     /// Performs an in-place shuffle of this array.
     /// </summary>
@@ -23,7 +22,6 @@ public static class ArrayExt
 
         return array;
     }
-#endif
 
     /// <summary>
     /// Creates a new <see cref="ReadOnlySpan{T}"/> over the entirety of the specified <paramref name="array"/>.

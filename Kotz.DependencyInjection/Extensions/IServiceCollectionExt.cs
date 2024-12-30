@@ -11,7 +11,7 @@ public static class IServiceCollectionExt
 {
     /// <summary>
     /// Registers all types in the current assembly that are marked with a
-    /// <see cref="ServiceAttributeBase"/> attribute to this service collection.
+    /// <see cref="ServiceBaseAttribute"/> attribute to this service collection.
     /// </summary>
     /// <param name="serviceCollection">This service collection.</param>
     /// <returns>This service collection with the services registered in it.</returns>
@@ -23,7 +23,7 @@ public static class IServiceCollectionExt
 
     /// <summary>
     /// Registers all types in the specifyed <paramref name="assembly"/> that are marked
-    /// with a <see cref="ServiceAttributeBase"/> attribute to this service collection.
+    /// with a <see cref="ServiceBaseAttribute"/> attribute to this service collection.
     /// </summary>
     /// <param name="serviceCollection">This service collection.</param>
     /// <param name="assembly">The assembly to get the types from.</param>
@@ -33,8 +33,8 @@ public static class IServiceCollectionExt
     /// </exception>
     public static IServiceCollection RegisterServices(this IServiceCollection serviceCollection, Assembly assembly)
     {
-        var typesAndAttributes = assembly.GetConcreteTypesWithAttribute<ServiceAttributeBase>()
-            .Select(x => (Type: x, Attribute: x.GetCustomAttribute<ServiceAttributeBase>()!));
+        var typesAndAttributes = assembly.GetConcreteTypesWithAttribute<ServiceBaseAttribute>()
+            .Select(x => (Type: x, Attribute: x.GetCustomAttribute<ServiceBaseAttribute>()!));
 
         foreach (var (type, attribute) in typesAndAttributes)
             attribute.RegisterService(serviceCollection, type);

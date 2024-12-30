@@ -9,7 +9,7 @@ namespace Kotz.DependencyInjection;
 /// registration in the IoC container for dependency injection.
 /// </summary>
 /// <typeparam name="T">The abstract type the service should be registered under.</typeparam>
-public sealed class ServiceAttribute<T> : ServiceAttributeBase
+public sealed class ServiceAttribute<T> : ServiceBaseAttribute
 {
     /// <summary>
     /// Defines the type this service should be registered as.
